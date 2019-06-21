@@ -55,6 +55,15 @@ def addexp(m):
             chats.update_one({'id':m.chat.id},{'$inc':{'exp':int(m.text.split(' ')[1])}})
         except:
             pass
+        
+        
+@bot.message_handler(commands=['addlvl'])
+def addlvl(m):
+    if m.from_user.id==441399484:
+        try:
+            chats.update_one({'id':m.chat.id},{'$inc':{'lvl':int(m.text.split(' ')[1])}})
+        except:
+            pass
     
     
 @bot.message_handler(commands=['petstats'])
