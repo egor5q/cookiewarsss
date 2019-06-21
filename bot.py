@@ -80,7 +80,13 @@ def messages(m):
         if m.from_user.id not in animal['lastminutefeed']:
             chats.update_one({'id':m.chat.id},{'$push':{'lastminutefeed':m.from_user.id}})
             
-        
+  
+@bot.message_handler(commands=['allinfo'])
+def allinfo(m):
+    if m.from_user.id==441399484:
+        text=str(chats.find_one({'id':m.chat.id}))
+        bot.send_message(441399484, text)
+
         
 def createpet(id, typee='horse', name='Без имени'):
     return {
