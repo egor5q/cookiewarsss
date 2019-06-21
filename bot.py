@@ -73,7 +73,7 @@ def name(m):
     except:
         pass
         
-@bot.message_handler({})
+@bot.message_handler(content_types=['text'])
 def messages(m):
     animal=chats.find_one({'id':m.chat.id})
     if animal!=None:
