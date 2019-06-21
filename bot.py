@@ -167,7 +167,7 @@ def check10():
     t.start()
             
 
-
+check1()
 check10()
 
 
