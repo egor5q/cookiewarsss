@@ -140,7 +140,7 @@ def check1():
     for ids in chats.find({}):
         if ids['hunger']>=100:
             multipler=1+(random.randint(-100, 100)/100)
-            exp=int(ids['lvl']+ids['lvl']*(multipler+random.randint(0,3)))
+            exp=int(ids['lvl']*(multipler+random.randint(1,1)))
             chats.update_one({'id':ids['id']},{'$inc':{'exp':exp}})
     for ids in chats.find({}):
         pet=chats.find_one({'id':ids['id']})
