@@ -143,8 +143,9 @@ def check10():
      
     for ids in chats.find({}):
         if ids['hp']<=0:
-            bot.send_message(ids['id'], 'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.')
             lost.update_one({},{'$inc':{'amount':1}})
+            bot.send_message(ids['id'], 'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n'+
+                            'Количество лошадей, которых мне пришлось забрать (во всех чатах): '+str(lost.find_one({})['amount']))
             chats.remove({'id':ids['id']})
             
     t=threading.Timer(600, check10)
