@@ -35,8 +35,11 @@ def grow(m):
 @bot.message_handler(commands=['help'])
 def help(m):
     no=0
-    if m.text[6]=='@' and m.text[6:len(botname)+6]!=botname:
-        no=1
+    try:
+        if m.text[6]=='@' and m.text[6:len(botname)+6]!=botname:
+            no=1
+    except:
+        pass
     if no==0:
         text=''
         text+='Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
@@ -49,14 +52,24 @@ def petstats(m):
     animal=chats.find_one({'id':m.chat.id})
     if animal!=None:
         text=''
-        text+='Имя: '+animal['name']+'\n'
-        text+='Уровень: '+str(animal['lvl'])+'\n'
-        text+='Опыт: '+str(animal['exp'])+'/'+str(nextlvl(animal))+'\n'
-        text+='Здоровье: '+str(animal['hp'])+'/'+str(animal['maxhp'])+'\n'
-        text+='Сытость: '+str(animal['hunger'])+'/'+str(animal['maxhunger'])+'\n'
+        text+='🐴Имя: '+animal['name']+'\n'
+        text+='🏅Уровень: '+str(animal['lvl'])+'\n'
+        text+='🔥Опыт: '+str(animal['exp'])+'/'+str(nextlvl(animal))+'\n'
+        text+='♥Здоровье: '+str(animal['hp'])+'/'+str(animal['maxhp'])+'\n'
+        text+='🍔Сытость: '+str(animal['hunger'])+'/'+str(animal['maxhunger'])+'\n'
         bot.send_message(m.chat.id, text)
     
-      
+@bot.message_handler(commands=['name'])
+def name(m):
+    try:
+        user=bot.get_chat_member(m.chat.id, m.from_user.id)       
+        if user.status=='creator' or user.status=='administrator' or m.from_user.id==441399484:
+            name=m.text.split('/name ')[1]
+            if chats.find_one({'id':m.chat.id})!=None:
+                chats.update_one({'id':m.chat.id},{'$set':{'name':name}})
+                bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на '+name+'!')
+    except:
+        pass
         
 @bot.message_handler({})
 def messages(m):
