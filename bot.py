@@ -73,6 +73,13 @@ def name(m):
     except:
         pass
         
+        
+@bot.message_handler(commands=['allinfo'])
+def allinfo(m):
+    if m.from_user.id==441399484:
+        text=str(chats.find_one({'id':m.chat.id}))
+        bot.send_message(441399484, text)
+        
 @bot.message_handler(content_types=['text'])
 def messages(m):
     animal=chats.find_one({'id':m.chat.id})
@@ -81,12 +88,6 @@ def messages(m):
             chats.update_one({'id':m.chat.id},{'$push':{'lastminutefeed':m.from_user.id}})
             
   
-@bot.message_handler(commands=['allinfo'])
-def allinfo(m):
-    if m.from_user.id==441399484:
-        text=str(chats.find_one({'id':m.chat.id}))
-        bot.send_message(441399484, text)
-
         
 def createpet(id, typee='horse', name='Без имени'):
     return {
