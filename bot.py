@@ -142,11 +142,12 @@ def check1():
             multipler=1+(random.randint(-100, 100)/100)
             exp=int(ids['lvl']+ids['lvl']*(multipler+random.randint(0,3)))
             chats.update_one({'id':ids['id']},{'$inc':{'exp':exp}})
-            pet=chats.find_one({'id':ids['id']})
-            if pet['exp']>=nextlvl(pet):
-                chats.update_one({'id':ids['id']},{'$inc':{'lvl':1}})
-                chats.update_one({'id':ids['id']},{'$inc':{'maxhunger':15}})
-                bot.send_message(ids['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
+    for ids in chats.find({}):
+        pet=chats.find_one({'id':ids['id']})
+        if pet['exp']>=nextlvl(pet):
+            chats.update_one({'id':ids['id']},{'$inc':{'lvl':1}})
+            chats.update_one({'id':ids['id']},{'$inc':{'maxhunger':15}})
+            bot.send_message(ids['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
     
     
     t=threading.Timer(60, check1)
