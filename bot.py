@@ -124,7 +124,7 @@ def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode=None):
 
 
 def nextlvl(pet):
-    needexp=int(20+pet['lvl']+(pet['lvl']*(pet['lvl']/3)))
+    needexp=int(pet['lvl']*10+10+pet['lvl']+(pet['lvl']*(pet['lvl']/3)))
     return needexp
 
 def check1():
