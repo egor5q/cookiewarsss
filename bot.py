@@ -47,6 +47,16 @@ def help(m):
         bot.send_message(m.chat.id, text)
      
     
+    
+@bot.message_handler(commands=['addexp'])
+def addexp(m):
+    if m.from_user.id==441399484:
+        try:
+            chats.update_one({'id':m.chat.id},{'$inc':{'$exp':int(m.text.split(' ')[1])}})
+        except:
+            pass
+    
+    
 @bot.message_handler(commands=['petstats'])
 def petstats(m):
     animal=chats.find_one({'id':m.chat.id})
