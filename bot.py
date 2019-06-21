@@ -43,7 +43,7 @@ def help(m):
     if no==0:
         text=''
         text+='Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
-        text+='Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /help!'
+        text+='Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /name!'
         bot.send_message(m.chat.id, text)
      
     
@@ -63,11 +63,13 @@ def petstats(m):
 def name(m):
     try:
         user=bot.get_chat_member(m.chat.id, m.from_user.id)       
-        if user.status=='creator' or user.status=='administrator' or m.from_user.id==441399484:
+        if user.status=='creator' or user.status=='administrator' or m.from_user.id==441399484 or m.from_user.id==m.chat.id:
             name=m.text.split('/name ')[1]
             if chats.find_one({'id':m.chat.id})!=None:
                 chats.update_one({'id':m.chat.id},{'$set':{'name':name}})
                 bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на '+name+'!')
+        else:
+            bot.send_message(m.chat.id, 'Только админ может делать это!')
     except:
         pass
         
