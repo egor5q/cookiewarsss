@@ -139,7 +139,7 @@ def nextlvl(pet):
 def check1():
     for ids in chats.find({}):
         if len(ids['lastminutefeed'])>0:
-            chats.update_one({'id':ids['id']},{'$inc':{'hunger':len(ids['lastminutefeed'])}})
+            chats.update_one({'id':ids['id']},{'$inc':{'hunger':len(ids['lastminutefeed'])*2}})
             chat=chats.find_one({'id':ids['id']})
             if chat['hunger']>chat['maxhunger']:
                 chats.update_one({'id':ids['id']},{'$set':{'hunger':ids['maxhunger']}})
