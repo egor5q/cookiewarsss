@@ -147,7 +147,7 @@ def check1():
                 
                 
     for ids in chats.find({}):
-        if ids['hunger']>=100:
+        if ids['hunger']>=85:
             multipler=1+(random.randint(-100, 100)/100)
             exp=int(ids['lvl']*(multipler+random.randint(1,1)))
             chats.update_one({'id':ids['id']},{'$inc':{'exp':exp}})
@@ -165,7 +165,7 @@ def check1():
         
 
 def check10():
-    chats.update_many({},{'$inc':{'hunger':-random.randint(1,3)}})
+    chats.update_many({},{'$inc':{'hunger':-random.randint(3,9)}})
     for ids in chats.find({}):
         if ids['hunger']<0:
             chats.update_one({'id':ids['id']},{'$set':{'hunger':0}})
@@ -190,7 +190,7 @@ def check10():
                             'Количество лошадей, которых мне пришлось забрать (во всех чатах): '+str(lost.find_one({})['amount']))
             chats.remove({'id':ids['id']})
             
-    t=threading.Timer(600, check10)
+    t=threading.Timer(1800, check10)
     t.start()
             
 
