@@ -156,8 +156,10 @@ def check1():
         if pet['exp']>=nextlvl(pet):
             chats.update_one({'id':ids['id']},{'$inc':{'lvl':1}})
             chats.update_one({'id':ids['id']},{'$inc':{'maxhunger':15}})
-            bot.send_message(ids['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
-    
+            try:
+                bot.send_message(ids['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
+            except:
+                 pass
     
     t=threading.Timer(60, check1)
     t.start()
@@ -173,10 +175,16 @@ def check10():
             chats.update_one({'id':ids['id']},{'$set':{'hunger':0}})
     for ids in chats.find({}):
         if ids['hunger']<=0:
-            bot.send_message(ids['id'], 'Ваша лошадь СИЛЬНО голодает! Осталось '+str(ids['hunger'])+' сытости! СРОЧНО нужен актив в чат!')
+            try:
+                bot.send_message(ids['id'], 'Ваша лошадь СИЛЬНО голодает! Осталось '+str(ids['hunger'])+' сытости! СРОЧНО нужен актив в чат!')
+            except:
+                pass
             chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(3,5)}})
         elif ids['hunger']<=30:
-            bot.send_message(ids['id'], 'Ваша лошадь голодает! Осталось всего '+str(ids['hunger'])+' сытости! Срочно нужен актив в чат!')
+            try:
+                bot.send_message(ids['id'], 'Ваша лошадь голодает! Осталось всего '+str(ids['hunger'])+' сытости! Срочно нужен актив в чат!')
+            except:
+                pass
             chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(1,2)}})
         elif ids['hunger']>=75:
             if ids['hp']<ids['maxhp']:
