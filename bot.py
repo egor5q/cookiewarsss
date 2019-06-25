@@ -169,7 +169,8 @@ def check1():
 def check10():
     t=threading.Timer(1800, check10)
     t.start()
-    chats.update_many({},{'$inc':{'hunger':-random.randint(3,9)}})
+    for ids in chats.find({}):
+        chats.update_one({'id':ids['id']},{'$inc':{'hunger':-random.randint(3,9)}})
     for ids in chats.find({}):
         if ids['hunger']<0:
             chats.update_one({'id':ids['id']},{'$set':{'hunger':0}})
@@ -179,16 +180,16 @@ def check10():
                 bot.send_message(ids['id'], 'Ваша лошадь СИЛЬНО голодает! Осталось '+str(ids['hunger'])+' сытости! СРОЧНО нужен актив в чат!')
             except:
                 pass
-            chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(3,5)}})
+            chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(9,15)}})
         elif ids['hunger']<=30:
             try:
                 bot.send_message(ids['id'], 'Ваша лошадь голодает! Осталось всего '+str(ids['hunger'])+' сытости! Срочно нужен актив в чат!')
             except:
                 pass
-            chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(1,2)}})
+            chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(3,6)}})
         elif ids['hunger']>=75:
             if ids['hp']<ids['maxhp']:
-                chats.update_one({'id':ids['id']},{'$inc':{'hp':random.randint(1,3)}})
+                chats.update_one({'id':ids['id']},{'$inc':{'hp':random.randint(3,9)}})
                 chat=chats.find_one({'id':ids['id']})
                 if chat['hp']>chat['maxhp']:
                     chats.update_one({'id':ids['id']},{'$set':{'hp':ids['maxhp']}})
