@@ -165,6 +165,8 @@ def check1():
         
 
 def check10():
+    t=threading.Timer(1800, check10)
+    t.start()
     chats.update_many({},{'$inc':{'hunger':-random.randint(3,9)}})
     for ids in chats.find({}):
         if ids['hunger']<0:
@@ -190,8 +192,7 @@ def check10():
                             'Количество лошадей, которых мне пришлось забрать (во всех чатах): '+str(lost.find_one({})['amount']))
             chats.remove({'id':ids['id']})
             
-    t=threading.Timer(1800, check10)
-    t.start()
+    
             
 
 check1()
