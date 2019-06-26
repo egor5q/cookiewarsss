@@ -170,7 +170,7 @@ def check10():
     t=threading.Timer(1800, check10)
     t.start()
     for ids in chats.find({}):
-        chats.update_one({'id':ids['id']},{'$inc':{'hunger':-random.randint(3,9)}})
+        chats.update_one({'id':ids['id']},{'$inc':{'hunger':-random.randint(1,6)}})
     for ids in chats.find({}):
         if ids['hunger']<0:
             chats.update_one({'id':ids['id']},{'$set':{'hunger':0}})
