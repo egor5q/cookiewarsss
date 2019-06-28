@@ -76,6 +76,7 @@ def petstats(m):
         text+='🔥Опыт: '+str(animal['exp'])+'/'+str(nextlvl(animal))+'\n'
         text+='♥Здоровье: '+str(animal['hp'])+'/'+str(animal['maxhp'])+'\n'
         text+='🍔Сытость: '+str(animal['hunger'])+'/'+str(animal['maxhunger'])+'\n'
+        text+='Нужно сытости для постоянного получения опыта: '+str(int(animal['hunger']/animal['maxhunger']*100))
         bot.send_message(m.chat.id, text)
     
 @bot.message_handler(commands=['name'])
@@ -147,7 +148,7 @@ def check1():
                 
                 
     for ids in chats.find({}):
-        if ids['hunger']>=85:
+        if ids['hunger']/ids['maxhunger']*100>=85:
             multipler=1+(random.randint(-100, 100)/100)
             exp=int(ids['lvl']*(multipler+random.randint(1,1)))
             chats.update_one({'id':ids['id']},{'$inc':{'exp':exp}})
@@ -170,7 +171,7 @@ def check10():
     t=threading.Timer(1800, check10)
     t.start()
     for ids in chats.find({}):
-        chats.update_one({'id':ids['id']},{'$inc':{'hunger':-random.randint(1,6)}})
+        chats.update_one({'id':ids['id']},{'$inc':{'hunger':-random.randint(2,6)}})
     for ids in chats.find({}):
         if ids['hunger']<0:
             chats.update_one({'id':ids['id']},{'$set':{'hunger':0}})
@@ -181,13 +182,13 @@ def check10():
             except:
                 pass
             chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(9,15)}})
-        elif ids['hunger']<=30:
+        elif ids['hunger']/ids['maxhunger']*100<=30:
             try:
                 bot.send_message(ids['id'], 'Ваша лошадь голодает! Осталось всего '+str(ids['hunger'])+' сытости! Срочно нужен актив в чат!')
             except:
                 pass
             chats.update_one({'id':ids['id']},{'$inc':{'hp':-random.randint(3,6)}})
-        elif ids['hunger']>=75:
+        elif ids['hunger']/ids['maxhunger']*100>=75:
             if ids['hp']<ids['maxhp']:
                 chats.update_one({'id':ids['id']},{'$inc':{'hp':random.randint(3,9)}})
                 chat=chats.find_one({'id':ids['id']})
