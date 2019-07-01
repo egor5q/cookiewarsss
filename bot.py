@@ -32,6 +32,32 @@ def grow(m):
         bot.send_message(m.chat.id, 'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
+@bot.message_handler(commands=['top'])
+def top(m):
+    alls=[]
+    i=1
+    while i<10:
+        chat=None
+        nextt=0
+        for ids in chats.find({}):
+            if ids['lvl']>nextt and ids not in alls:
+                nextt=ids['lvl']
+                chat=ids
+        i+=1
+        if chat!=None:
+            alls.append(chat)
+    text='Топ-10 лошадей:\n\n'
+    i=1
+    for ids in alls:
+        text+=str(i)+' место: '+ids['name']+' ('+ids['lvl'])+' лвл)\n'
+        i+=1
+    bot.send_message(m.chat.id, text)
+        
+                
+        
+        
+        
+        
 @bot.message_handler(commands=['help'])
 def help(m):
     no=0
