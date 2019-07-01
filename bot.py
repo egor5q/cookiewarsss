@@ -32,6 +32,15 @@ def grow(m):
         bot.send_message(m.chat.id, 'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
+        
+@bot.message_handler(commands=['info'])
+def info(m):
+    text=''
+    if m.from_user.id==441399484:
+        for ids in chats.find({}):
+            text+=str(ids)+'\n\n'
+        bot.send_message(m.chat.id, text)        
+        
 @bot.message_handler(commands=['top'])
 def top(m):
     alls=[]
