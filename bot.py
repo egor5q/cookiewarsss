@@ -32,7 +32,12 @@ def grow(m):
         bot.send_message(m.chat.id, 'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
-        
+     
+@bot.message_handler(commands=['start'])
+def startt(m):
+    if m.from_user.id==m.chat.id:
+        bot.send_message(m.chat.id, 'Здравствуй! /help для информации.')
+   
 @bot.message_handler(commands=['info'])
 def info(m):
     text=''
