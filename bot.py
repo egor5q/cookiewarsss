@@ -245,12 +245,12 @@ def check10():
             total += 1
             lost.update_one({}, {'$inc': {'amount': 1}})
             chats.remove({'id': pet['id']})
-        try:
-            bot.send_message(pet['id'],
+            try:
+                bot.send_message(pet['id'],
                              'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n' +
                              'Количество лошадей, которых мне пришлось забрать (во всех чатах): ' + str(total))
-        except:
-            pass
+            except:
+                pass
 
 
 def is_from_admin(m):
