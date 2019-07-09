@@ -31,6 +31,15 @@ def grow(m):
                          'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
+@bot.message_handler(commands=['getids'])
+def idssssss(m):
+    if m.from_user.id==441399484:
+        text=''
+        for h in lost.find({}):
+            text+=str(h['id'])+' '+h['name']+'\n'
+        bot.send_message(m.chat.id, text)
+        
+        
 @bot.message_handler(commands=['remove'])
 def removee(m):
     if is_from_admin(m):
