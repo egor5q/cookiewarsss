@@ -80,8 +80,7 @@ def top(m):
 
 @bot.message_handler(commands=['help'])
 def help(m):
-    if m.text != "/help@" + botname:
-        return
+    
 
     text = ''
     text += 'Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
