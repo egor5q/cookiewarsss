@@ -36,7 +36,8 @@ def idssssss(m):
     if m.from_user.id==441399484:
         text=''
         for h in lost.find({}):
-            text+=str(h['id'])+' '+h['name']+'\n'
+            if 'id' in h:
+                text+=str(h['id'])+' '+h['name']+'\n'
         bot.send_message(m.chat.id, text)
         
         
