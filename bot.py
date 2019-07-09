@@ -74,7 +74,7 @@ def info(m):
 def top(m):
     alls=[]
     i=1
-    while i<10:
+    while i<=10:
         chat=None
         nextt=0
         for ids in chats.find({}):
