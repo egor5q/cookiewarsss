@@ -16,6 +16,7 @@ chats = db.chats
 lost = db.lost
 
 ban = []
+totalban=[]
 
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
@@ -205,6 +206,7 @@ def name(m):
             if chats.find_one({'id': m.chat.id}) is not None:
                 if len(name) <= 50:
                     chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
+                    bot.send_message(441399484, m.chat.id+' '+m.from_user.first_name+' (имя: '+name+')')
                     bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
                 else:
                     bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
