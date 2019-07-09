@@ -198,7 +198,7 @@ def throwh(m):
 
         
 @bot.message_handler(commands=['ban'])
-def ban(m):
+def bannn(m):
     if m.from_user.id==441399484:
         try:
             totalban.append(int(m.text.split(' ')[1]))
