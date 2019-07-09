@@ -35,6 +35,7 @@ def removee(m):
     if m.from_user.id==441399484:
         try:
             lost.remove({'id':m.text.split(' ')[1]})
+            bot.send_message(m.chat.id, "success")
         except:
             pass
 
