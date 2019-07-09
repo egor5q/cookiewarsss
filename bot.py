@@ -126,7 +126,7 @@ def petstats(m):
 def losthorses(m):
     text = 'Чтобы забрать лошадь, введите команду /takeh id\n\n'
     for pet in lost.find({'id': {'$exists': True}}):
-        text += str(pet['id']) + ': ' + pet['name'] + '\n'
+        text += str(pet['id']) + ': ' + pet['name'] + " (" + pet['lvl'] + ')' + '\n'
     bot.send_message(m.chat.id, text)
 
 
@@ -153,7 +153,8 @@ def takeh(m):
 @bot.message_handler(commands=['throwh'])
 def throwh(m):
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
-    if user.status != 'creator' and user.status != 'administrator' and m.from_user.id != 441399484 and m.from_user.id != m.chat.id:
+    if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+            m) and m.from_user.id != m.chat.id:
         bot.send_message(m.chat.id, 'Только админ может делать это!')
         return
 
@@ -164,14 +165,16 @@ def throwh(m):
     if lose_horse(m.chat.id):
         bot.send_message(m.chat.id, "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
     else:
-        bot.send_message(m.chat.id, "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
+        bot.send_message(m.chat.id,
+                         "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
 
 
 @bot.message_handler(commands=['name'])
 def name(m):
     try:
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
-        if user.status == 'creator' or user.status == 'administrator' or m.from_user.id == 441399484 or m.from_user.id == m.chat.id:
+        if user.status == 'creator' or user.status == 'administrator' or is_from_admin(
+                m) or m.from_user.id == m.chat.id:
             name = m.text.split('/name ')[1]
             if chats.find_one({'id': m.chat.id}) is not None:
                 if len(name) <= 50:
@@ -189,7 +192,7 @@ def name(m):
 def allinfo(m):
     if is_from_admin(m):
         text = str(chats.find_one({'id': m.chat.id}))
-        bot.send_message(441399484, text)
+        bot.send_message(admin_id, text)
 
 
 @bot.message_handler(content_types=['text'])
