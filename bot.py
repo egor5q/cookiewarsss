@@ -6,12 +6,10 @@ import threading
 import telebot
 from pymongo import MongoClient
 
-# token = os.environ['TELEGRAM_TOKEN']
-token = "642870651:AAHk5MjYUPF8wJfkhVS3VrZP4YK_0Vqz-iw"
+token = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(token)
 
-# client = MongoClient(os.environ['database'])
-client = MongoClient("mongodb+srv://Senderman:Everlasting@cluster0-imaiu.mongodb.net/test?retryWrites=true&w=majority")
+client = MongoClient(os.environ['database'])
 db = client.chatpets
 users = db.users
 chats = db.chats
@@ -238,7 +236,10 @@ def check_hunger(pet, horse_lost):
             send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
 
     commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
-    chats.update_one({'id': pet['id']}, {'$set': commit})
+    if not horse_lost:
+        chats.update_one({'id': pet['id']}, {'$set': commit})
+    else:
+        lost.update_one({'id': pet['id']}, {'$set': commit})
 
 
 def check_hp(pet, horse_lost):
@@ -265,21 +266,27 @@ def check_hp(pet, horse_lost):
         if hp > maxhp:
             hp = maxhp
 
-    commit = {'hunger': hunger, 'hp': hp}
-    chats.update_one({'id': pet['id']}, {'$set': commit})
-
     if hp <= 0:
         total = lost.find_one({})['amount']
         total += 1
         lost.update_one({'amount': {'$exists': True}}, {'$inc': {'amount': 1}})
-        chats.remove({'id': pet['id']})
         if not horse_lost:
+            chats.remove({'id': pet['id']})
             try:
                 bot.send_message(pet['id'],
                                  'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n' +
                                  'Количество лошадей, которых мне пришлось забрать (во всех чатах): ' + str(total))
             except:
                 pass
+        else:
+            lost.remove({'id': pet['id']})
+
+    else:
+        commit = {'hunger': hunger, 'hp': hp}
+        if not horse_lost:
+            chats.update_one({'id': pet['id']}, {'$set': commit})
+        else:
+            lost.update_one({'id': pet['id']}, {'$set': commit})
 
 
 def check_all_pets_hunger():
