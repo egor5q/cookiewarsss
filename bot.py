@@ -87,7 +87,7 @@ def top(m):
     text='Топ-10 лошадей:\n\n'
     i=1
     for ids in alls:
-        text+=str(i)+' место: '+ids['name']+' ('+ids['lvl'])+' лвл)\n'
+        text+=str(i)+' место: '+ids['name']+' ('+ids['lvl']+' лвл)\n'
         i+=1
     bot.send_message(m.chat.id, text)
 
