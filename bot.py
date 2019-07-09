@@ -142,7 +142,7 @@ def takeh(m):
 @bot.message_handler(commands=['throwh'])
 def throwh(m):
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
-    if user.status != 'creator' or user.status != 'administrator' or m.from_user.id == 441399484 or m.from_user.id == m.chat.id:
+    if user.status != 'creator' and user.status != 'administrator' and m.from_user.id != 441399484 and m.from_user.id != m.chat.id:
         bot.send_message(m.chat.id, 'Только админ может делать это!')
         return
 
