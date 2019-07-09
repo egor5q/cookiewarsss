@@ -163,8 +163,11 @@ def name(m):
         if user.status == 'creator' or user.status == 'administrator' or m.from_user.id == 441399484 or m.from_user.id == m.chat.id:
             name = m.text.split('/name ')[1]
             if chats.find_one({'id': m.chat.id}) is not None:
-                chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
-                bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
+                if len(name) <= 50:
+                    chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
+                    bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
+                else:
+                    bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
         else:
             bot.send_message(m.chat.id, 'Только админ может делать это!')
     except:
