@@ -72,24 +72,23 @@ def info(m):
 
 @bot.message_handler(commands=['top'])
 def top(m):
-    best_pets = []
-    horses = chats.find({})
-
-    for i in range(1, 11):
-        current_lvl = 0
-        current_pet = None
-        for pet in horses:
-            if pet['lvl'] > current_lvl and pet not in best_pets:
-                current_lvl = pet['lvl']
-                current_pet = pet
-            if current_pet is not None:
-                best_pets.append(current_pet)
-
-    text = 'Топ-10 лошадей:\n\n'
-    i = 1
-    for pet in best_pets:
-        text += str(i) + ' место: ' + pet['name'] + ' (' + str(pet['lvl']) + ' лвл)\n'
-        i += 1
+    alls=[]
+    i=1
+    while i<10:
+        chat=None
+        nextt=0
+        for ids in chats.find({}):
+            if ids['lvl']>nextt and ids not in alls:
+                nextt=ids['lvl']
+                chat=ids
+        i+=1
+        if chat!=None:
+            alls.append(chat)
+    text='Топ-10 лошадей:\n\n'
+    i=1
+    for ids in alls:
+        text+=str(i)+' место: '+ids['name']+' ('+ids['lvl'])+' лвл)\n'
+        i+=1
     bot.send_message(m.chat.id, text)
 
 
