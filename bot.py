@@ -82,8 +82,8 @@ def top(m):
             if pet['lvl'] > current_lvl and pet not in best_pets:
                 current_lvl = pet['lvl']
                 current_pet = pet
-        if current_pet is not None:
-            best_pets.append(current_pet)
+            if current_pet is not None:
+                best_pets.append(current_pet)
 
     text = 'Топ-10 лошадей:\n\n'
     i = 1
