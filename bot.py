@@ -334,8 +334,7 @@ def send_message(chat_id, text):  # использовать только что
 def lose_horse(chat_id):  # returns True on success
     pet = chats.find_one({'id': chat_id})
     chats.remove({'id': chat_id})
-    if lost.count({'id': {'$exists': True}}) >= 15:
-        return False
+    
 
     lost.insert_one(pet)
     horse_id = lost.count({'id': {'$exists': True}})
