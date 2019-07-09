@@ -126,7 +126,7 @@ def petstats(m):
 def losthorses(m):
     text = 'Чтобы забрать лошадь, введите команду /takeh id\n\n'
     for pet in lost.find({'id': {'$exists': True}}):
-        text += str(pet['id']) + ': ' + pet['name'] + " (" + pet['lvl'] + ')' + '\n'
+        text += str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ')' + '\n'
     bot.send_message(m.chat.id, text)
 
 
