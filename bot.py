@@ -331,6 +331,8 @@ def lose_horse(chat_id):
     chats.remove({'id': chat_id})
     lost.insert_one(pet)
     horse_id = lost.count({'id': {'$exists': True}})
+    while lost.find_one({'id':horse_id}) is not None:
+        horse_id+=1
     lost.update_one({'id': chat_id}, {'$set': {'id': horse_id}})
 
 
