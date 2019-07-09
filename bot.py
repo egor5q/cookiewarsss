@@ -30,14 +30,16 @@ def grow(m):
         bot.send_message(m.chat.id,
                          'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
+
 @bot.message_handler(commands=['remove'])
 def removee(m):
-    if m.from_user.id==441399484:
+    if is_from_admin(m):
         try:
-            lost.remove({'id':m.text.split(' ')[1]})
+            lost.remove({'id': m.text.split(' ')[1]})
             bot.send_message(m.chat.id, "success")
         except:
             pass
+
 
 @bot.message_handler(commands=['start'])
 def startt(m):
@@ -80,8 +82,6 @@ def top(m):
 
 @bot.message_handler(commands=['help'])
 def help(m):
-    
-
     text = ''
     text += 'Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
     text += 'Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /name!'
@@ -132,22 +132,23 @@ def losthorses(m):
 
 @bot.message_handler(commands=['takeh'])
 def takeh(m):
-  try:
-    horse_id = int(m.text.split(' ')[1])
-    if lost.find_one({'id': horse_id}) is None:
-        bot.send_message(m.chat.id, "Лошадь не существует!")
-        return
+    try:
+        horse_id = int(m.text.split(' ')[1])
+        if lost.find_one({'id': horse_id}) is None:
+            bot.send_message(m.chat.id, "Лошадь не существует!")
+            return
 
-    if chats.find_one({'id': m.chat.id}) is not None:
-        bot.send_message(m.chat.id, "У вас уже есть лошадь!")
-        return
+        if chats.find_one({'id': m.chat.id}) is not None:
+            bot.send_message(m.chat.id, "У вас уже есть лошадь!")
+            return
 
-    take_horse(horse_id, m.chat.id)
-    chats.update_one({'id':horse_id},{'$set':{'id':m.chat.id}})
-    bot.send_message(m.chat.id,
-                     "Поздравляем, вы спасли лошадь от голода! Следите за ней, чтобы она росла и не умирала!")
-  except:
-    pass
+        take_horse(horse_id, m.chat.id)
+        chats.update_one({'id': horse_id}, {'$set': {'id': m.chat.id}})
+        bot.send_message(m.chat.id,
+                         "Поздравляем, вы спасли лошадь от голода! Следите за ней, чтобы она росла и не умирала!")
+    except:
+        pass
+
 
 @bot.message_handler(commands=['throwh'])
 def throwh(m):
@@ -160,8 +161,10 @@ def throwh(m):
         bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались :(")
         return
 
-    lose_horse(m.chat.id)
-    bot.send_message(m.chat.id, "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
+    if lose_horse(m.chat.id):
+        bot.send_message(m.chat.id, "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
+    else:
+        bot.send_message(m.chat.id, "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
 
 
 @bot.message_handler(commands=['name'])
@@ -325,14 +328,18 @@ def send_message(chat_id, text):  # использовать только что
         lose_horse(chat_id)
 
 
-def lose_horse(chat_id):
+def lose_horse(chat_id):  # returns True on success
     pet = chats.find_one({'id': chat_id})
     chats.remove({'id': chat_id})
+    if lost.count({'id': {'$exists': True}}) >= 15:
+        return False
+
     lost.insert_one(pet)
     horse_id = lost.count({'id': {'$exists': True}})
-    while lost.find_one({'id':horse_id}) is not None:
-        horse_id+=1
+    while lost.find_one({'id': horse_id}) is not None:
+        horse_id += 1
     lost.update_one({'id': chat_id}, {'$set': {'id': horse_id}})
+    return True
 
 
 def take_horse(horse_id, new_chat_id):
