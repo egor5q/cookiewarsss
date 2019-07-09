@@ -125,6 +125,7 @@ def losthorses(m):
 
 @bot.message_handler(commands=['takeh'])
 def takeh(m):
+  try;
     horse_id = int(m.text.split(' ')[1])
     if lost.find_one({'id': horse_id}) is None:
         bot.send_message(m.chat.id, "Лошадь не существует!")
@@ -137,7 +138,8 @@ def takeh(m):
     take_horse(horse_id, m.chat.id)
     bot.send_message(m.chat.id,
                      "Поздравляем, вы спасли лошадь от голода! Следите за ней, чтобы она росла и не умирала!")
-
+  except:
+    pass
 
 @bot.message_handler(commands=['throwh'])
 def throwh(m):
