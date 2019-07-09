@@ -15,7 +15,7 @@ users = db.users
 chats = db.chats
 lost = db.lost
 
-ban=[]
+ban = []
 
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
@@ -35,14 +35,14 @@ def grow(m):
 
 @bot.message_handler(commands=['getids'])
 def idssssss(m):
-    if m.from_user.id==441399484:
-        text=''
+    if m.from_user.id == 441399484:
+        text = ''
         for h in lost.find({}):
             if 'id' in h:
-                text+=str(h['id'])+' '+h['name']+'\n'
+                text += str(h['id']) + ' ' + h['name'] + '\n'
         bot.send_message(m.chat.id, text)
-        
-        
+
+
 @bot.message_handler(commands=['remove'])
 def removee(m):
     if is_from_admin(m):
@@ -73,21 +73,22 @@ def info(m):
 @bot.message_handler(commands=['top'])
 def top(m):
     best_pets = []
+    horses = chats.find({})
+    current_lvl = 0
 
     for i in range(1, 11):
-        chat = None
-        nextt = 0
-        for ids in chats.find({}):
-            if ids['lvl'] > nextt and ids not in best_pets:
-                nextt = ids['lvl']
-                chat = ids
-        if chat is not None:
-            best_pets.append(chat)
+        current_pet = None
+        for pet in horses:
+            if pet['lvl'] > current_lvl and pet not in best_pets:
+                current_lvl = pet['lvl']
+                current_pet = pet
+        if current_pet is not None:
+            best_pets.insert(0, current_pet)
 
     text = 'Топ-10 лошадей:\n\n'
     i = 1
-    for ids in best_pets:
-        text += str(i) + ' место: ' + ids['name'] + ' (' + str(ids['lvl']) + ' лвл)\n'
+    for pet in best_pets:
+        text += str(i) + ' место: ' + pet['name'] + ' (' + str(pet['lvl']) + ' лвл)\n'
         i += 1
     bot.send_message(m.chat.id, text)
 
@@ -167,30 +168,32 @@ def unban(id):
         ban.remove(id)
     except:
         pass
-    
+
+
 @bot.message_handler(commands=['throwh'])
 def throwh(m):
-  if m.chat.id not in ban:
-    user = bot.get_chat_member(m.chat.id, m.from_user.id)
-    if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
-            m) and m.from_user.id != m.chat.id:
-        bot.send_message(m.chat.id, 'Только админ может делать это!')
-        return
+    if m.chat.id not in ban:
+        user = bot.get_chat_member(m.chat.id, m.from_user.id)
+        if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+                m) and m.from_user.id != m.chat.id:
+            bot.send_message(m.chat.id, 'Только админ может делать это!')
+            return
 
-    if chats.find_one({'id': m.chat.id}) is None:
-        bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались :(")
-        return
+        if chats.find_one({'id': m.chat.id}) is None:
+            bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались :(")
+            return
 
-    if lose_horse(m.chat.id):
-        ban.append(m.chat.id)
-        t=threading.Timer(3600, unban, args=[m.chat.id])
-        t.start()
-        bot.send_message(m.chat.id, "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
+        if lose_horse(m.chat.id):
+            ban.append(m.chat.id)
+            t = threading.Timer(3600, unban, args=[m.chat.id])
+            t.start()
+            bot.send_message(m.chat.id,
+                             "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
+        else:
+            bot.send_message(m.chat.id,
+                             "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
     else:
-        bot.send_message(m.chat.id,
-                         "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
-  else:
-    bot.send_message(m.chat.id, 'Можно выгонять только одну лошадь в час!')
+        bot.send_message(m.chat.id, 'Можно выгонять только одну лошадь в час!')
 
 
 @bot.message_handler(commands=['name'])
@@ -358,7 +361,6 @@ def send_message(chat_id, text):  # использовать только что
 def lose_horse(chat_id):  # returns True on success
     pet = chats.find_one({'id': chat_id})
     chats.remove({'id': chat_id})
-    
 
     lost.insert_one(pet)
     horse_id = lost.count({'id': {'$exists': True}})
