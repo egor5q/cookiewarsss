@@ -74,16 +74,16 @@ def info(m):
 def top(m):
     best_pets = []
     horses = chats.find({})
-    current_lvl = 0
 
     for i in range(1, 11):
+        current_lvl = 0
         current_pet = None
         for pet in horses:
             if pet['lvl'] > current_lvl and pet not in best_pets:
                 current_lvl = pet['lvl']
                 current_pet = pet
         if current_pet is not None:
-            best_pets.insert(0, current_pet)
+            best_pets.append(current_pet)
 
     text = 'Топ-10 лошадей:\n\n'
     i = 1
