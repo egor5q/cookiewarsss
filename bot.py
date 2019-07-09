@@ -45,7 +45,7 @@ def idssssss(m):
 def removee(m):
     if is_from_admin(m):
         try:
-            lost.remove({'id': m.text.split(' ')[1]})
+            lost.remove({'id': int(m.text.split(' ')[1])})
             bot.send_message(m.chat.id, "success")
         except:
             pass
