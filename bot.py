@@ -30,6 +30,13 @@ def grow(m):
         bot.send_message(m.chat.id,
                          'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
+@bot.message_handler(commands=['remove'])
+def removee(m):
+    if m.from_user.id==441399484:
+        try:
+            lost.remove({'id':m.text.split(' ')[1]})
+        except:
+            pass
 
 @bot.message_handler(commands=['start'])
 def startt(m):
@@ -136,6 +143,7 @@ def takeh(m):
         return
 
     take_horse(horse_id, m.chat.id)
+    chats.update_one({'id':horse_id},{'$set':{'id':m.chat.id}})
     bot.send_message(m.chat.id,
                      "Поздравляем, вы спасли лошадь от голода! Следите за ней, чтобы она росла и не умирала!")
   except:
