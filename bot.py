@@ -79,7 +79,7 @@ def top(m):
         chat=None
         nextt=0
         for ids in chats.find({}):
-            if ids['lvl']>nextt and ids not in alls:
+            if ids['lvl']>=nextt and ids not in alls:
                 nextt=ids['lvl']
                 chat=ids
         i+=1
