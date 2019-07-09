@@ -15,6 +15,8 @@ users = db.users
 chats = db.chats
 lost = db.lost
 
+ban=[]
+
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
 
@@ -160,8 +162,15 @@ def takeh(m):
         pass
 
 
+def unban(id):
+    try:
+        ban.remove(id)
+    except:
+        pass
+    
 @bot.message_handler(commands=['throwh'])
 def throwh(m):
+  if m.chat.id not in ban:
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
             m) and m.from_user.id != m.chat.id:
@@ -173,10 +182,15 @@ def throwh(m):
         return
 
     if lose_horse(m.chat.id):
+        ban.append(m.chat.id)
+        t=threading.Timer(3600, unban, args=[m.chat.id])
+        t.start()
         bot.send_message(m.chat.id, "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
     else:
         bot.send_message(m.chat.id,
                          "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
+  else:
+    bot.send_message(m.chat.id, 'Можно выгонять только одну лошадь в час!')
 
 
 @bot.message_handler(commands=['name'])
