@@ -6,16 +6,18 @@ import threading
 import telebot
 from pymongo import MongoClient
 
-token = os.environ['TELEGRAM_TOKEN']
+# token = os.environ['TELEGRAM_TOKEN']
+token = "642870651:AAHk5MjYUPF8wJfkhVS3VrZP4YK_0Vqz-iw"
 bot = telebot.TeleBot(token)
 
-client = MongoClient(os.environ['database'])
+# client = MongoClient(os.environ['database'])
+client = MongoClient("mongodb+srv://Senderman:Everlasting@cluster0-imaiu.mongodb.net/test?retryWrites=true&w=majority")
 db = client.chatpets
 users = db.users
 chats = db.chats
 lost = db.lost
 
-if lost.find_one({}) is None:
+if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
 
 botname = 'Chatpetsbot'
@@ -115,6 +117,45 @@ def petstats(m):
     bot.send_message(m.chat.id, text)
 
 
+@bot.message_handler(commands=['losthorses'])
+def losthorses(m):
+    text = 'Чтобы забрать лошадь, введите команду /takeh id\n\n'
+    for pet in lost.find({'id': {'$exists': True}}):
+        text += str(pet['id']) + ': ' + pet['name'] + '\n'
+    bot.send_message(m.chat.id, text)
+
+
+@bot.message_handler(commands=['takeh'])
+def takeh(m):
+    horse_id = int(m.text.split(' ')[1])
+    if lost.find_one({'id': horse_id}) is None:
+        bot.send_message(m.chat.id, "Лошадь не существует!")
+        return
+
+    if chats.find_one({'id': m.chat.id}) is not None:
+        bot.send_message(m.chat.id, "У вас уже есть лошадь!")
+        return
+
+    take_horse(horse_id, m.chat.id)
+    bot.send_message(m.chat.id,
+                     "Поздравляем, вы спасли лошадь от голода! Следите за ней, чтобы она росла и не умирала!")
+
+
+@bot.message_handler(commands=['throwh'])
+def throwh(m):
+    user = bot.get_chat_member(m.chat.id, m.from_user.id)
+    if user.status != 'creator' or user.status != 'administrator' or m.from_user.id == 441399484 or m.from_user.id == m.chat.id:
+        bot.send_message(m.chat.id, 'Только админ может делать это!')
+        return
+
+    if chats.find_one({'id': m.chat.id}) is None:
+        bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались :(")
+        return
+
+    lose_horse(m.chat.id)
+    bot.send_message(m.chat.id, "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
+
+
 @bot.message_handler(commands=['name'])
 def name(m):
     try:
@@ -172,93 +213,119 @@ def nextlvl(pet):
     return pet['lvl'] * (4 + pet['lvl'] * 100)
 
 
-def check1():
-    for pet in chats.find({}):
-        hunger = pet['hunger']
-        maxhunger = pet['maxhunger']
-        exp = pet['exp']
-        lvl = pet['lvl']
-        lastminutefeed = pet['lastminutefeed']
+def check_hunger(pet, horse_lost):
+    hunger = pet['hunger']
+    maxhunger = pet['maxhunger']
+    exp = pet['exp']
+    lvl = pet['lvl']
+    lastminutefeed = pet['lastminutefeed']
 
-        # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
-        if len(lastminutefeed) > 0:
-            hunger += len(lastminutefeed) * 2
-            lastminutefeed = []
-            if hunger > maxhunger:
-                hunger = maxhunger
+    # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
+    if len(lastminutefeed) > 0:
+        hunger += len(lastminutefeed) * 2
+        lastminutefeed = []
+        if hunger > maxhunger:
+            hunger = maxhunger
 
-        # если лошадь накормлена на 85% и выше, прибавить опыта
-        if hunger / maxhunger * 100 >= 85:
-            exp += int(lvl * (2 + (random.randint(-100, 100) / 100)))
+    # если лошадь накормлена на 85% и выше, прибавить опыта
+    if hunger / maxhunger * 100 >= 85:
+        exp += int(lvl * (2 + (random.randint(-100, 100) / 100)))
 
-        if exp >= nextlvl(pet):
-            lvl += 1
-            maxhunger += 15
-            try:
-                bot.send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
-            except:
-                pass
+    if exp >= nextlvl(pet):
+        lvl += 1
+        maxhunger += 15
+        if not horse_lost:
+            send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
 
-        commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
-        chats.update_one({'id': pet['id']}, {'$set': commit})
-
-    t = threading.Timer(60, check1)
-    t.start()
+    commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
+    chats.update_one({'id': pet['id']}, {'$set': commit})
 
 
-def check10():
-    t = threading.Timer(1800, check10)
-    t.start()
-    for pet in chats.find({}):
-        hunger = pet['hunger'] - random.randint(2, 6)
-        maxhunger = pet['maxhunger']  # const
-        hp = pet['hp']
-        maxhp = pet['maxhp']  # const
+def check_hp(pet, horse_lost):
+    hunger = pet['hunger'] - random.randint(2, 6)
+    maxhunger = pet['maxhunger']  # const
+    hp = pet['hp']
+    maxhp = pet['maxhp']  # const
 
-        if hunger <= 0:
-            hunger = 0
-            try:
-                bot.send_message(pet['id'], 'Ваша лошадь СИЛЬНО голодает! Осталось ' + str(
-                    hunger) + ' сытости! СРОЧНО нужен актив в чат!')
-            except:
-                pass
-            hp -= random.randint(9, 15)
+    if hunger <= 0:
+        hunger = 0
+        if not horse_lost:
+            send_message(pet['id'], 'Ваша лошадь СИЛЬНО голодает! Осталось ' + str(
+                hunger) + ' сытости! СРОЧНО нужен актив в чат!')
+        hp -= random.randint(9, 15)
 
-        elif hunger / maxhunger * 100 <= 30:
-            try:
-                bot.send_message(pet['id'], 'Ваша лошадь голодает! Осталось всего ' + str(
-                    hunger) + ' сытости! Срочно нужен актив в чат!')
-            except:
-                pass
-            hp -= random.randint(9, 15)
+    elif hunger / maxhunger * 100 <= 30:
+        if not horse_lost:
+            send_message(pet['id'], 'Ваша лошадь голодает! Осталось всего ' + str(
+                hunger) + ' сытости! Срочно нужен актив в чат!')
+        hp -= random.randint(9, 15)
 
-        elif hunger / maxhunger * 100 >= 75 and hp < maxhp:
-            hp += random.randint(3, 9)
-            if hp > maxhp:
-                hp = maxhp
+    elif hunger / maxhunger * 100 >= 75 and hp < maxhp:
+        hp += random.randint(3, 9)
+        if hp > maxhp:
+            hp = maxhp
 
-        commit = {'hunger': hunger, 'hp': hp}
-        chats.update_one({'id': pet['id']}, {'$set': commit})
+    commit = {'hunger': hunger, 'hp': hp}
+    chats.update_one({'id': pet['id']}, {'$set': commit})
 
-        if hp <= 0:
-            total = lost.find_one({})['amount']
-            total += 1
-            lost.update_one({}, {'$inc': {'amount': 1}})
-            chats.remove({'id': pet['id']})
+    if hp <= 0:
+        total = lost.find_one({})['amount']
+        total += 1
+        lost.update_one({'amount': {'$exists': True}}, {'$inc': {'amount': 1}})
+        chats.remove({'id': pet['id']})
+        if not horse_lost:
             try:
                 bot.send_message(pet['id'],
-                             'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n' +
-                             'Количество лошадей, которых мне пришлось забрать (во всех чатах): ' + str(total))
+                                 'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n' +
+                                 'Количество лошадей, которых мне пришлось забрать (во всех чатах): ' + str(total))
             except:
                 pass
+
+
+def check_all_pets_hunger():
+    for pet in chats.find({}):
+        check_hunger(pet, False)
+    for pet in lost.find({'id': {'$exists': True}}):
+        check_hunger(pet, True)
+    threading.Timer(60, check_all_pets_hunger).start()
+
+
+def check_all_pets_hp():
+    for pet in chats.find({}):
+        check_hp(pet, False)
+    for pet in lost.find({'id': {'$exists': True}}):
+        check_hp(pet, True)
+    threading.Timer(1800, check_all_pets_hp).start()
+
+
+def send_message(chat_id, text):  # использовать только чтобы проверить что лошадь все еще в чате
+    try:
+        bot.send_message(chat_id, text)
+    except:
+        lose_horse(chat_id)
+
+
+def lose_horse(chat_id):
+    pet = chats.find_one({'id': chat_id})
+    chats.remove({'id': chat_id})
+    lost.insert_one(pet)
+    horse_id = lost.count({'id': {'$exists': True}})
+    lost.update_one({'id': chat_id}, {'$set': {'id': horse_id}})
+
+
+def take_horse(horse_id, new_chat_id):
+    lost.update_one({'id': horse_id}, {'$set': {'id': new_chat_id}})
+    pet = lost.find_one({'id': new_chat_id})
+    lost.remove({'id': new_chat_id})
+    chats.insert_one(pet)
 
 
 def is_from_admin(m):
     return m.from_user.id == admin_id
 
 
-check1()
-check10()
+check_all_pets_hunger()
+check_all_pets_hp()
 
 print('7777')
 bot.polling(none_stop=True, timeout=600)
