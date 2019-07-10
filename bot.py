@@ -306,7 +306,7 @@ def check_hunger(pet, horse_lost):
 
 
 def check_hp(pet, horse_lost):
-    hunger = pet['hunger'] - random.randint(2, 6)
+    hunger = pet['hunger'] - random.randint(3, 9)
     maxhunger = pet['maxhunger']  # const
     hp = pet['hp']
     maxhp = pet['maxhp']  # const
