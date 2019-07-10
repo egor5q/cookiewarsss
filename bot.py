@@ -75,11 +75,14 @@ def info(m):
 def top(m):
     alls=[]
     i=1
+    hhh=[]
     hh=chats.find({})
+    for ids in hh:
+        hhh.append(ids)
     while i<=10:
         chat=None
         nextt=0
-        for ids in hh:
+        for ids in hhh:
             if ids['lvl']>=nextt and ids not in alls:
                 nextt=ids['lvl']
                 chat=ids
