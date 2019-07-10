@@ -16,7 +16,7 @@ chats = db.chats
 lost = db.lost
 
 ban = []
-totalban=[]
+totalban = []
 
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
@@ -73,23 +73,24 @@ def info(m):
 
 @bot.message_handler(commands=['top'])
 def top(m):
-    alls=[]
-    i=1
-    while i<=10:
-        chat=None
-        nextt=0
-        for ids in chats.find({}):
-            if ids['lvl']>=nextt and ids not in alls:
-                nextt=ids['lvl']
-                chat=ids
-        i+=1
-        if chat!=None:
+    alls = []
+    horses = chats.find({})
+    i = 1
+    while i <= 10:
+        chat = None
+        nextt = 0
+        for ids in horses:
+            if ids['lvl'] >= nextt and ids not in alls:
+                nextt = ids['lvl']
+                chat = ids
+        i += 1
+        if chat != None:
             alls.append(chat)
-    text='Топ-10 лошадей:\n\n'
-    i=1
+    text = 'Топ-10 лошадей:\n\n'
+    i = 1
     for ids in alls:
-        text+=str(i)+' место: '+ids['name']+' ('+str(ids['lvl'])+' лвл)\n'
-        i+=1
+        text += str(i) + ' место: ' + ids['name'] + ' (' + str(ids['lvl']) + ' лвл)\n'
+        i += 1
     bot.send_message(m.chat.id, text)
 
 
@@ -196,36 +197,37 @@ def throwh(m):
         bot.send_message(m.chat.id, 'Можно выгонять только одну лошадь в час!')
 
 
-        
 @bot.message_handler(commands=['ban'])
 def bannn(m):
-    if m.from_user.id==441399484:
+    if m.from_user.id == 441399484:
         try:
             totalban.append(int(m.text.split(' ')[1]))
             bot.send_message(m.chat.id, 'Success')
         except:
             pass
-        
-        
+
+
 @bot.message_handler(commands=['name'])
 def name(m):
     try:
-      if m.chat.id not in totalban:
-        user = bot.get_chat_member(m.chat.id, m.from_user.id)
-        if user.status == 'creator' or user.status == 'administrator' or is_from_admin(
-                m) or m.from_user.id == m.chat.id:
-            name = m.text.split('/name ')[1]
-            if chats.find_one({'id': m.chat.id}) is not None:
-                if len(name) <= 50:
-                    chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
-                    bot.send_message(441399484, str(m.chat.id)+' '+m.from_user.first_name+' (имя: '+name+')')
-                    bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
-                else:
-                    bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
+        if m.chat.id not in totalban:
+            user = bot.get_chat_member(m.chat.id, m.from_user.id)
+            if user.status == 'creator' or user.status == 'administrator' or is_from_admin(
+                    m) or m.from_user.id == m.chat.id:
+                name = m.text.split('/name ')[1]
+                if chats.find_one({'id': m.chat.id}) is not None:
+                    if len(name) <= 50:
+                        chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
+                        bot.send_message(441399484,
+                                         str(m.chat.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
+                        bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
+                    else:
+                        bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
+            else:
+                bot.send_message(m.chat.id, 'Только админ может делать это!')
         else:
-            bot.send_message(m.chat.id, 'Только админ может делать это!')
-      else:
-        bot.send_message(m.chat.id, 'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
+            bot.send_message(m.chat.id,
+                             'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
     except:
         pass
 
