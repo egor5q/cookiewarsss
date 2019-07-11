@@ -48,7 +48,7 @@ def idssssss(m):
 def removee(m):
     if is_from_admin(m):
         try:
-            lost.remove({'id': int(m.text.split(' ')[1])})
+            lost.delete_one({'id': int(m.text.split(' ')[1])})
             bot.send_message(m.chat.id, "success")
         except:
             pass
@@ -73,27 +73,25 @@ def info(m):
 
 @bot.message_handler(commands=['top'])
 def top(m):
-    alls=[]
-    i=1
-    hhh=[]
-    hh=chats.find({})
-    for ids in hh:
-        hhh.append(ids)
-    while i<=10:
-        chat=None
-        nextt=0
-        for ids in hhh:
-            if ids['lvl']>=nextt and ids not in alls:
-                nextt=ids['lvl']
-                chat=ids
-        i+=1
-        if chat!=None:
-            alls.append(chat)
-    text='Топ-10 лошадей:\n\n'
-    i=1
-    for ids in alls:
-        text+=str(i)+' место: '+ids['name']+' ('+str(ids['lvl'])+' лвл)\n'
-        i+=1
+    db_pets = chats.find({})
+    horses = []
+    for doc in db_pets:
+        horses.append(doc)
+
+    text = 'Топ-10 лошадей:\n\n'
+    for i in range(1, 11):
+        current_pet = None
+        current_lvl = 0
+        for pet in horses:
+            if pet['lvl'] >= current_lvl:
+                current_lvl = pet['lvl']
+                current_pet = pet
+
+        if current_pet is None:
+            break
+        horses.remove(current_pet)
+        text += str(i) + ' место: ' + current_pet['name'] + ' (' + str(current_pet['lvl']) + ' лвл)\n'
+
     bot.send_message(m.chat.id, text)
 
 
@@ -143,7 +141,7 @@ def petstats(m):
 def losthorses(m):
     text = 'Чтобы забрать лошадь, введите команду /takeh id\n\n'
     for pet in lost.find({'id': {'$exists': True}}):
-        text += str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ')' + '\n'
+        text += str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ' лвл)' + '\n'
     bot.send_message(m.chat.id, text)
 
 
@@ -212,27 +210,32 @@ def bannn(m):
 
 @bot.message_handler(commands=['name'])
 def name(m):
+    if m.chat.id in totalban:
+        bot.send_message(m.chat.id,
+                         'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
+        return
+
+    user = bot.get_chat_member(m.chat.id, m.from_user.id)
+    if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+            m) and m.from_user.id != m.chat.id:
+        bot.send_message(m.chat.id, 'Только админ может делать это!')
+        return
+
+    name = m.text.replace('/name ', '', 1)
+    if chats.find_one({'id': m.chat.id}) is None:
+        return
+
+    if len(name) > 50:
+        bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
+        return
+
+    chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
     try:
-        if m.chat.id not in totalban:
-            user = bot.get_chat_member(m.chat.id, m.from_user.id)
-            if user.status == 'creator' or user.status == 'administrator' or is_from_admin(
-                    m) or m.from_user.id == m.chat.id:
-                name = m.text.split('/name ')[1]
-                if chats.find_one({'id': m.chat.id}) is not None:
-                    if len(name) <= 50:
-                        chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
-                        bot.send_message(441399484,
-                                         str(m.chat.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
-                        bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
-                    else:
-                        bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
-            else:
-                bot.send_message(m.chat.id, 'Только админ может делать это!')
-        else:
-            bot.send_message(m.chat.id,
-                             'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
+        bot.send_message(admin_id,
+                         str(m.chat.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
     except:
         pass
+    bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
 
 
 @bot.message_handler(commands=['allinfo'])
@@ -240,6 +243,23 @@ def allinfo(m):
     if is_from_admin(m):
         text = str(chats.find_one({'id': m.chat.id}))
         bot.send_message(admin_id, text)
+
+
+@bot.message_handler(commands=['igogo'])
+def announce(m):
+    if not is_from_admin(m):
+        return
+    
+    text = m.text.replace('/igogo ', '', 1)
+    chats_ids = chats.find({})
+    i = 0
+    for doc in chats_ids:
+        try:
+            bot.send_message(doc['id'], text)
+            i += 1
+        except:
+            pass
+    bot.send_message(m.chat.id, "Сообщение успешно получило " + str(i) + " чатиков")
 
 
 @bot.message_handler(content_types=['text'])
@@ -337,7 +357,7 @@ def check_hp(pet, horse_lost):
         total += 1
         lost.update_one({'amount': {'$exists': True}}, {'$inc': {'amount': 1}})
         if not horse_lost:
-            chats.remove({'id': pet['id']})
+            chats.delete_one({'id': pet['id']})
             try:
                 bot.send_message(pet['id'],
                                  'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n' +
@@ -345,7 +365,7 @@ def check_hp(pet, horse_lost):
             except:
                 pass
         else:
-            lost.remove({'id': pet['id']})
+            lost.delete_one({'id': pet['id']})
 
     else:
         commit = {'hunger': hunger, 'hp': hp}
@@ -380,10 +400,10 @@ def send_message(chat_id, text):  # использовать только что
 
 def lose_horse(chat_id):  # returns True on success
     pet = chats.find_one({'id': chat_id})
-    chats.remove({'id': chat_id})
+    chats.delete_one({'id': chat_id})
 
     lost.insert_one(pet)
-    horse_id = lost.count({'id': {'$exists': True}})
+    horse_id = lost.count_documents({'id': {'$exists': True}})
     while lost.find_one({'id': horse_id}) is not None:
         horse_id += 1
     lost.update_one({'id': chat_id}, {'$set': {'id': horse_id}})
@@ -393,7 +413,7 @@ def lose_horse(chat_id):  # returns True on success
 def take_horse(horse_id, new_chat_id):
     lost.update_one({'id': horse_id}, {'$set': {'id': new_chat_id}})
     pet = lost.find_one({'id': new_chat_id})
-    lost.remove({'id': new_chat_id})
+    lost.delete_one({'id': new_chat_id})
     chats.insert_one(pet)
 
 
