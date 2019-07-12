@@ -103,6 +103,14 @@ def help(m):
     bot.send_message(m.chat.id, text)
 
 
+@bot.message_handler(func=lambda message: message.migrate_from_chat_id is not None, content_types=None)
+def migrate(m):
+    old_chat_id = m.migrate_from_chat_id
+    new_chat_id = m.chat.id
+    if chats.find_one({'id': old_chat_id}) is not None:
+        chats.update_one({'id': old_chat_id}, {'$set': {'id': new_chat_id}})
+
+
 @bot.message_handler(commands=['addexp'])
 def addexp(m):
     if is_from_admin(m):
@@ -249,7 +257,7 @@ def allinfo(m):
 def announce(m):
     if not is_from_admin(m):
         return
-    
+
     text = m.text.replace('/igogo ', '', 1)
     chats_ids = chats.find({})
     i = 0
