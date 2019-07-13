@@ -324,9 +324,13 @@ def check_hunger(pet, horse_lost):
             hunger = maxhunger
 
     # если лошадь накормлена на 85% и выше, прибавить опыта
-    if hunger / maxhunger * 100 >= 85:
+    h = hunger / maxhunger * 100
+    if h >= 85:
         exp += int(lvl * (2 + (random.randint(-100, 100) / 100)))
-
+    if h >= 90:
+        exp+=lvl
+    if h >= 99:
+        exp += lvl
     if exp >= nextlvl(pet):
         lvl += 1
         maxhunger += 15
