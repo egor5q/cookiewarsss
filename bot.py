@@ -147,7 +147,7 @@ def petstats(m):
 
 @bot.message_handler(commands=['losthorses'])
 def losthorses(m):
-    if lost.countDocuments({'id': {'$exists': True}}) == 0:
+    if lost.count_documents({'id': {'$exists': True}}) == 0:
         bot.send_message(m.chat.id, "На улице лошадей нет!")
         return
 
