@@ -147,6 +147,10 @@ def petstats(m):
 
 @bot.message_handler(commands=['losthorses'])
 def losthorses(m):
+    if lost.count_documents({'id': {'$exists': True}}) == 0:
+        bot.send_message(m.chat.id, "На улице лошадей нет!")
+        return
+
     text = 'Чтобы забрать лошадь, введите команду /takeh id\n\n'
     for pet in lost.find({'id': {'$exists': True}}):
         text += str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ' лвл)' + '\n'
