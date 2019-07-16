@@ -16,7 +16,7 @@ chats = db.chats
 lost = db.lost
 
 ban = []
-totalban = []
+totalban = [243153864]
 
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
@@ -222,7 +222,7 @@ def bannn(m):
 
 @bot.message_handler(commands=['name'])
 def name(m):
-    if m.chat.id in totalban:
+    if m.chat.id in totalban and m.from_user.id not in totalban:
         bot.send_message(m.chat.id,
                          'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
         return
@@ -233,18 +233,26 @@ def name(m):
         bot.send_message(m.chat.id, 'Только админ может делать это!')
         return
 
-    name = m.text.replace('/name ', '', 1)
+    name = m.text.split(' ')
+    n2=''
+    i=1
+    while i<len(name):
+        n2+=name[i]+' '
+        i+=1
+    name=n2
     if chats.find_one({'id': m.chat.id}) is None:
         return
 
     if len(name) > 50:
         bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
         return
-
+    if len(name) < 2:
+        bot.send_message(m.chat.id, "Минимальная длина имени - 2 символа!")
+        return
     chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
     try:
         bot.send_message(admin_id,
-                         str(m.chat.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
+                         str(m.from_user.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
     except:
         pass
     bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
