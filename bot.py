@@ -222,6 +222,7 @@ def bannn(m):
 
 @bot.message_handler(commands=['name'])
 def name(m):
+  try:
     if m.chat.id in totalban and m.from_user.id not in totalban:
         bot.send_message(m.chat.id,
                          'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
@@ -233,13 +234,8 @@ def name(m):
         bot.send_message(m.chat.id, 'Только админ может делать это!')
         return
 
-    name = m.text.split(' ')
-    n2=''
-    i=1
-    while i<len(name):
-        n2+=name[i]+' '
-        i+=1
-    name=n2
+    name = m.text.split('/name ')[1]
+
     if chats.find_one({'id': m.chat.id}) is None:
         return
 
@@ -256,7 +252,8 @@ def name(m):
     except:
         pass
     bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
-
+  except:
+    pass
 
 @bot.message_handler(commands=['allinfo'])
 def allinfo(m):
