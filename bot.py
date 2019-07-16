@@ -253,7 +253,7 @@ def name(m):
         pass
     bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
   except:
-    pass
+    bot.send_message(441399484, traceback.format_exc())
 
 @bot.message_handler(commands=['allinfo'])
 def allinfo(m):
