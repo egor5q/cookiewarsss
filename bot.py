@@ -141,7 +141,8 @@ def petstats(m):
     text += '🏅Уровень: ' + str(animal['lvl']) + '\n'
     text += '🔥Опыт: ' + str(animal['exp']) + '/' + str(nextlvl(animal)) + '\n'
     text += '♥Здоровье: ' + str(animal['hp']) + '/' + str(animal['maxhp']) + '\n'
-    text += '🍔Сытость: ' + str(animal['hunger']) + '/' + str(animal['maxhunger']) + '\n'
+    p=int(animal['hunger']/animal['maxhunger']*100)
+    text += '🍔Сытость: ' + str(animal['hunger']) + '/' + str(animal['maxhunger']) + '('+str(p)+'%)'+'\n'
     text += 'Нужно сытости для постоянного получения опыта: ' + str(int(animal['maxhunger'] * 0.85))
     bot.send_message(m.chat.id, text)
 
