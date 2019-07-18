@@ -116,7 +116,7 @@ def gladit(m):
   try:
     x=chats.find_one({'id':m.chat.id})
     if x!=None:
-        bot.send_message(m.chat.id, m.from_user.first_name+' погладил '+x['name']+'!')
+        bot.send_message(m.chat.id, m.from_user.first_name+' погладил(а) '+x['name']+'!')
   except:
     bot.send_message(441399484, traceback.format_exc())
 
