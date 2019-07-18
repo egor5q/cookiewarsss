@@ -55,8 +55,10 @@ def feeed(m):
         else:
             s=s2
         word=random.choice(s)
-        bot.send_message(m.chat.id, m.from_user.first_name+' достаёт из кармана '+word+' и кормит '+x['name']+'. Лошадь с аппетитом съедает это!') 
-
+        name=m.from_user.first_name
+        name=name.replace('*', '').replace('_', '').replace("`", "")
+        text=name+' достаёт из кармана *'+word+'* и кормит '+x['name']+'. Лошадь с аппетитом съедает это!'
+        bot.send_message(m.chat.id, text, parse_mode='markdown')
 
 @bot.message_handler(commands=['remove'])
 def removee(m):
