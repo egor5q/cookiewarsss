@@ -3,6 +3,7 @@ import os
 import random
 import threading
 import traceback
+import time
 
 import telebot
 from pymongo import MongoClient
@@ -26,39 +27,47 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-@bot.message_handler(commands=['growpet'])
+@bot.message_handler(commands=['growpet'], func=lambda message: is_actual(message))
 def grow(m):
     animal = chats.find_one({'id': m.chat.id})
-    if animal is None:
-        chats.insert_one(createpet(m.chat.id))
-        bot.send_message(m.chat.id,
-                         'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
+    if animal is not None:
+        bot.send_message(m.chat.id, 'У вас уже есть лошадь!')
+        return
+
+    chats.insert_one(createpet(m.chat.id))
+    bot.send_message(m.chat.id,
+                     'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
 @bot.message_handler(commands=['getids'])
 def idssssss(m):
-    if m.from_user.id == 441399484:
+    if is_from_admin(m):
         text = ''
         for h in lost.find({}):
             if 'id' in h:
                 text += str(h['id']) + ' ' + h['name'] + '\n'
         bot.send_message(m.chat.id, text)
 
+
 @bot.message_handler(commands=['feed'])
 def feeed(m):
-    x=chats.find_one({'id':m.chat.id})
-    if x!=None:
-        spisok=['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу']
-        s2=['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон']
-        if random.randint(1,100)<=90:
-            s=spisok
-        else:
-            s=s2
-        word=random.choice(s)
-        name=m.from_user.first_name
-        name=name.replace('*', '').replace('_', '').replace("`", "")
-        text=name+' достаёт из кармана *'+word+'* и кормит '+x['name']+'. Лошадь с аппетитом съедает это!'
-        bot.send_message(m.chat.id, text, parse_mode='markdown')
+    x = chats.find_one({'id': m.chat.id})
+    if x is None:
+        bot.send_message(m.chat.id, 'А гладить некого:(')
+        return
+
+    spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу']
+    s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон']
+    if random.randint(1, 100) <= 90:
+        s = spisok
+    else:
+        s = s2
+    word = random.choice(s)
+    name = m.from_user.first_name
+    name = name.replace('*', '').replace('_', '').replace("`", "")
+    text = name + ' достаёт из кармана *' + word + '* и кормит ' + x['name'] + '. Лошадь с аппетитом съедает это!'
+    bot.send_message(m.chat.id, text, parse_mode='markdown')
+
 
 @bot.message_handler(commands=['remove'])
 def removee(m):
@@ -70,7 +79,7 @@ def removee(m):
             pass
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start'], func=lambda message: is_actual(message))
 def startt(m):
     if m.from_user.id == m.chat.id:
         bot.send_message(m.chat.id, 'Здравствуй! /help для информации.')
@@ -87,7 +96,7 @@ def info(m):
     bot.send_message(m.chat.id, text)
 
 
-@bot.message_handler(commands=['top'])
+@bot.message_handler(commands=['top'], func=lambda message: is_actual(message))
 def top(m):
     db_pets = chats.find({})
     horses = []
@@ -111,11 +120,12 @@ def top(m):
     bot.send_message(m.chat.id, text)
 
 
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['help'], func=lambda message: is_actual(message))
 def help(m):
     text = ''
     text += 'Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
-    text += 'Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /name!'
+    text += 'Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /name\n'
+    text += 'Для получения опыта необходимо иметь 85% сытости. Для получения бонусного опыта - 98%'
     bot.send_message(m.chat.id, text)
 
 
@@ -126,14 +136,18 @@ def migrate(m):
     if chats.find_one({'id': old_chat_id}) is not None:
         chats.update_one({'id': old_chat_id}, {'$set': {'id': new_chat_id}})
 
+
 @bot.message_handler(commands=['pogladit'])
 def gladit(m):
-  try:
-    x=chats.find_one({'id':m.chat.id})
-    if x!=None:
-        bot.send_message(m.chat.id, m.from_user.first_name+' погладил(а) '+x['name']+'!')
-  except:
-    bot.send_message(441399484, traceback.format_exc())
+    try:
+        x = chats.find_one({'id': m.chat.id})
+        if x is not None:
+            bot.send_message(m.chat.id, m.from_user.first_name + ' погладил(а) ' + x['name'] + '!')
+        else:
+            bot.send_message(m.chat.id, 'А гладить некого!')
+    except:
+        bot.send_message(admin_id, traceback.format_exc())
+
 
 @bot.message_handler(commands=['addexp'])
 def addexp(m):
@@ -153,10 +167,11 @@ def addlvl(m):
             pass
 
 
-@bot.message_handler(commands=['petstats'])
+@bot.message_handler(commands=['petstats'], func=lambda message: is_actual(message))
 def petstats(m):
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
+        bot.send_message(m.chat.id, 'Сначала лошадь нужно завести (или подобрать с улицы)')
         return
 
     text = ''
@@ -164,13 +179,13 @@ def petstats(m):
     text += '🏅Уровень: ' + str(animal['lvl']) + '\n'
     text += '🔥Опыт: ' + str(animal['exp']) + '/' + str(nextlvl(animal)) + '\n'
     text += '♥Здоровье: ' + str(animal['hp']) + '/' + str(animal['maxhp']) + '\n'
-    p=int(animal['hunger']/animal['maxhunger']*100)
-    text += '🍔Сытость: ' + str(animal['hunger']) + '/' + str(animal['maxhunger']) + ' ('+str(p)+'%)'+'\n'
+    p = int(animal['hunger'] / animal['maxhunger'] * 100)
+    text += '🍔Сытость: ' + str(animal['hunger']) + '/' + str(animal['maxhunger']) + ' (' + str(p) + '%)' + '\n'
     text += 'Нужно сытости для постоянного получения опыта: ' + str(int(animal['maxhunger'] * 0.85))
     bot.send_message(m.chat.id, text)
 
 
-@bot.message_handler(commands=['losthorses'])
+@bot.message_handler(commands=['losthorses'], func=lambda message: is_actual(message))
 def losthorses(m):
     if lost.count_documents({'id': {'$exists': True}}) == 0:
         bot.send_message(m.chat.id, "На улице лошадей нет!")
@@ -182,7 +197,7 @@ def losthorses(m):
     bot.send_message(m.chat.id, text)
 
 
-@bot.message_handler(commands=['takeh'])
+@bot.message_handler(commands=['takeh'], func=lambda message: is_actual(message))
 def takeh(m):
     try:
         horse_id = int(m.text.split(' ')[1])
@@ -209,7 +224,7 @@ def unban(id):
         pass
 
 
-@bot.message_handler(commands=['throwh'])
+@bot.message_handler(commands=['throwh'], func=lambda message: is_actual(message))
 def throwh(m):
     if m.chat.id not in ban:
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
@@ -237,7 +252,7 @@ def throwh(m):
 
 @bot.message_handler(commands=['ban'])
 def bannn(m):
-    if m.from_user.id == 441399484:
+    if is_from_admin(m):
         try:
             totalban.append(int(m.text.split(' ')[1]))
             bot.send_message(m.chat.id, 'Success')
@@ -245,40 +260,41 @@ def bannn(m):
             pass
 
 
-@bot.message_handler(commands=['name'])
+@bot.message_handler(commands=['name'], func=lambda message: is_actual(message))
 def name(m):
-  try:
-    if m.chat.id in totalban and m.from_user.id not in totalban:
-        bot.send_message(m.chat.id,
-                         'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
-        return
-
-    user = bot.get_chat_member(m.chat.id, m.from_user.id)
-    if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
-            m) and m.from_user.id != m.chat.id:
-        bot.send_message(m.chat.id, 'Только админ может делать это!')
-        return
-
-    name = m.text.split('/name ')[1]
-
-    if chats.find_one({'id': m.chat.id}) is None:
-        return
-
-    if len(name) > 50:
-        bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
-        return
-    if len(name) < 2:
-        bot.send_message(m.chat.id, "Минимальная длина имени - 2 символа!")
-        return
-    chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
     try:
-        bot.send_message(admin_id,
-                         str(m.from_user.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
+        if m.chat.id in totalban and m.from_user.id not in totalban:
+            bot.send_message(m.chat.id,
+                             'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
+            return
+
+        user = bot.get_chat_member(m.chat.id, m.from_user.id)
+        if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+                m) and m.from_user.id != m.chat.id:
+            bot.send_message(m.chat.id, 'Только админ может делать это!')
+            return
+
+        name = m.text.split('/name ')[1]
+
+        if chats.find_one({'id': m.chat.id}) is None:
+            return
+
+        if len(name) > 50:
+            bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
+            return
+        if len(name) < 2:
+            bot.send_message(m.chat.id, "Минимальная длина имени - 2 символа!")
+            return
+        chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
+        try:
+            bot.send_message(admin_id,
+                             str(m.from_user.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
+        except:
+            pass
+        bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
     except:
-        pass
-    bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
-  except:
-    bot.send_message(441399484, traceback.format_exc())
+        bot.send_message(admin_id, traceback.format_exc())
+
 
 @bot.message_handler(commands=['allinfo'])
 def allinfo(m):
@@ -302,6 +318,10 @@ def announce(m):
         except:
             pass
     bot.send_message(m.chat.id, "Сообщение успешно получило " + str(i) + " чатиков")
+
+
+def is_actual(m):
+    return m.date + 120 > int(round(time.time()))
 
 
 @bot.message_handler(content_types=['text'])
@@ -358,7 +378,7 @@ def check_hunger(pet, horse_lost):
     if h >= 85:
         exp += int(lvl * (2 + (random.randint(-100, 100) / 100)))
     if h >= 90:
-        exp+=lvl
+        exp += lvl
     if h >= 99:
         exp += lvl
     if exp >= nextlvl(pet):
@@ -422,18 +442,18 @@ def check_hp(pet, horse_lost):
 
 
 def check_all_pets_hunger():
-    for pet in chats.find({}):
-        check_hunger(pet, False)
     for pet in lost.find({'id': {'$exists': True}}):
         check_hunger(pet, True)
+    for pet in chats.find({}):
+        check_hunger(pet, False)
     threading.Timer(60, check_all_pets_hunger).start()
 
 
 def check_all_pets_hp():
-    for pet in chats.find({}):
-        check_hp(pet, False)
     for pet in lost.find({'id': {'$exists': True}}):
         check_hp(pet, True)
+    for pet in chats.find({}):
+        check_hp(pet, False)
     threading.Timer(1800, check_all_pets_hp).start()
 
 
