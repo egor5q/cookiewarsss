@@ -44,6 +44,19 @@ def idssssss(m):
                 text += str(h['id']) + ' ' + h['name'] + '\n'
         bot.send_message(m.chat.id, text)
 
+@bot.message_handler(commands=['feed'])
+def feeed(m):
+    x=chats.find_one({'id':m.chat.id})
+    if x!=None:
+        spisok=['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу']
+        s2=['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон']
+        if random.randint(1,100)<=90:
+            s=spisok
+        else:
+            s=s2
+        word=random.choice(s)
+        bot.send_message(m.chat.id, m.from_user.first_name+' достаёт из кармана '+word+' и кормит '+x['name']+'. Лошадь с аппетитом съедает это!') 
+
 
 @bot.message_handler(commands=['remove'])
 def removee(m):
