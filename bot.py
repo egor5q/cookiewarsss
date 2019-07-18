@@ -113,10 +113,12 @@ def migrate(m):
 
 @bot.message_handler(commands=['pogladit'])
 def gladit(m):
+  try:
     x=chats.find_one({'id':m.chat.id})
     if x!=None:
         bot.send_message(m.chat.id, m.from_user.first_name+' погладил '+x['name']+'!')
-
+  except:
+    bot.send_message(441399484, traceback.format_exc())
 
 @bot.message_handler(commands=['addexp'])
 def addexp(m):
