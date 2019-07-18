@@ -111,6 +111,12 @@ def migrate(m):
     if chats.find_one({'id': old_chat_id}) is not None:
         chats.update_one({'id': old_chat_id}, {'$set': {'id': new_chat_id}})
 
+@bot.message_handler(commands=['pogladit'])
+def gladit(m):
+    x=chats.find_one({'id':m.chat.id})
+    if x!=None:
+        bot.send_message(m.chat.id, m.from_user.first_name+' погладил '+x['name']+'!')
+
 
 @bot.message_handler(commands=['addexp'])
 def addexp(m):
