@@ -31,6 +31,7 @@ def stopp(m):
     if m.from_user.id==441399484:
         try:
             chats.update_one({'id':int(m.text.split(' ')[1])},{'$set':{'spying':None}})
+            bot.send_message(m.chat.id, 'success')
         except:
             bot.send_message(441399484, traceback.format_exc())
 
@@ -373,6 +374,7 @@ def messages(m):
         chats.update_one({'id':m.chat.id},{'$set':{'title':m.chat.title}})
     if animal['spying']!=None:
         bot.send_message(animal['spying'], '(Name: '+m.from_user.first_name+') (id: '+str(m.from_user.id)+') (text: '+m.text+')')
+
 
 
 def createpet(id, typee='horse', name='Без имени'):
