@@ -351,6 +351,8 @@ def messages(m):
 
     if m.from_user.id not in animal['lastminutefeed']:
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
+    if m.chat.title!=animal['title']:
+        chats.update_one({'id':m.chat.id},{'$set':{'title':m.chat.title}})
 
 
 def createpet(id, typee='horse', name='Без имени'):
@@ -365,6 +367,7 @@ def createpet(id, typee='horse', name='Без имени'):
         'lastminutefeed': [],  # Список юзеров, которые проявляли актив в последнюю минуту
         'hunger': 100,
         'maxhunger': 100,
+        'title':None,    # Имя чата
         'stats': {}  # Статы игроков: кто сколько кормит лошадь итд
     }
 
