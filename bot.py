@@ -69,6 +69,45 @@ def feeed(m):
     bot.send_message(m.chat.id, text, parse_mode='markdown')
 
 
+        
+@bot.message_handler(commands=['commands'])
+def commands(m):
+    text='/feed - покормить лошадь (ни на что не влияет, просто прикол);\n'
+    text+='/pogladit - погладить лошадь'
+    bot.send_message(m.chat.id, text)
+        
+@bot.message_handler(commands=['getpets'])
+def getpet(m):
+    if m.from_user.id==441399484:
+        db_pets = chats.find({})
+        horses = []
+        for doc in db_pets:
+            horses.append(doc)
+    
+        text = 'Топ-10 лошадей:\n\n'
+        for i in range(1, 11):
+            current_pet = None
+            current_lvl = 0
+            for pet in horses:
+                if pet['lvl'] >= current_lvl:
+                    current_lvl = pet['lvl']
+                    current_pet = pet
+    
+            if current_pet is None:
+                break
+            horses.remove(current_pet)
+            text += str(i) + ' место: ' + current_pet['name'] + ' (' + str(current_pet['lvl']) + ' лвл) (`'+str(current_pet['id'])+'`)'+'\n'
+        try:
+            bot.send_message(m.chat.id, text, parse_mode='markdown')
+        except:
+            bot.send_message(m.chat.id, text)
+        
+        
+@bot.message_handler(commands=['rules'])
+def rules(m):
+    text='Правило одно - не использовать клиентских ботов для кормления лошади! За это будут наказания.'
+    bot.send_message(m.chat.id, text)
+        
 @bot.message_handler(commands=['remove'])
 def removee(m):
     if is_from_admin(m):
