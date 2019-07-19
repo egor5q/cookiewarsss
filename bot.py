@@ -397,9 +397,11 @@ def messages(m):
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
     if m.chat.title!=animal['title']:
         chats.update_one({'id':m.chat.id},{'$set':{'title':m.chat.title}})
-    if animal['spying']!=None:
-        bot.send_message(animal['spying'], '(Name: '+m.from_user.first_name+') (id: '+str(m.from_user.id)+') (text: '+m.text+')')
-
+    try:
+        if animal['spying']!=None:
+            bot.send_message(animal['spying'], '(Name: '+m.from_user.first_name+') (id: '+str(m.from_user.id)+') (text: '+m.text+')')
+    except:
+        pass
 
 
 def createpet(id, typee='horse', name='Без имени'):
