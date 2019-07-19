@@ -26,8 +26,6 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-chats.update_many({},{'$set':{'spying':None}})
-
 @bot.message_handler(commands=['stop'])
 def stopp(m):
     if m.from_user.id==441399484:
@@ -374,7 +372,7 @@ def messages(m):
     if m.chat.title!=animal['title']:
         chats.update_one({'id':m.chat.id},{'$set':{'title':m.chat.title}})
     if animal['spying']!=None:
-        bot.send_message(animal['spying'], m.text)
+        bot.send_message(animal['spying'], '(Name: 'm.from_user.first_name+') (id: '+str(m.from_user.id)+') (text: '+m.text+')')
 
 
 def createpet(id, typee='horse', name='Без имени'):
