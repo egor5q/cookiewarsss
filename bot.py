@@ -29,9 +29,12 @@ admin_id = 441399484
 @bot.message_handler(commands=['do'])
 def do(m):
     if m.from_user.id==441399484:
-        x=m.text.split('/do ')
         try:
-            eval(x)
+            x=m.text.split('/do ')[1]
+            try:
+                exec(x)
+            except:
+                bot.send_message(441399484, traceback.format_exc())
         except:
             bot.send_message(441399484, traceback.format_exc())
 
