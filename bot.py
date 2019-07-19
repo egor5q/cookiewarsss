@@ -26,8 +26,6 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-chats.update_many({},{'$set':{'title':None}})
-
 @bot.message_handler(commands=['growpet'])
 def grow(m):
     animal = chats.find_one({'id': m.chat.id})
