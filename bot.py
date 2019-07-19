@@ -31,7 +31,7 @@ def do(m):
     if m.from_user.id==441399484:
         x=m.text.split('/do ')
         try:
-            exec(x)
+            eval(x)
         except:
             bot.send_message(441399484, traceback.format_exc())
 
