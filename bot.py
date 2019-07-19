@@ -26,6 +26,18 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
+
+@bot.message_handler(commands=['showlvl'])
+def lvlvlvlvl(m):
+    if m.from_user.id==441399484:
+        try:
+            pet={'lvl':int(m.text.split(' ')[1])}
+            x=nextlvl(pet)
+            bot.send_message(m.chat.id, str(x))
+        except:
+            pass
+        
+
 @bot.message_handler(commands=['do'])
 def do(m):
     if m.from_user.id==441399484:
