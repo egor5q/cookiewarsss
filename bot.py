@@ -41,6 +41,7 @@ def showchat(m):
     if m.from_user.id==441399484:
         try:
             chats.update_one({'id':int(m.text.split(' ')[1])},{'$set':{'spying':m.chat.id}})
+            bot.send_message(m.chat.id, 'success')
         except:
             bot.send_message(441399484, traceback.format_exc())
 
