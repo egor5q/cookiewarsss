@@ -26,6 +26,15 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
+@bot.message_handler(commands=['do'])
+def do(m):
+    if m.from_user.id==441399484:
+        x=m.text.split('/do ')
+        try:
+            exec(x)
+        except:
+            bot.send_message(441399484, traceback.format_exc())
+
 @bot.message_handler(commands=['stop'])
 def stopp(m):
     if m.from_user.id==441399484:
