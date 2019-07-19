@@ -26,6 +26,26 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
+chats.update_many({},{'$set':{'spying':None}})
+
+@bot.message_handler(commands=['stop'])
+def stopp(m):
+    if m.from_user.id==441399484:
+        try:
+            chats.update_one({'id':int(m.text.split(' ')[1])},{'$set':{'spying':None}})
+        except:
+            bot.send_message(441399484, traceback.format_exc())
+
+
+@bot.message_handler(commands=['showchat'])
+def showchat(m):
+    if m.from_user.id==441399484:
+        try:
+            chats.update_one({'id':int(m.text.split(' ')[1])},{'$set':{'spying':m.chat.id}})
+        except:
+            bot.send_message(441399484, traceback.format_exc())
+
+
 @bot.message_handler(commands=['growpet'])
 def grow(m):
     animal = chats.find_one({'id': m.chat.id})
@@ -353,6 +373,8 @@ def messages(m):
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
     if m.chat.title!=animal['title']:
         chats.update_one({'id':m.chat.id},{'$set':{'title':m.chat.title}})
+    if animal['spying']!=None:
+        bot.send_message(animal['spying'], m.text)
 
 
 def createpet(id, typee='horse', name='Без имени'):
