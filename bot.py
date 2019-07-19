@@ -58,7 +58,7 @@ def do(m):
         try:
             x=m.text.split('/do ')[1]
             try:
-                exec(x)
+                eval(x)
             except:
                 bot.send_message(441399484, traceback.format_exc())
         except:
@@ -154,7 +154,7 @@ def getpet(m):
         
 @bot.message_handler(commands=['rules'])
 def rules(m):
-    text='Правило одно - не использовать клиентских ботов для кормления лошади! За это будут наказания.'
+    text='1. Не использовать клиентских ботов для кормления лошади! За это будут наказания.\n2. Не давать рекламу в списке выброшенных лошадей.'
     bot.send_message(m.chat.id, text)
         
 @bot.message_handler(commands=['remove'])
