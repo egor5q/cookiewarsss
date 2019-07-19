@@ -27,6 +27,20 @@ admin_id = 441399484
 
 
 
+@bot.message_handler(commands=['send'])
+def sendd(m):
+    if m.from_user.id==441399484:
+        try:
+            text=''
+            i=2
+            a=m.text.split(' ')
+            while i<len(a):
+                text+=a[i]+' '
+                i+=1
+            bot.send_message(m.text.split(' ')[1], text)
+        except:
+            pass
+
 @bot.message_handler(commands=['showlvl'])
 def lvlvlvlvl(m):
     if m.from_user.id==441399484:
