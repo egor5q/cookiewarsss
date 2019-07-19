@@ -390,7 +390,8 @@ def createpet(id, typee='horse', name='Без имени'):
         'hunger': 100,
         'maxhunger': 100,
         'title':None,    # Имя чата
-        'stats': {}  # Статы игроков: кто сколько кормит лошадь итд
+        'stats': {},  # Статы игроков: кто сколько кормит лошадь итд
+        'spying':None
     }
 
 
