@@ -395,6 +395,10 @@ def announce(m):
     bot.send_message(m.chat.id, "Сообщение успешно получило " + str(i) + '/' + str(chats.count_documents()) + " чатиков")
 
 
+@bot.message_handler(func=lambda message: not is_actual(message))
+def skip_message(m):
+    print('old message skipped')
+
 def is_actual(m):
     return m.date + 120 > int(round(time.time()))
 
