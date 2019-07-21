@@ -19,6 +19,8 @@ lost = db.lost
 
 ban = []
 totalban = [243153864]
+block=[-1001365421933]
+
 
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
@@ -405,6 +407,7 @@ def is_actual(m):
 
 @bot.message_handler(content_types=['text'])
 def messages(m):
+  if m.chat.id not in block:
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
