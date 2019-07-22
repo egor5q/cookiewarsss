@@ -16,6 +16,7 @@ db = client.chatpets
 users = db.users
 chats = db.chats
 lost = db.lost
+chat_admins=db.chat_admins
 
 ban = []
 totalban = [243153864, 866706209]
@@ -100,6 +101,50 @@ def grow(m):
                      'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
+    
+@bot.message_handler(commands=['set_admin'])
+def set_admin(m):
+    user = bot.get_chat_member(m.chat.id, m.from_user.id)
+    if user.status == 'creator':
+        if m.reply_to_message!=None:
+            chatt=chat_admins.find_one({'id':m.chat.id})
+            if chatt==None:
+                chat_admins.insert_one(createchatadmins(m))
+                chatt=chat_admins.find_one({'id':m.chat.id})
+            if int(m.reply_to_message.from_user.id) not in chatt['admins']:
+                chat_admins.update_one({'id':m.chat.id},{'$push':{'admins':int(m.reply_to_message.from_user.id)}})
+                bot.send_message(m.chat.id, 'Успешно установлен админ лошади: '+m.reply_to_message.from_user.first_name)
+            else:
+                bot.send_message(m.chat.id, 'Этот юзер уже является администратором лошади!')
+        else:
+            bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+                    
+    
+@bot.message_handler(commands=['remove_admin'])
+def remove_admin(m):
+    user = bot.get_chat_member(m.chat.id, m.from_user.id)
+    if user.status == 'creator':
+        if m.reply_to_message!=None:
+            chatt=chat_admins.find_one({'id':m.chat.id})
+            if chatt==None:
+                chat_admins.insert_one(createchatadmins(m))
+                chatt=chat_admins.find_one({'id':m.chat.id})
+            if int(m.reply_to_message.from_user.id) in chatt['admins']:
+                chat_admins.update_one({'id':m.chat.id},{'$pull':{'admins':int(m.reply_to_message.from_user.id)}})
+                bot.send_message(m.chat.id, 'Успешно удалён админ лошади: '+m.reply_to_message.from_user.first_name+'.')
+            else:
+                bot.send_message(m.chat.id, 'Этот юзер не является администратором лошади!')
+        else:
+            bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+    
+    
+    
+def createchatadmins(m):
+    return {
+        'id':m.chat.id, 
+        'admins':[]
+    }
+    
 @bot.message_handler(commands=['getids'])
 def idssssss(m):
     if is_from_admin(m):
