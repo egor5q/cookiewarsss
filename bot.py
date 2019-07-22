@@ -451,7 +451,7 @@ def announce(m):
             i += 1
         except:
             pass
-    bot.send_message(m.chat.id, "Сообщение успешно получило " + str(i) + '/' + str(chats.count_documents()) + " чатиков")
+    bot.send_message(m.chat.id, 'success')#"Сообщение успешно получило " + str(i) + '/' + str(chats.count_documents()) + " чатиков")
 
 
 @bot.message_handler(func=lambda message: not is_actual(message))
