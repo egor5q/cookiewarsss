@@ -118,6 +118,8 @@ def set_admin(m):
                 bot.send_message(m.chat.id, 'Этот юзер уже является администратором лошади!')
         else:
             bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+    else:
+        bot.send_message(m.chat.id, 'Только создатель чата может делать это!')
                     
     
 @bot.message_handler(commands=['remove_admin'])
@@ -136,6 +138,8 @@ def remove_admin(m):
                 bot.send_message(m.chat.id, 'Этот юзер не является администратором лошади!')
         else:
             bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+    else:
+        bot.send_message(m.chat.id, 'Только создатель чата может делать это!')
     
     
     
