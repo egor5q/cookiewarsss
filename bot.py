@@ -19,7 +19,7 @@ lost = db.lost
 chat_admins=db.chat_admins
 
 ban = []
-totalban = [243153864, 866706209]
+totalban = [243153864, 866706209, 500238135]
 block=[-1001365421933]
 
 
