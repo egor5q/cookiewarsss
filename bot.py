@@ -181,7 +181,9 @@ def feeed(m):
 @bot.message_handler(commands=['commands'])
 def commands(m):
     text = '/feed - покормить лошадь (ни на что не влияет, просто прикол);\n'
-    text += '/pogladit - погладить лошадь'
+    text += '/pogladit - погладить лошадь\n'
+    text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять лошадь из чата\n'
+    text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять лошадь (только если ранее ему было это разрешено).\n'
     bot.send_message(m.chat.id, text)
 
 
