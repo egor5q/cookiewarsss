@@ -56,6 +56,13 @@ def lvlvlvlvl(m):
         except:
             pass
 
+        
+@bot.message_handler(commands=['donate'])
+def donate(m):
+    text='Для совершения добровольного пожертвования можно использовать Сбербанк.'+\
+    'Номер карты: `5336 6900 5562 4037`\nЗаранее благодарю!'
+    bot.send_message(m.chat.id, text, parse_mode='markdown')
+        
 
 @bot.message_handler(commands=['do'])
 def do(m):
