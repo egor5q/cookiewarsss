@@ -317,7 +317,7 @@ def addlvl(m):
 def addlvl(m):
     if is_from_admin(m):
         try:
-            chats.update_one({'id': m.chat.id}, {'$set': {'hunger': int(m.text.split(' ')[1]}})
+            chats.update_one({'id': m.chat.id}, {'$set': {'hunger': int(m.text.split(' ')[1])}})
         except:
             pass
 
