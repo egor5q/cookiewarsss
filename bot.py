@@ -300,7 +300,7 @@ def addexp(m):
 def addexp(m):
     if is_from_admin(m):
         try:
-            chats.update_one({'id': m.chat.id}, {'$inc': {'maxhunger': int(m.text.split(' ')[1])}})
+            chats.update_one({'id': m.chat.id}, {'$inc': {'maxhunger': int(m.text.split(' ')[1]), 'hunger':int(m.text.split(' ')[1])}})
         except:
             pass
 
@@ -309,6 +309,15 @@ def addlvl(m):
     if is_from_admin(m):
         try:
             chats.update_one({'id': m.chat.id}, {'$inc': {'lvl': int(m.text.split(' ')[1])}})
+        except:
+            pass
+
+
+@bot.message_handler(commands=['reboot'])
+def addlvl(m):
+    if is_from_admin(m):
+        try:
+            chats.update_one({'id': m.chat.id}, {'$set': {'hunger': int(m.text.split(' ')[1]}})
         except:
             pass
 
