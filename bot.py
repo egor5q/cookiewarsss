@@ -619,7 +619,9 @@ def send_message(chat_id, text):  # использовать только что
     try:
         bot.send_message(chat_id, text)
     except:
-        lose_horse(chat_id)
+        h=chats.find_one({'id':chat_id})
+        if h['hunger']/h['maxhunger']*100<=30:
+            lose_horse(chat_id)
 
 
 def lose_horse(chat_id):  # returns True on success
