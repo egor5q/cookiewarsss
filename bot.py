@@ -50,7 +50,7 @@ chats.update_many({},{'$set':{'send_lvlup':True}})
 def switch_lvlup(m):
     chat=chats.find_one({'id':m.chat.id})
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
-    if user.status == 'creator' or user.status=='administrator':
+    if user.status == 'creator' or user.status=='administrator' or m.from_user.id==m.chat.id:
         if chat['send_lvlup']==True:
             chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':False}})
             bot.send_message(m.chat.id, 'Теперь лошадь *НЕ* будет присылать вам уведомления о повышении уровня!', parse_mode='markdown')
