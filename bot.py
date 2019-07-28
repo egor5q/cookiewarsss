@@ -44,6 +44,22 @@ def sendd(m):
             bot.send_message(m.text.split(' ')[1], text)
         except:
             pass
+chats.update_many({},{'$set':{'send_lvlup':True}})  
+
+@bot.message_handler(commands=['switch_lvlup'])
+def switch_lvlup(m):
+    chat=chats.find_one({'id':m.chat.id})
+    user = bot.get_chat_member(m.chat.id, m.from_user.id)
+    if user.status == 'creator' or user.status=='administrator':
+        if chat['send_lvlup']==True:
+            chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':False}})
+            bot.send_message(m.chat.id, 'Теперь лошадь *НЕ* будет присылать вам уведомления о повышении уровня!', parse_mode='markdown')
+        else:
+            chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':True}})
+            bot.send_message(m.chat.id, 'Теперь лошадь будет присылать вам уведомления о повышении уровня!')
+    else:
+        bot.send_message(m.chat.id, 'Только администраторы чата могут делать это!')
+
 
 
 @bot.message_handler(commands=['showlvl'])
@@ -175,7 +191,7 @@ def feeed(m):
 
     spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
     s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон', 'лошадь', 'автобус', 'компухтер', 'карман']
-    if random.randint(1, 100) <= 90:
+    if random.randint(1, 100) <= 80:
         s = spisok
     else:
         s = s2
@@ -522,7 +538,8 @@ def createpet(id, typee='horse', name='Без имени'):
         'maxhunger': 100,
         'title': None,  # Имя чата
         'stats': {},  # Статы игроков: кто сколько кормит лошадь итд
-        'spying': None
+        'spying': None,
+        'send_lvlup':True
     }
 
 
@@ -561,7 +578,7 @@ def check_hunger(pet, horse_lost):
         lvl += 1
         maxhunger += 15
         if not horse_lost:
-            send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!')
+            send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!', act='lvlup')
 
     commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
     if not horse_lost:
@@ -633,11 +650,15 @@ def check_all_pets_hp():
     threading.Timer(1800, check_all_pets_hp).start()
 
 
-def send_message(chat_id, text):  # использовать только чтобы проверить что лошадь все еще в чате
+def send_message(chat_id, text, act=None):  # использовать только чтобы проверить что лошадь все еще в чате
+    h=chats.find_one({'id':chat_id})
     try:
-        bot.send_message(chat_id, text)
+        if act==None:
+            bot.send_message(chat_id, text)
+        else:
+            if h['send_lvlup']==True:
+                bot.send_message(chat_id, text)
     except:
-        h=chats.find_one({'id':chat_id})
         if h['hunger']/h['maxhunger']*100<=30:
             lose_horse(chat_id)
 
