@@ -48,6 +48,7 @@ chats.update_many({},{'$set':{'send_lvlup':True}})
 
 @bot.message_handler(commands=['switch_lvlup'])
 def switch_lvlup(m):
+  try:
     chat=chats.find_one({'id':m.chat.id})
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status == 'creator' or user.status=='administrator' or m.from_user.id==m.chat.id:
@@ -60,7 +61,8 @@ def switch_lvlup(m):
     else:
         bot.send_message(m.chat.id, 'Только администраторы чата могут делать это!')
 
-
+  except:
+    pass
 
 @bot.message_handler(commands=['showlvl'])
 def lvlvlvlvl(m):
