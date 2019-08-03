@@ -44,7 +44,6 @@ def sendd(m):
             bot.send_message(m.text.split(' ')[1], text)
         except:
             pass
-chats.update_many({},{'$set':{'send_lvlup':True}})  
 
 @bot.message_handler(commands=['switch_lvlup'])
 def switch_lvlup(m):
