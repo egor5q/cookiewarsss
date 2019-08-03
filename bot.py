@@ -186,27 +186,29 @@ def idssssss(m):
 
 @bot.message_handler(commands=['feed'])
 def feeed(m):
-    x = chats.find_one({'id': m.chat.id})
-    if x is None:
-        bot.send_message(m.chat.id, 'А гладить некого:(')
-        return
-
-    spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
-    s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон', 'лошадь', 'автобус', 'компухтер', 'карман']
-    if random.randint(1, 100) <= 80:
-        s = spisok
-    else:
-        s = s2
-    word = random.choice(s)
-    name = m.from_user.first_name
-    name = name.replace('*', '').replace('_', '').replace("`", "")
-    name2=x['name'].replace('*', '').replace('_', '').replace("`", "")
-    text = name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. Лошадь с аппетитом съедает это!'
-    bot.send_message(m.chat.id, text, parse_mode='markdown')
+    if m.text.lower()=='/feed' or m.text.lower()=='/feed@chatpetsbot':
+        x = chats.find_one({'id': m.chat.id})
+        if x is None:
+            bot.send_message(m.chat.id, 'А гладить некого:(')
+            return
+    
+        spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
+        s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон', 'лошадь', 'автобус', 'компухтер', 'карман']
+        if random.randint(1, 100) <= 80:
+            s = spisok
+        else:
+            s = s2
+        word = random.choice(s)
+        name = m.from_user.first_name
+        name = name.replace('*', '').replace('_', '').replace("`", "")
+        name2=x['name'].replace('*', '').replace('_', '').replace("`", "")
+        text = name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. Лошадь с аппетитом съедает это!'
+        bot.send_message(m.chat.id, text, parse_mode='markdown')
 
 
 @bot.message_handler(commands=['commands'])
 def commands(m):
+  if m.text.lower()=='/commands' or m.text.lower()=='/commands@chatpetsbot':
     text = '/feed - покормить лошадь (ни на что не влияет, просто прикол);\n'
     text += '/pogladit - погладить лошадь\n'
     text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять лошадь из чата\n'
@@ -232,6 +234,7 @@ def getpet(m):
 
 @bot.message_handler(commands=['rules'])
 def rules(m):
+  if m.text.lower()=='/rules' or m.text.lower()=='/rules@chatpetsbot':
     text = '1. Не использовать клиентских ботов для кормления лошади! За это будут наказания.\n2. Не давать рекламу в списке выброшенных лошадей.'
     bot.send_message(m.chat.id, text)
 
@@ -265,6 +268,7 @@ def info(m):
 
 @bot.message_handler(commands=['top'], func=lambda message: is_actual(message))
 def top(m):
+  if m.text.lower()=='/top' or m.text.lower()=='/top@chatpetsbot':
     db_pets = chats.find().sort('lvl', -1).limit(10)
     text = 'Топ-10 лошадей:\n\n'
     i = 1
@@ -277,6 +281,7 @@ def top(m):
 
 @bot.message_handler(commands=['help'], func=lambda message: is_actual(message))
 def help(m):
+  if m.text.lower()=='/help' or m.text.lower()=='/help@chatpetsbot':
     text = ''
     text += 'Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
     text += 'Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /name\n'
@@ -399,6 +404,7 @@ def unban(id):
 
 @bot.message_handler(commands=['throwh'], func=lambda message: is_actual(message))
 def throwh(m):
+  if m.text.lower()=='/throwh' or m.text.lower()=='/throwh@chatpetsbot':
     if m.chat.id not in ban:
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
         ch=chat_admins.find_one({'id':m.chat.id})
@@ -472,7 +478,7 @@ def name(m):
             pass
         bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
     except:
-        bot.send_message(admin_id, traceback.format_exc())
+        pass
 
 
 @bot.message_handler(commands=['allinfo'])
