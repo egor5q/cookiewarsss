@@ -19,8 +19,10 @@ chats = db.chats
 lost = db.lost
 chat_admins=db.chat_admins
 
-ban = []
-totalban = [243153864, 866706209, 500238135]
+ban = [243153864, 866706209,  500238135, ]
+totalban = [243153864, 866706209, 500238135, 598442962,765420407, 
+ 786508668, 633357981,   521075049,  788297567, 709394939, 
+   638625062,  872696708,941085059,  958911815  ] 
 block=[-1001365421933]
 
 
@@ -447,7 +449,7 @@ def bannn(m):
 @bot.message_handler(commands=['name'], func=lambda message: is_actual(message))
 def name(m):
     try:
-        if m.chat.id in totalban and m.from_user.id not in totalban:
+        if m.chat.id in totalban or m.from_user.id in totalban:
             bot.send_message(m.chat.id,
                              'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
             return
