@@ -37,7 +37,7 @@ admin_id = 441399484
 
 #globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
 
-users.update_many({},{'$set':{'now_elite':False}})
+#users.update_many({},{'$set':{'now_elite':False}})
 @bot.message_handler(commands=['send'])
 def sendd(m):
     if is_from_admin(m):
@@ -701,7 +701,7 @@ def change_pet(pet):
     
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
-    if m.from_user.id==441399484:
+    if m.from_user.id=='aab':
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
@@ -722,6 +722,12 @@ def new_season(m):
                 pass
         chats.remove({})
     
+
+@bot.message_handler(commands=['refresh_lvl'])
+def rrrlll(m):
+    if m.from_user.id==441399484:
+        chats.update_many({},{'$set':{'lvl':1, 'hunger':100, 'maxhunger':100, 'exp':0}})
+
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.chat.id not in block:
