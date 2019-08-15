@@ -568,7 +568,8 @@ def use_dice(m):
         globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':-1}})
         globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':tt}})
         bot.send_message(m.chat.id, 'Кручу-верчу, питомца выбрать хочу...\n...\n...\n...\n...\n...\nПоздравляю! Вам достался питомец "*'+pettype(tt)+'*"!', parse_mode='markdown')
-        
+    else:
+        bot.send_message(m.chat.id, 'У вас нет кубов! Зарабатывайте достижения для их получения!')
     
     
 @bot.message_handler(commands=['chat_stats'])
@@ -584,10 +585,15 @@ def chatstats(m):
         else:
             pts+=pettype(ids)+';*'
         i+=1
+    lastpets=''
+    for ids in x['saved_pets']:
+        hr=x['saved_pets'][ids]
+        lastpets+=typetoemoji(hr['type'])+hr['name']': '+str(hr['lvl'])+'\n'
     text=''
+    text+='Питомцы из прошлых сезонов: '+lastpets+'\n'
     text+='🎖Максимальный уровень лошади в этом чате: '+str(x['max_lvl'])+';\n'
     text+='🌏Доступные типы питомцев: *'+pts+'\n'
-    text+='🎲Количество попыток для увеличения доступных типов: '+str(x['pet_access'])+' (использовать: /use_dice).'
+    text+='🎲Количество попыток для увеличения доступных типов (кубы): '+str(x['pet_access'])+' (использовать: /use_dice).'
     bot.send_message(m.chat.id, text)
     
 
