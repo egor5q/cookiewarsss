@@ -568,7 +568,8 @@ def use_dice(m):
             return
         tt=random.choice(alltypes)
         globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':-1}})
-        globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':tt}})
+        if tt not in chat['avalaible_pets']:
+            globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':tt}})
         bot.send_message(m.chat.id, 'Кручу-верчу, питомца выбрать хочу...\n...\n...\n...\n...\n...\nПоздравляю! Вам достался питомец "*'+pettype(tt)+'*"!', parse_mode='markdown')
     else:
         bot.send_message(m.chat.id, 'У вас нет кубов! Зарабатывайте достижения для их получения!')
