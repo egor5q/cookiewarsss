@@ -588,7 +588,7 @@ def chatstats(m):
     lastpets=''
     for ids in x['saved_pets']:
         hr=x['saved_pets'][ids]
-        lastpets+=typetoemoji(hr['type'])+hr['name']': '+str(hr['lvl'])+'\n'
+        lastpets+=typetoemoji(hr['type'])+hr['name']+': '+str(hr['lvl'])+'\n'
     text=''
     text+='Питомцы из прошлых сезонов: '+lastpets+'\n'
     text+='🎖Максимальный уровень лошади в этом чате: '+str(x['max_lvl'])+';\n'
