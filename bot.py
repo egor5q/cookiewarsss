@@ -273,7 +273,8 @@ def commands(m):
     text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять питомца из чата\n'
     text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять питомца (только если ранее ему было это разрешено);\n'
     text+='/achievement_list - список ачивок, за которые можно получить кубы;\n'
-    text+='/use_dice - попытка на получение нового типа питомцев.'
+    text+='/use_dice - попытка на получение нового типа питомцев;\n'
+    text+='/select_pet pet - выбор типа питомца.'
     bot.send_message(m.chat.id, text)
 
 
@@ -662,7 +663,7 @@ def selectpett(m):
                 else:
                     bot.send_message(m.chat.id, 'Вам сейчас не доступен этот тип питомцев (или его просто не существует)!')
     else:
-        bot.send_message(m.chat.id, 'Ошибка! Используйте формат\n/select_pet *pet*\nГде *pet* - доступный вам тип питомцев (посмотреть их можно в /chat_stats).', parse_mode='markdown')
+        bot.send_message(m.chat.id, 'Ошибка! Используйте формат\n/select_pet pet\nГде pet - доступный вам тип питомцев (посмотреть их можно в /chat_stats).')
     
 
 def change_pet(pet):
