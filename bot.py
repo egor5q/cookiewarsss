@@ -727,7 +727,8 @@ def new_season(m):
 @bot.message_handler(commands=['refresh_lvl'])
 def rrrlll(m):
     if m.from_user.id==441399484:
-        chats.update_many({},{'$set':{'lvl':1, 'hunger':100, 'maxhunger':100, 'exp':0}})
+        
+        globalchats.update_many({},{'$set':{'avalaible_pets':['horse'], 'pet_access':2, 'achievements':[]}})
 
 
 @bot.message_handler(content_types=['text'])
