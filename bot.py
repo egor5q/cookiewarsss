@@ -17,6 +17,7 @@ client = MongoClient(os.environ['database'])
 db = client.chatpets
 users = db.users
 chats = db.chats
+globalchats = db.globalchats
 lost = db.lost
 chat_admins=db.chat_admins
 
@@ -56,10 +57,10 @@ def switch_lvlup(m):
     if user.status == 'creator' or user.status=='administrator' or m.from_user.id==m.chat.id:
         if chat['send_lvlup']==True:
             chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':False}})
-            bot.send_message(m.chat.id, 'Теперь лошадь *НЕ* будет присылать вам уведомления о повышении уровня!', parse_mode='markdown')
+            bot.send_message(m.chat.id, 'Теперь питомец *НЕ* будет присылать вам уведомления о повышении уровня!', parse_mode='markdown')
         else:
             chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':True}})
-            bot.send_message(m.chat.id, 'Теперь лошадь будет присылать вам уведомления о повышении уровня!')
+            bot.send_message(m.chat.id, 'Теперь питомец будет присылать вам уведомления о повышении уровня!')
     else:
         bot.send_message(m.chat.id, 'Только администраторы чата могут делать это!')
 
@@ -126,7 +127,7 @@ def grow(m):
 
     chats.insert_one(createpet(m.chat.id))
     bot.send_message(m.chat.id,
-                     'Поздравляю! Вы завели лошадь! О том, как за ней ухаживать, можно прочитать в /help.')
+                     'Поздравляю! Вы завели питомца (лошадь)! О том, как за ней ухаживать, можно прочитать в /help.')
 
 
     
@@ -161,9 +162,9 @@ def remove_admin(m):
                 chatt=chat_admins.find_one({'id':m.chat.id})
             if int(m.reply_to_message.from_user.id) in chatt['admins']:
                 chat_admins.update_one({'id':m.chat.id},{'$pull':{'admins':int(m.reply_to_message.from_user.id)}})
-                bot.send_message(m.chat.id, 'Успешно удалён админ лошади: '+m.reply_to_message.from_user.first_name+'.')
+                bot.send_message(m.chat.id, 'Успешно удалён админ питомца: '+m.reply_to_message.from_user.first_name+'.')
             else:
-                bot.send_message(m.chat.id, 'Этот юзер не является администратором лошади!')
+                bot.send_message(m.chat.id, 'Этот юзер не является администратором питомца!')
         else:
             bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
     else:
@@ -193,9 +194,14 @@ def feeed(m):
         if x is None:
             bot.send_message(m.chat.id, 'А гладить некого:(')
             return
-    
-        spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
-        s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон', 'лошадь', 'автобус', 'компухтер', 'карман']
+        if x['type']=='horse':
+            spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
+            s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон', 'лошадь', 'автобус', 'компухтер', 'карман']
+            petname='Лошадь'
+        if x['type']=='cat':
+            spisok=['рыбу', 'мышь', 'кошачий корм']
+            s2=['миску', 'одеяло']
+            petname='Кот'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -204,17 +210,17 @@ def feeed(m):
         name = m.from_user.first_name
         name = name.replace('*', '').replace('_', '').replace("`", "")
         name2=x['name'].replace('*', '').replace('_', '').replace("`", "")
-        text = name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. Лошадь с аппетитом съедает это!'
+        text = name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. '+petname+' с аппетитом съедает это!'
         bot.send_message(m.chat.id, text, parse_mode='markdown')
 
 
 @bot.message_handler(commands=['commands'])
 def commands(m):
   if m.text.lower()=='/commands' or m.text.lower()=='/commands@chatpetsbot':
-    text = '/feed - покормить лошадь (ни на что не влияет, просто прикол);\n'
-    text += '/pogladit - погладить лошадь\n'
-    text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять лошадь из чата\n'
-    text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять лошадь (только если ранее ему было это разрешено).\n'
+    text = '/feed - покормить питомца (ни на что не влияет, просто прикол);\n'
+    text += '/pogladit - погладить питомца\n'
+    text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять питомца из чата\n'
+    text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять питомца (только если ранее ему было это разрешено).\n'
     bot.send_message(m.chat.id, text)
 
 
@@ -222,7 +228,7 @@ def commands(m):
 def getpet(m):
     if is_from_admin(m):
         db_pets = chats.find().sort('lvl', -1).limit(10)
-        text = 'Топ-10 лошадей:\n\n'
+        text = 'Топ-10 питомцев:\n\n'
         i = 1
         for doc in db_pets:
             text += str(i) + ' место: ' + doc['name'] + ' (' + str(doc['lvl']) + ' лвл) (`' + str(
@@ -237,7 +243,7 @@ def getpet(m):
 @bot.message_handler(commands=['rules'])
 def rules(m):
   if m.text.lower()=='/rules' or m.text.lower()=='/rules@chatpetsbot':
-    text = '1. Не использовать клиентских ботов для кормления лошади! За это будут наказания.\n2. Не давать рекламу в списке выброшенных лошадей.'
+    text = '1. Не использовать клиентских ботов для кормления питомца! За это будут наказания.\n2. Не давать рекламу в списке выброшенных питомцев.'
     bot.send_message(m.chat.id, text)
 
 
@@ -272,7 +278,7 @@ def info(m):
 def top(m):
   if m.text.lower()=='/top' or m.text.lower()=='/top@chatpetsbot':
     db_pets = chats.find().sort('lvl', -1).limit(10)
-    text = 'Топ-10 лошадей:\n\n'
+    text = 'Топ-10 питомцев:\n\n'
     i = 1
     for doc in db_pets:
         text += str(i) + ' место: ' + doc['name'] + ' (' + str(doc['lvl']) + ' лвл)\n'
@@ -287,7 +293,7 @@ def help(m):
     text = ''
     text += 'Чатовые питомцы питаются активностью юзеров. Чем больше вы общаетесь в чате, тем счастливее будет питомец! '
     text += 'Если долго не общаться, питомец начинает голодать и терять жизни. Назвать питомца можно командой /name\n'
-    text += 'Для получения опыта необходимо иметь 85% сытости. Для получения бонусного опыта - 95% и 99% (за каждую отметку дается x опыта. То есть если у вас 95% сытости, вы получите (базовый_опыт + х), а если 99%, то (базовый_опыт + 2х).'
+    text += 'Для получения опыта необходимо иметь 85% сытости. Для получения бонусного опыта - 90% и 99% (за каждую отметку дается x опыта. То есть если у вас 90% сытости, вы получите (базовый_опыт + х), а если 99%, то (базовый_опыт + 2х).'
     bot.send_message(m.chat.id, text)
 
 
@@ -351,11 +357,11 @@ def addlvl(m):
 def petstats(m):
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
-        bot.send_message(m.chat.id, 'Сначала лошадь нужно завести (или подобрать с улицы)')
+        bot.send_message(m.chat.id, 'Сначала питомца нужно завести (или подобрать с улицы).')
         return
-
+    emoj=pettoemoji(animal['type'])
     text = ''
-    text += '🐴Имя: ' + animal['name'] + '\n'
+    text += emoj+'Имя: ' + animal['name'] + '\n'
     text += '🏅Уровень: ' + str(animal['lvl']) + '\n'
     text += '🔥Опыт: ' + str(animal['exp']) + '/' + str(nextlvl(animal)) + '\n'
     text += '♥Здоровье: ' + str(animal['hp']) + '/' + str(animal['maxhp']) + '\n'
@@ -364,7 +370,29 @@ def petstats(m):
     text += 'Нужно сытости для постоянного получения опыта: ' + str(int(animal['maxhunger'] * 0.85))
     bot.send_message(m.chat.id, text)
 
-
+def pettoemoji(pet):
+    if pet=='horse':
+        return '🐴'
+    if pet=='parrot':
+        return '🦜'
+    if pet=='cat':
+        return '🐱'
+    if pet=='dog':
+        return '🐶'
+    if pet=='octopus':
+        return '🦑'
+    if pet=='turtle':
+        return '🐢'
+    if pet=='hedgehog':
+        return '🦔'
+    if pet=='pig':
+        return '🐷'
+    if pet=='bear':
+        return '🐻'
+    if pet=='crab':
+        return '🦀'
+    
+    
 @bot.message_handler(commands=['losthorses'], func=lambda message: is_actual(message))
 def losthorses(m):
     if lost.count_documents({'id': {'$exists': True}}) == 0:
@@ -515,15 +543,28 @@ def is_actual(m):
     return m.date + 120 > int(round(time.time()))
 
 
+def createuser(user):
+    return {
+        'id':user.id,
+        'name':user.first_name,
+        'username':user.username,
+        'now_elite':False
+    }
+
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.chat.id not in block:
+    if m.chat.id!=m.from_user.id:
+        if users.find_one({'id':m.from_user.id})==None:
+            users.insert_one(createuser(m.from_user))
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
 
     if m.from_user.id not in animal['lastminutefeed']:
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
+    if m.from_user.id not in animal['lvlupers']:
+        chats.update_one({'id': m.chat.id}, {'$push': {'lvlupers': m.from_user.id}})
     if m.chat.title != animal['title']:
         chats.update_one({'id': m.chat.id}, {'$set': {'title': m.chat.title}})
     try:
@@ -650,6 +691,11 @@ def check_all_pets_hunger():
     for pet in chats.find({}):
         check_hunger(pet, False)
     threading.Timer(60, check_all_pets_hunger).start()
+    
+def check_all_pets_lvlup():
+    for pet in chats.find({}):
+        check_lvlup(pet)
+    threading.Timer(900, check_all_pets_lvlup).start()
 
 
 def check_all_pets_hp():
@@ -659,6 +705,35 @@ def check_all_pets_hp():
         check_hp(pet, False)
     threading.Timer(1800, check_all_pets_hp).start()
 
+    
+def check_lvlup(pet):
+    lvl=0
+    for ids in pet['lvlupers']:
+        lvl+=1
+    if lvl>0:
+        chats.update_one({'id':pet['id']},{'$inc':{'lvl':lvl}})
+        bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
+    
+
+def pettype(pet):
+    t='не определено'
+    if pet=='horse':
+        return 'лошадь'
+    if pet=='parrot':
+        return 'попугай'
+    if pet=='cat':
+        return 'кот'
+    if pet=='dog':
+        return 'собака'
+    if pet=='bear':
+        return 'медведь'
+    if pet=='pig':
+        return 'свинья'
+    if pet=='hedgehog':
+        return 'ёж'
+    if pet=='octopus':
+        return 'осьминог'
+    
 
 def send_message(chat_id, text, act=None):  # использовать только чтобы проверить что лошадь все еще в чате
     h=chats.find_one({'id':chat_id})
