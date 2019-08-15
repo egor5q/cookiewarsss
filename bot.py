@@ -706,7 +706,7 @@ def new_season(m):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
-            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['name']):ids}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season1':ids}})
             globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}})
     
         for ids in globalchats.find({}):
@@ -902,6 +902,7 @@ def check_all_pets_hunger():
 def check_all_pets_lvlup():
     for pet in chats.find({}):
         check_lvlup(pet)
+    chats.update_many({},{'$set':{'lvlupers':[]}})
     threading.Timer(900, check_all_pets_lvlup).start()
 
 
