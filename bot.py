@@ -35,6 +35,9 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
+chats.update_many({},{'$set':{'lvlupers':[]}})
+
+
 @bot.message_handler(commands=['send'])
 def sendd(m):
     if is_from_admin(m):
@@ -590,7 +593,8 @@ def createpet(id, typee='horse', name='Без имени'):
         'title': None,  # Имя чата
         'stats': {},  # Статы игроков: кто сколько кормит лошадь итд
         'spying': None,
-        'send_lvlup':True
+        'send_lvlup':True,
+        'lvlupers':[]
     }
 
 
