@@ -35,7 +35,7 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-#chats.update_many({},{'$set':{'lvlupers':[]}})
+chats.update_many({},{'$set':{'lvlupers':[]}})
 
 
 @bot.message_handler(commands=['send'])
@@ -202,9 +202,57 @@ def feeed(m):
             s2 = ['немного металла', 'мышьяк', 'доску', 'хрен', 'сорняк', 'телефон', 'лошадь', 'автобус', 'компухтер', 'карман']
             petname='Лошадь'
         if x['type']=='cat':
-            spisok=['рыбу', 'мышь', 'кошачий корм']
+            spisok=['рыбу', 'мышь', 'кошачий корм', 'колбасу']
             s2=['миску', 'одеяло']
             petname='Кот'
+        if x['type']=='parrot':
+            spisok=['траву', 'корм для попугая']
+            s2=['телефон']
+            petname='Попугай'
+        if x['type']=='dog':
+            spisok=['кость', 'корм для собак']
+            s2=['столб']
+            petname='Собака'
+        if x['type']=='bear':
+            spisok=['мёд', 'оленя']
+            s2=['берлогу', 'горящую машину, а медведь сел в неё и сгорел']
+            petname='Медведь'
+        if x['type']=='pig':
+            spisok=['корм для свиней']
+            s2=['лужу']
+            petname='Свинка'
+        if x['type']=='hedgehog':
+            spisok=['гриб', 'яблоко', 'жука']
+            s2=['змею']
+            petname='Ёж'
+        if x['type']=='octopus':
+            spisok=['моллюска', 'улитку', 'рака']
+            s2=['банку с планктоном', 'корабль']
+            petname='Осьминог'
+        if x['type']=='turtle':
+            spisok=['капусту', 'яблоко', 'арбуз', 'дыню', 'хлеб']
+            s2=['попугая', 'осьминога', 'карман']
+            petname='Черепаха'
+        if x['type']=='crab':
+            spisok=['рыбий корм', 'морковь', 'перец', 'креветку', 'таракана', 'огурец']
+            s2=['камень']
+            petname='Краб'
+        if x['type']=='spider':
+            spisok=['муху', 'стрекозу', 'кузнечика', 'попугая', 'жука']
+            s2=['дом']
+            petname='Паук'
+        if x['type']=='bee':
+            spisok=['немного нектара', 'немного пыльцы', 'кусочек сахара']
+            s2=['муравья', 'кита']
+            petname='Пчела'
+        if x['type']=='owl':
+            spisok=['мышь', 'пчелу', 'рыбу']
+            s2=['сову', 'компьютерную мышь', 'волка']
+            petname='Сова'
+        if x['type']=='boar':
+            spisok=['орех', 'жёлудь']
+            s2=['дерево']
+            petname='Кабан'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -320,6 +368,16 @@ def gladit(m):
         bot.send_message(admin_id, traceback.format_exc())
 
 
+@bot.message_handler(commands=['achievement_list'])
+def achlist(m):
+    text=''
+    text+='1. За каждые 100 уровней даётся по 1 кубику, и так до 10000го.\n'
+    text+='2. За сообщение от Дмитрия Исаева в вашем чате даётся 3 кубика!\n'
+    text+='3. За актив в чате (сообщения от 10ти пользователей за минуту) даётся 3 кубика!\n'
+    text+='Имеются секретные ачивки! Список ачивок в будущем будет пополняться.'
+    bot.send_message(m.chat.id, text)
+        
+        
 @bot.message_handler(commands=['addexp'])
 def addexp(m):
     if is_from_admin(m):
@@ -720,6 +778,22 @@ def check_hunger(pet, horse_lost):
     lastminutefeed = pet['lastminutefeed']
 
     # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
+    gchat=globalchats.find_one({'id':pet['id']})
+    gchat=None
+    if gchat!=None:
+        if len(lastminutefeed)>=10 and '10 users in one minute!' not in gchat['achievements']:
+            globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'10 users in one minute!'}})
+            globalchats.update_one({'id':pet['id']},{'$push':{'pet_access':3}})
+            bot.send_message(pet['id'], 'Заработано достижение: супер-актив! Получено: 3 куба (/chat_stats).')
+            
+    if gchat!=None:
+        if 86190439 in lastminutefeed and 'dmitriy isaev' not in gchat['achievements']:
+            globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'dmitriy isaev'}})
+            globalchats.update_one({'id':pet['id']},{'$push':{'pet_access':3}})
+            bot.send_message(pet['id'], 'Заработано достижение: Дмитрий Исаев! Получено: 3 куба (/chat_stats).')
+        
+        
+        
     if len(lastminutefeed) > 0:
         hunger += len(lastminutefeed) * 2
         lastminutefeed = []
@@ -739,6 +813,15 @@ def check_hunger(pet, horse_lost):
         maxhunger += 15
         if not horse_lost:
             send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!', act='lvlup')
+     
+    ii=100
+    if gchat!=None:
+        while ii<=10000:
+            if lvl>=ii and 'lvl '+str(ii) not in gchat['achievements']:
+                globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'lvl '+str(ii)}})
+                globalchats.update_one({'id':pet['id']},{'$push':{'pet_access':1}})
+                bot.send_message(pet['id'], 'Заработано достижение: '+str(ii)+' лвл! Получено: 1 куб (/chat_stats).')
+            ii+=100
 
     commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
     if not horse_lost:
@@ -821,7 +904,8 @@ def check_lvlup(pet):
         lvl+=1
     if lvl>0:
         chats.update_one({'id':pet['id']},{'$inc':{'lvl':lvl}})
-        bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
+        if pet['send_lvlup']==True:
+            bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
     
 
 def pettoemoji(pet):
