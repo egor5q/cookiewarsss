@@ -195,7 +195,7 @@ def feeed(m):
     if m.text.lower()=='/feed' or m.text.lower()=='/feed@chatpetsbot':
         x = chats.find_one({'id': m.chat.id})
         if x is None:
-            bot.send_message(m.chat.id, 'А гладить некого:(')
+            bot.send_message(m.chat.id, 'А кормить некого:(')
             return
         if x['type']=='horse':
             spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
@@ -332,7 +332,7 @@ def top(m):
     text = 'Топ-10 питомцев:\n\n'
     i = 1
     for doc in db_pets:
-        text += str(i) + ' место: ' + doc['name'] + ' (' + str(doc['lvl']) + ' лвл)\n'
+        text += str(i) + ' место: ' + pettoemoji(doc['type'])+doc['name'] + ' (' + str(doc['lvl']) + ' лвл)\n'
         i += 1
 
     bot.send_message(m.chat.id, text)
@@ -489,7 +489,7 @@ def throwh(m):
                 return
     
         if chats.find_one({'id': m.chat.id}) is None:
-            bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались :(")
+            bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались!")
             return
     
         if lose_horse(m.chat.id):
@@ -655,7 +655,7 @@ def selectpett(m):
                     return
                 if newpet in chat['avalaible_pets']:
                     chats.update_one({'id':m.chat.id},{'$set':{'type':newpet}})
-                    bot.send_message(m.chat.id, 'Вы успешшно сменили тип питомца на '+pet+'!')
+                    bot.send_message(m.chat.id, 'Вы успешшно сменили тип питомца на "'+pet+'"!')
                 else:
                     bot.send_message(m.chat.id, 'Вам сейчас не доступен этот тип питомцев (или его просто не существует)!')
     else:
@@ -1010,6 +1010,50 @@ def take_horse(horse_id, new_chat_id):
     lost.delete_one({'id': new_chat_id})
     chats.insert_one(pet)
 
+    
+def check_newday():
+    t=threading.Timer(60, check_newday)
+    t.start()
+    x=time.ctime()
+    x=x.split(" ")
+    month=0
+    year=0
+    ind=0
+    num=0
+    for ids in x:
+       for idss in ids:
+          if idss==':':
+             tru=ids
+             ind=num
+       num+=1
+    day=x[ind-1]
+    month=x[1]
+    year=x[ind+1]
+    x=tru 
+    x=x.split(":")  
+    y=int(x[1])    # минуты
+    x=int(x[0])+3  # часы (+3, потому что heroku в Великобритании)
+    z=time.ctime()
+ 
+ 
+    if y==0 and x==24:
+        users.update_many({},{'$set':{'now_elite':False}})
+        allist=users.find({})
+        alls=[]
+        for ids in allist:
+            alls.append(ids)
+        amount=int(len(alls)/10)
+        alreadyelite=[]
+        while len(alreadyelite)<amount:
+            us=random.choice(alls)
+            if us['id'] not in alreadyelite:
+                alreadyelite.append(us['id'])
+        for ids in alreadyelite:
+            users.update_one({'id':ids['id']},{'$set':{'now_elite':True}})
+        bot.send_message(441399484, str(amount))
+        
+       
+    
 
 def is_from_admin(m):
     return m.from_user.id == admin_id
@@ -1017,6 +1061,7 @@ def is_from_admin(m):
 
 check_all_pets_hunger()
 check_all_pets_hp()
+#check_newday()
 #check_all_pets_lvlup()
 
 print('7777')
