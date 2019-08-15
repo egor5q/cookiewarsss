@@ -35,9 +35,7 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-#globalchats.update_many({},{'$set':{'pet_access':0,
-#        'pet_maxlvl':0,
-#        'achievements':[]}})
+globalchats.update_many({},{'$push':{'avalaible_types':'horse'}})
 
 
 @bot.message_handler(commands=['send'])
@@ -585,7 +583,7 @@ def chatstats(m):
         if i!=len(x['avalaible_pets']):
             pts+=pettype(ids)+', '
         else:
-            pts+=pettype(ids)+';*'
+            pts+=pettype(ids)+';'
         i+=1
     lastpets=''
     for ids in x['saved_pets']:
@@ -594,7 +592,7 @@ def chatstats(m):
     text=''
     text+='Питомцы из прошлых сезонов: '+lastpets+'\n'
     text+='🎖Максимальный уровень лошади в этом чате: '+str(x['pet_maxlvl'])+';\n'
-    text+='🌏Доступные типы питомцев: *'+pts+'\n'
+    text+='🌏Доступные типы питомцев: '+pts+'\n'
     text+='🎲Количество попыток для увеличения доступных типов (кубы): '+str(x['pet_access'])+' (использовать: /use_dice).'
     bot.send_message(m.chat.id, text)
     
