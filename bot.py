@@ -1070,8 +1070,8 @@ def is_from_admin(m):
 
 check_all_pets_hunger()
 check_all_pets_hp()
-check_newday()
-check_all_pets_lvlup()
+#check_newday()
+#check_all_pets_lvlup()
 
 print('7777')
 bot.polling(none_stop=True, timeout=600)
