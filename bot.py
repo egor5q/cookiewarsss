@@ -631,6 +631,21 @@ def change_pet(pet):
         x= 'boar'
     return x
     
+    
+@bot.message_handler(commands=['new_season'])
+def new_season():
+    if m.from_user.id==441399484:
+        for ids in chats.find({}):
+            bot.send_message(m.chat.id, 'Начинается новый сезон! Все ваши текущие лошади добавлены вам в конюшню, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память.')
+        for ids in chats.find({}):
+            x=globalchats.find_one({'id':ids['id']})
+            if x==None:
+                globalchats.insert_one(createglobalchat(ids['id']))
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['name']):ids}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}})
+    
+    
+    
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.chat.id not in block:
@@ -663,7 +678,8 @@ def createglobalchat(id):
         'avalaible_pets':['horse'],
         'saved_pets':{},
         'pet_access':0,
-        'pet_maxlvl':0
+        'pet_maxlvl':0,
+        'achievements':[]
     }
     
     
