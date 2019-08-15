@@ -24,7 +24,7 @@ chat_admins=db.chat_admins
 ban = [243153864, 866706209,  500238135, ]
 totalban = [243153864, 866706209, 500238135, 598442962,765420407, 
  786508668, 633357981,   521075049,  788297567, 709394939, 
-   638625062,  872696708,941085059,  958911815, 579555709  ] 
+   638625062,  872696708,941085059,  958911815, 579555709] 
 block=[-1001365421933]
 
 
@@ -35,7 +35,7 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-chats.update_many({},{'$set':{'lvlupers':[]}})
+#chats.update_many({},{'$set':{'lvlupers':[]}})
 
 
 @bot.message_handler(commands=['send'])
@@ -554,6 +554,10 @@ def createuser(user):
         'now_elite':False
     }
 
+@bot.message_handler(commands=['select_pet'])
+def selectpett(m):
+    pass
+
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.chat.id not in block:
@@ -563,7 +567,8 @@ def messages(m):
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
-
+    if globalchats.find_one({'id':m.chat.id})==None:
+        globalchats.insert_one(createglobalchat(m.chat.id))
     if m.from_user.id not in animal['lastminutefeed']:
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
     if m.from_user.id not in animal['lvlupers']:
@@ -578,6 +583,15 @@ def messages(m):
         pass
 
 
+    
+def createglobalchat(id):
+    return {
+        'id':id,
+        'avalaible_pets':[],
+        'saved_pets':{}
+    }
+    
+    
 def createpet(id, typee='horse', name='Без имени'):
     return {
         'id': id,
