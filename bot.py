@@ -35,7 +35,7 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
+#globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
 
 
 @bot.message_handler(commands=['send'])
