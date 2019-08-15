@@ -728,15 +728,13 @@ def new_season(m):
 def rrrlll(m):
     if m.from_user.id==441399484:
         chats.update_many({},{'$set':{'lvl':1, 'hunger':100, 'maxhunger':100, 'exp':0}})
-        globalchats.update_many({},{'$set':{'avalaible_types':['horse'], 'pet_access':2}})
 
 
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.chat.id not in block:
-    if m.chat.id!=m.from_user.id:
-        if users.find_one({'id':m.from_user.id})==None:
-            users.insert_one(createuser(m.from_user))
+    if users.find_one({'id':m.from_user.id})==None:
+        users.insert_one(createuser(m.from_user))
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
@@ -744,7 +742,7 @@ def messages(m):
         globalchats.insert_one(createglobalchat(m.chat.id))
     if m.from_user.id not in animal['lastminutefeed']:
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
-    if m.from_user.id not in animal['lvlupers']:
+    if m.from_user.id not in animal['lvlupers'] and users.find_one({'id':m.from_user.id})['now_elite']==True:
         chats.update_one({'id': m.chat.id}, {'$push': {'lvlupers': m.from_user.id}})
     if m.chat.title != animal['title']:
         chats.update_one({'id': m.chat.id}, {'$set': {'title': m.chat.title}})
