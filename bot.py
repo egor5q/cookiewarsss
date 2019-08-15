@@ -792,16 +792,17 @@ def check_hunger(pet, horse_lost):
 
     # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
     gchat=globalchats.find_one({'id':pet['id']})
+    gchat=None
     if gchat!=None:
         if len(lastminutefeed)>=10 and '10 users in one minute!' not in gchat['achievements']:
             globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'10 users in one minute!'}})
-            globalchats.update_one({'id':pet['id']},{'$push':{'pet_access':3}})
+            globalchats.update_one({'id':pet['id']},{'$inc':{'pet_access':3}})
             bot.send_message(pet['id'], 'Заработано достижение: супер-актив! Получено: 3 куба (/chat_stats).')
             
     if gchat!=None:
         if 86190439 in lastminutefeed and 'dmitriy isaev' not in gchat['achievements']:
             globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'dmitriy isaev'}})
-            globalchats.update_one({'id':pet['id']},{'$push':{'pet_access':3}})
+            globalchats.update_one({'id':pet['id']},{'$inc':{'pet_access':3}})
             bot.send_message(pet['id'], 'Заработано достижение: Дмитрий Исаев! Получено: 3 куба (/chat_stats).')
         
         
@@ -831,7 +832,7 @@ def check_hunger(pet, horse_lost):
         while ii<=10000:
             if lvl>=ii and 'lvl '+str(ii) not in gchat['achievements']:
                 globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'lvl '+str(ii)}})
-                globalchats.update_one({'id':pet['id']},{'$push':{'pet_access':1}})
+                globalchats.update_one({'id':pet['id']},{'$inc':{'pet_access':1}})
                 bot.send_message(pet['id'], 'Заработано достижение: '+str(ii)+' лвл! Получено: 1 куб (/chat_stats).')
             ii+=100
 
