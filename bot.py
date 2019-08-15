@@ -700,7 +700,7 @@ def change_pet(pet):
     
     
 @bot.message_handler(commands=['new_season'])
-def new_season():
+def new_season(m):
     if m.from_user.id==441399484:
         db_pets = chats.find().sort('lvl', -1).limit(10)
         
@@ -792,7 +792,6 @@ def check_hunger(pet, horse_lost):
 
     # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
     gchat=globalchats.find_one({'id':pet['id']})
-    gchat=None
     if gchat!=None:
         if len(lastminutefeed)>=10 and '10 users in one minute!' not in gchat['achievements']:
             globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'10 users in one minute!'}})
