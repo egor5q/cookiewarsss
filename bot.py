@@ -35,7 +35,9 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
-chats.update_many({},{'$set':{'lvlupers':[]}})
+globalchats.update_many({},{'$set':{'pet_access':0,
+        'pet_maxlvl':0,
+        'achievements':[]}})
 
 
 @bot.message_handler(commands=['send'])
