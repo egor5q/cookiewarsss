@@ -707,7 +707,7 @@ def new_season(m):
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
             globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season1':ids}})
-            globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
     
         for ids in globalchats.find({}):
             globalchats.update_one({'id':ids['id']},{'$set':{'achievements':[]}})
@@ -716,8 +716,11 @@ def new_season(m):
         for doc in db_pets:
             globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':3}})
         for ids in chats.find({}):
-            bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие лошади добавлены вам в конюшню, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топа получают 3 куба в подарок!')
-        
+            try:
+                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие лошади добавлены вам в конюшню, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топа получают 3 куба в подарок!')
+            except:
+                pass
+        chats.remove({})
     
 @bot.message_handler(content_types=['text'])
 def messages(m):
