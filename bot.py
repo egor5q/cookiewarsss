@@ -450,17 +450,17 @@ def takeh(m):
     try:
         horse_id = int(m.text.split(' ')[1])
         if lost.find_one({'id': horse_id}) is None:
-            bot.send_message(m.chat.id, "Лошадь не существует!")
+            bot.send_message(m.chat.id, "Питомец не существует!")
             return
 
         if chats.find_one({'id': m.chat.id}) is not None:
-            bot.send_message(m.chat.id, "У вас уже есть лошадь!")
+            bot.send_message(m.chat.id, "У вас уже есть питомец!")
             return
 
         take_horse(horse_id, m.chat.id)
         chats.update_one({'id': horse_id}, {'$set': {'id': m.chat.id}})
         bot.send_message(m.chat.id,
-                         "Поздравляем, вы спасли лошадь от голода! Следите за ней, чтобы она росла и не умирала!")
+                         "Поздравляем, вы спасли питомца от голода! Следите за ним, чтобы он рос и не голодал!")
     except:
         pass
 
@@ -497,12 +497,12 @@ def throwh(m):
             t = threading.Timer(3600, unban, args=[m.chat.id])
             t.start()
             bot.send_message(m.chat.id,
-                             "Вы выбросили лошадь на улицу... Если ее никто не подберет, она умрет от голода!")
+                             "Вы выбросили питомца на улицу... Если его никто не подберет, он умрет от голода!")
         else:
             bot.send_message(m.chat.id,
                                  "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
     else:
-        bot.send_message(m.chat.id, 'Можно выгонять только одну лошадь в час!')
+        bot.send_message(m.chat.id, 'Можно выгонять только одного питомца в час!')
 
 
 @bot.message_handler(commands=['ban'])
