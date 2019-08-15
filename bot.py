@@ -383,7 +383,7 @@ def losthorses(m):
 
     text = 'Чтобы забрать питомца, введите команду /takeh id\n\n'
     for pet in lost.find({'id': {'$exists': True}}):
-        text += str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ' лвл)' + '\n'
+        text += pettoemoji(pet['type'])+str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ' лвл)' + '\n'
     bot.send_message(m.chat.id, text)
 
 
@@ -462,7 +462,7 @@ def name(m):
     try:
         if m.chat.id in totalban or m.from_user.id in totalban:
             bot.send_message(m.chat.id,
-                             'Вам было запрещено менять имя лошади! Разбан через рандомное время (1 минута - 24 часа).')
+                             'Вам было запрещено менять имя питомца! Разбан через рандомное время (1 минута - 24 часа).')
             return
 
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
@@ -488,10 +488,30 @@ def name(m):
                              str(m.from_user.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
         except:
             pass
-        bot.send_message(m.chat.id, 'Вы успешно сменили имя лошади на ' + name + '!')
+        bot.send_message(m.chat.id, 'Вы успешно сменили имя питомца на ' + name + '!')
     except:
         pass
 
+
+    
+@bot.message_handler(commands=['use_dice'])
+def use_dice(m):
+    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar']
+    chat=globalchats.find_one({'id':m.chat.id})
+    if chat==None:
+        return
+    if chat['pet_access']>0:
+        user = bot.get_chat_member(m.chat.id, m.from_user.id)
+        if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+                m) and m.from_user.id != m.chat.id:
+            bot.send_message(m.chat.id, 'Только администратор может делать это!')
+            return
+        tt=random.choice(alltypes)
+        globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':-1}})
+        globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':tt}})
+        bot.send_message(m.chat.id, 'Кручу-верчу, питомца выбрать хочу...\n...\n...\n...\n...\n...\nПоздравляю! Вам достался питомец "*'+pettype(tt)+'*"!', parse_mode='markdown')
+        
+    
     
 @bot.message_handler(commands=['chat_stats'])
 def chatstats(m):
@@ -509,7 +529,7 @@ def chatstats(m):
     text=''
     text+='🎖Максимальный уровень лошади в этом чате: '+str(x['max_lvl'])+';\n'
     text+='🌏Доступные типы питомцев: *'+pts+'\n'
-    text+='🎲Количество попыток для увеличения доступных типов: '+str(x['pet_access'])+'.'
+    text+='🎲Количество попыток для увеличения доступных типов: '+str(x['pet_access'])+' (использовать: /use_dice).'
     bot.send_message(m.chat.id, text)
     
 
@@ -833,7 +853,7 @@ def pettype(pet):
     if pet=='bear':
         return 'медведь'
     if pet=='pig':
-        return 'свинья'
+        return 'свинка'
     if pet=='hedgehog':
         return 'ёж'
     if pet=='octopus':
@@ -891,6 +911,7 @@ def is_from_admin(m):
 
 check_all_pets_hunger()
 check_all_pets_hp()
+#check_all_pets_lvlup()
 
 print('7777')
 bot.polling(none_stop=True, timeout=600)
