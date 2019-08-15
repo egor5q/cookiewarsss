@@ -373,36 +373,15 @@ def petstats(m):
     text += 'Нужно сытости для постоянного получения опыта: ' + str(int(animal['maxhunger'] * 0.85))
     bot.send_message(m.chat.id, text)
 
-def pettoemoji(pet):
-    if pet=='horse':
-        return '🐴'
-    if pet=='parrot':
-        return '🦜'
-    if pet=='cat':
-        return '🐱'
-    if pet=='dog':
-        return '🐶'
-    if pet=='octopus':
-        return '🦑'
-    if pet=='turtle':
-        return '🐢'
-    if pet=='hedgehog':
-        return '🦔'
-    if pet=='pig':
-        return '🐷'
-    if pet=='bear':
-        return '🐻'
-    if pet=='crab':
-        return '🦀'
     
     
 @bot.message_handler(commands=['losthorses'], func=lambda message: is_actual(message))
 def losthorses(m):
     if lost.count_documents({'id': {'$exists': True}}) == 0:
-        bot.send_message(m.chat.id, "На улице лошадей нет!")
+        bot.send_message(m.chat.id, "На улице питомцев нет!")
         return
 
-    text = 'Чтобы забрать лошадь, введите команду /takeh id\n\n'
+    text = 'Чтобы забрать питомца, введите команду /takeh id\n\n'
     for pet in lost.find({'id': {'$exists': True}}):
         text += str(pet['id']) + ': ' + pet['name'] + " (" + str(pet['lvl']) + ' лвл)' + '\n'
     bot.send_message(m.chat.id, text)
@@ -513,6 +492,26 @@ def name(m):
     except:
         pass
 
+    
+@bot.message_handler(commands=['chat_stats'])
+def chatstats(m):
+    x=globalchats.find_one({'id':m.chat.id})
+    if x==None:
+        return
+    pts=''
+    i=1
+    for ids in x['avalaible_pets']:
+        if i!=len(x['avalaible_pets']):
+            pts+=pettype(ids)+', '
+        else:
+            pts+=pettype(ids)+';*'
+        i+=1
+    text=''
+    text+='🎖Максимальный уровень лошади в этом чате: '+str(x['max_lvl'])+';\n'
+    text+='🌏Доступные типы питомцев: *'+pts+'\n'
+    text+='🎲Количество попыток для увеличения доступных типов: '+str(x['pet_access'])+'.'
+    bot.send_message(m.chat.id, text)
+    
 
 @bot.message_handler(commands=['allinfo'])
 def allinfo(m):
@@ -556,8 +555,62 @@ def createuser(user):
 
 @bot.message_handler(commands=['select_pet'])
 def selectpett(m):
-    pass
+    chat=globalchats.find_one({'id':m.chat.id})
+    if chat==None:
+        return
+    x=m.text.split(' ')
+    if len(x)==2:
+        pet=x[1]
+        newpet=change_pet(pet)
+        if newpet!=None:
+            if chats.find_one({'id':m.chat.id})!=None:
+                user = bot.get_chat_member(m.chat.id, m.from_user.id)
+                if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+                    m) and m.from_user.id != m.chat.id:
+                    bot.send_message(m.chat.id, 'Только админ может делать это!')
+                    return
+                if newpet in chat['avalaible_pets']:
+                    chats.update_one({'id':m.chat.id},{'$set':{'type':newpet}})
+                    bot.send_message(m.chat.id, 'Вы успешшно сменили тип питомца на '+pet+'!')
+                else:
+                    bot.send_message(m.chat.id, 'Вам сейчас не доступен этот тип питомцев (или его просто не существует)!')
+    else:
+        bot.send_message(m.chat.id, 'Ошибка! Используйте формат\n/select_pet *pet*\nГде *pet* - доступный вам тип питомцев (посмотреть их можно в /chat_stats).', parse_mode='markdown')
+    
 
+def change_pet(pet):
+    x=None
+    pet=pet.lower()
+    if pet=='лошадь':
+        x='horse'
+    if pet=='попугай':
+        x= 'parrot'
+    if pet=='кот':
+        x= 'cat'
+    if pet=='собака':
+        x= 'dog'
+    if pet=='медведь':
+        x= 'bear'
+    if pet=='свинка':
+        x= 'pig'
+    if pet=='ёж':
+        x= 'hedgehog'
+    if pet=='осьминог':
+        x= 'octopus'
+    if pet=='черепаха':
+        x= 'turtle'
+    if pet=='краб':
+        x= 'crab'
+    if pet=='паук':
+        x= 'spider'
+    if pet=='пчела':
+        x= 'bee'
+    if pet=='сова':
+        x= 'owl'
+    if pet=='кабан':
+        x= 'boar'
+    return x
+    
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.chat.id not in block:
@@ -587,8 +640,10 @@ def messages(m):
 def createglobalchat(id):
     return {
         'id':id,
-        'avalaible_pets':[],
-        'saved_pets':{}
+        'avalaible_pets':['horse'],
+        'saved_pets':{},
+        'pet_access':0,
+        'pet_maxlvl':0
     }
     
     
@@ -688,7 +743,7 @@ def check_hp(pet, horse_lost):
             chats.delete_one({'id': pet['id']})
             try:
                 bot.send_message(pet['id'],
-                                 'Вашей лошади плохо в вашем чате, ей не хватает питания. Поэтому я забираю её, чтобы не откинула копыта.\n' +
+                                 'Вашему питомцу плохо в вашем чате, ему не хватает питания. Поэтому я забираю его, чтобы он не умер.\n' +
                                  'Количество лошадей, которых мне пришлось забрать (во всех чатах): ' + str(total))
             except:
                 pass
@@ -733,6 +788,38 @@ def check_lvlup(pet):
         bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
     
 
+def pettoemoji(pet):
+    if pet=='horse':
+        return '🐴'
+    if pet=='parrot':
+        return '🦜'
+    if pet=='cat':
+        return '🐱'
+    if pet=='dog':
+        return '🐶'
+    if pet=='octopus':
+        return '🦑'
+    if pet=='turtle':
+        return '🐢'
+    if pet=='hedgehog':
+        return '🦔'
+    if pet=='pig':
+        return '🐷'
+    if pet=='bear':
+        return '🐻'
+    if pet=='crab':
+        return '🦀'
+    if pet=='bee':
+        return '🐝'
+    if pet=='spider':
+        return '🕷'
+    if pet=='boar':
+        return '🐗'
+    if pet=='owl':
+        return '🦉'
+    
+    
+    
 def pettype(pet):
     t='не определено'
     if pet=='horse':
@@ -751,6 +838,19 @@ def pettype(pet):
         return 'ёж'
     if pet=='octopus':
         return 'осьминог'
+    if pet=='turtle':
+        return 'черепаха'
+    if pet=='crab':
+        return 'краб'
+    if pet=='spider':
+        return 'паук'
+    if pet=='bee':
+        return 'пчела'
+    if pet=='owl':
+        return 'сова'
+    if pet=='boar':
+        return 'кабан'
+    return t
     
 
 def send_message(chat_id, text, act=None):  # использовать только чтобы проверить что лошадь все еще в чате
