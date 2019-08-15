@@ -37,7 +37,7 @@ admin_id = 441399484
 
 #globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
 
-
+users.update_many({},{'$set':{'now_elite':False}})
 @bot.message_handler(commands=['send'])
 def sendd(m):
     if is_from_admin(m):
@@ -1074,8 +1074,8 @@ def is_from_admin(m):
 
 check_all_pets_hunger()
 check_all_pets_hp()
-#check_newday()
-#check_all_pets_lvlup()
+check_newday()
+check_all_pets_lvlup()
 
 print('7777')
 bot.polling(none_stop=True, timeout=600)
