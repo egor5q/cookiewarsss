@@ -702,12 +702,6 @@ def change_pet(pet):
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
     if m.from_user.id==441399484:
-        db_pets = chats.find().sort('lvl', -1).limit(10)
-        
-        for doc in db_pets:
-            globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':3}})
-        for ids in chats.find({}):
-            bot.send_message(ids[id], 'Начинается новый сезон! Все ваши текущие лошади добавлены вам в конюшню, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топа получают 3 куба в подарок!')
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
@@ -715,7 +709,15 @@ def new_season(m):
             globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['name']):ids}})
             globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}})
     
-    
+        for ids in globalchats.find({}):
+            globalchats.update_one({'id':ids['id']},{'$set':{'achievements':[]}})
+        db_pets = chats.find().sort('lvl', -1).limit(10)
+        
+        for doc in db_pets:
+            globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':3}})
+        for ids in chats.find({}):
+            bot.send_message(ids[id], 'Начинается новый сезон! Все ваши текущие лошади добавлены вам в конюшню, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топа получают 3 куба в подарок!')
+        
     
 @bot.message_handler(content_types=['text'])
 def messages(m):
