@@ -642,9 +642,18 @@ def cubeee(m):
     chat=globalchats.find_one({'id':m.chat.id})
     if chat!=None:
         if 'so easy' not in chat['achievements']:
-            globalchats.update_one({'id':m.chat.id},{'$push':{'a'+'c'+'h'+'i'+'evem'+'ents':'so easy'}})
-            globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':2}})
-            bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.')
+            x=chats.find_one({'id':m.chat.id})
+            if x!=None:
+                if x['lvl']>=15:
+                    globalchats.update_one({'id':m.chat.id},{'$push':{'a'+'c'+'h'+'i'+'evem'+'ents':'so easy'}})
+                    globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':2}})
+                    bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.')
+                else:
+                    bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
+            else:
+                bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
+
+
 
 @bot.message_handler(func=lambda message: not is_actual(message))
 def skip_message(m):
