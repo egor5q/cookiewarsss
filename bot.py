@@ -1109,7 +1109,7 @@ def check_newday():
     z=time.ctime()
  
  
-    if y==0 and x==24:
+    if y==4 and x==24:
         users.update_many({},{'$set':{'now_elite':False}})
         allist=users.find({})
         alls=[]
@@ -1122,7 +1122,7 @@ def check_newday():
             if us['id'] not in alreadyelite:
                 alreadyelite.append(us['id'])
         for ids in alreadyelite:
-            users.update_one({'id':ids['id']},{'$set':{'now_elite':True}})
+            users.update_one({'id':ids},{'$set':{'now_elite':True}})
         bot.send_message(441399484, str(amount))
         
        
