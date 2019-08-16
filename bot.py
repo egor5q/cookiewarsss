@@ -384,7 +384,7 @@ def gladit(m):
     except:
         bot.send_message(admin_id, traceback.format_exc())
 
-bot.message_handler(commands=['achievement_list'])
+@bot.message_handler(commands=['achievement_list'])
 def achlist(m):
     text=''
     text+='1. За каждые 100 уровней даётся по 1 кубику, и так до 10000го.\n'
