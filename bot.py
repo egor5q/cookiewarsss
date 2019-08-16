@@ -253,6 +253,10 @@ def feeed(m):
             spisok=['орех', 'жёлудь']
             s2=['дерево', 'землю']
             petname='Кабан'
+        if x['type']=='panda':
+            spisok=['бамбук', 'большой бамбук', 'маленький бамбук', 'средний бамбук', 'яблоко', 'морковь', 'сосиску']
+            s2=['лопату', 'не бамбук']
+            petname='Панда'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -558,7 +562,7 @@ def name(m):
     
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
-    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar']
+    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda']
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
         return
@@ -631,7 +635,7 @@ def cubeee(m):
     chat=globalchats.find_one({'id':m.chat.id})
     if chat!=None:
         if 'so easy' not in chat['achievements']:
-            globalchats.update_one({'id':m.chat.id},{'$push':{'achievements':'so easy'}})
+            globalchats.update_one({'id':m.chat.id},{'$push':{'a'+'c'+'h'+'i'+'evem'+'ents':'so easy'}})
             globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':2}})
             bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.')
 
@@ -707,6 +711,8 @@ def change_pet(pet):
         x= 'owl'
     if pet=='кабан':
         x= 'boar'
+    if pet=='панда':
+        x='panda'
     return x
     
     
@@ -975,6 +981,8 @@ def pettoemoji(pet):
         return '🐗'
     if pet=='owl':
         return '🦉'
+    if pet=='panda':
+        return '🐼'
     
     
     
@@ -1008,6 +1016,8 @@ def pettype(pet):
         return 'сова'
     if pet=='boar':
         return 'кабан'
+    if pet=='panda':
+        return 'панда'
     return t
     
 
