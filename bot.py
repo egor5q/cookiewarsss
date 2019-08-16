@@ -838,7 +838,7 @@ def check_hunger(pet, horse_lost):
         lvl += 1
         maxhunger += 15
         if not horse_lost:
-            send_message(pet['id'], 'Уровень вашей лошади повышен! Максимальный запас сытости увеличен на 15!', act='lvlup')
+            send_message(pet['id'], 'Уровень вашего питомца повышен! Максимальный запас сытости увеличен на 15!', act='lvlup')
      
     ii=100
     if gchat!=None:
@@ -865,13 +865,13 @@ def check_hp(pet, horse_lost):
     if hunger <= 0:
         hunger = 0
         if not horse_lost:
-            send_message(pet['id'], 'Ваша лошадь СИЛЬНО голодает! Осталось ' + str(
+            send_message(pet['id'], 'Ваш питомец СИЛЬНО голодает! Осталось ' + str(
                 hunger) + ' сытости! СРОЧНО нужен актив в чат!')
         hp -= random.randint(9, 15)
 
     elif hunger / maxhunger * 100 <= 30:
         if not horse_lost:
-            send_message(pet['id'], 'Ваша лошадь голодает! Осталось всего ' + str(
+            send_message(pet['id'], 'Ваш питомец голодает! Осталось всего ' + str(
                 hunger) + ' сытости! Срочно нужен актив в чат!')
         hp -= random.randint(9, 15)
 
