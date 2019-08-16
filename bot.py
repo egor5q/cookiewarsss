@@ -377,7 +377,7 @@ def gladit(m):
     try:
         x = chats.find_one({'id': m.chat.id})
         if x is not None:
-            bot.send_message(m.chat.id, m.from_user.first_name + ' погладил(а) ' + +pettoemoji(x['type'])+x['name'] + '!')
+            bot.send_message(m.chat.id, m.from_user.first_name + ' погладил(а) ' + pettoemoji(x['type'])+x['name'] + '!')
         else:
             bot.send_message(m.chat.id, 'А гладить некого!')
     except:
