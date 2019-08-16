@@ -383,8 +383,7 @@ def gladit(m):
     except:
         bot.send_message(admin_id, traceback.format_exc())
 
-
-@bot.message_handler(commands=['achievement_list'])
+bot.message_handler(commands=['achievement_list'])
 def achlist(m):
     text=''
     text+='1. За каждые 100 уровней даётся по 1 кубику, и так до 10000го.\n'
@@ -1063,7 +1062,7 @@ def lose_horse(chat_id):  # returns True on success
     while lost.find_one({'id': horse_id}) is not None:
         horse_id += 1
     lost.update_one({'id': chat_id}, {'$set': {'id': horse_id}})
-    lost.update_one({'id': chat_id}, {'$set': {'type':'horse'}})
+    lost.update_one({'id': horse_id}, {'$set': {'type':'horse'}})
     return True
 
 
