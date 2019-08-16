@@ -950,7 +950,7 @@ def check_all_pets_lvlup():
     for pet in chats.find({}):
         check_lvlup(pet)
     chats.update_many({},{'$set':{'lvlupers':[]}})
-    threading.Timer(900, check_all_pets_lvlup).start()
+    threading.Timer(1800, check_all_pets_lvlup).start()
 
 
 def check_all_pets_hp():
