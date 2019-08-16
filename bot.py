@@ -274,7 +274,8 @@ def commands(m):
     text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять питомца (только если ранее ему было это разрешено);\n'
     text+='/achievement_list - список ачивок, за которые можно получить кубы;\n'
     text+='/use_dice - попытка на получение нового типа питомцев;\n'
-    text+='/select_pet pet - выбор типа питомца.'
+    text+='/select_pet pet - выбор типа питомца.\n'
+    text+='@Chatpets - канал с обновлениями бота!'
     bot.send_message(m.chat.id, text)
 
 
