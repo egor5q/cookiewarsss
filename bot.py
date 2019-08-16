@@ -257,6 +257,10 @@ def feeed(m):
             spisok=['бамбук', 'большой бамбук', 'маленький бамбук', 'средний бамбук', 'яблоко', 'морковь', 'сосиску']
             s2=['лопату', 'не бамбук']
             petname='Панда'
+        if x['type']=='cock':
+            spisok=['зерно', 'лягушку', 'муху', 'муравья']
+            s2=['доту', 'аниме', 'футбол', 'качалку', 'лигу легенд', 'hearthstone']
+            petname='Петух'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -369,7 +373,7 @@ def gladit(m):
     try:
         x = chats.find_one({'id': m.chat.id})
         if x is not None:
-            bot.send_message(m.chat.id, m.from_user.first_name + ' погладил(а) ' + x['name'] + '!')
+            bot.send_message(m.chat.id, m.from_user.first_name + ' погладил(а) ' + +pettoemoji(x['type'])+x['name'] + '!')
         else:
             bot.send_message(m.chat.id, 'А гладить некого!')
     except:
@@ -562,7 +566,7 @@ def name(m):
     
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
-    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda']
+    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock']
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
         return
@@ -713,6 +717,8 @@ def change_pet(pet):
         x= 'boar'
     if pet=='панда':
         x='panda'
+    if pet=='петух':
+        x='cock'
     return x
     
     
@@ -983,6 +989,8 @@ def pettoemoji(pet):
         return '🦉'
     if pet=='panda':
         return '🐼'
+    if pet=='cock':
+        return '🐓'
     
     
     
@@ -1018,6 +1026,8 @@ def pettype(pet):
         return 'кабан'
     if pet=='panda':
         return 'панда'
+    if pet=='cock':
+        return 'петух'
     return t
     
 
@@ -1043,6 +1053,7 @@ def lose_horse(chat_id):  # returns True on success
     while lost.find_one({'id': horse_id}) is not None:
         horse_id += 1
     lost.update_one({'id': chat_id}, {'$set': {'id': horse_id}})
+    lost.update_one({'id': chat_id}, {'$set': {'type':'horse'}})
     return True
 
 
