@@ -648,6 +648,7 @@ def cubeee(m):
                     globalchats.update_one({'id':m.chat.id},{'$push':{'a'+'c'+'h'+'i'+'evem'+'ents':'so easy'}})
                     globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':2}})
                     bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.')
+                    bot.send_message(441399484, m.from_user.first_name+ '('+str(m.from_user.username)+') открыл секрет!')
                 else:
                     bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
             else:
