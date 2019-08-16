@@ -261,6 +261,10 @@ def feeed(m):
             spisok=['зерно', 'лягушку', 'муху', 'муравья']
             s2=['доту', 'аниме', 'футбол', 'качалку', 'лигу легенд', 'hearthstone']
             petname='Петух'
+        if x['type']=='onehorn':
+            spisok=['радугу', 'сено', 'овёс', 'картошку']
+            s2=['автобус', 'телефон', 'того, кто не верит в единорогов']
+            petname='Единорог'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -566,7 +570,7 @@ def name(m):
     
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
-    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock']
+    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn']
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
         return
@@ -719,6 +723,8 @@ def change_pet(pet):
         x='panda'
     if pet=='петух':
         x='cock'
+    if pet=='единорог':
+        x='onehorn'
     return x
     
     
@@ -991,6 +997,8 @@ def pettoemoji(pet):
         return '🐼'
     if pet=='cock':
         return '🐓'
+    if pet=='onehorn':
+        return '🦄'
     
     
     
@@ -1028,6 +1036,8 @@ def pettype(pet):
         return 'панда'
     if pet=='cock':
         return 'петух'
+    if pet=='onehorn':
+        return 'единорог'
     return t
     
 
