@@ -626,6 +626,15 @@ def announce(m):
     bot.send_message(m.chat.id, 'success')#"Сообщение успешно получило " + str(i) + '/' + str(chats.count_documents()) + " чатиков")
 
 
+@bot.message_handler(commands=['secret'])
+def cubeee(m):
+    chat=globalchats.find_one({'id':m.chat.id})
+    if chat!=None:
+        if 'so easy' not in chat['achievements']:
+            globalchats.update_one({'id':m.chat.id},{'$push':{'achievements':'so easy'}})
+            globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':2}})
+            bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.)
+
 @bot.message_handler(func=lambda message: not is_actual(message))
 def skip_message(m):
     print('old message skipped')
