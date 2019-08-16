@@ -956,7 +956,7 @@ def pettoemoji(pet):
     if pet=='dog':
         return '🐶'
     if pet=='octopus':
-        return '🦑'
+        return '🐙'
     if pet=='turtle':
         return '🐢'
     if pet=='hedgehog':
