@@ -1109,7 +1109,7 @@ def check_newday():
     z=time.ctime()
  
  
-    if y==4 and x==24:
+    if y==0 and x==24:
         users.update_many({},{'$set':{'now_elite':False}})
         allist=users.find({})
         alls=[]
