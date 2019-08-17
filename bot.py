@@ -967,11 +967,14 @@ def check_lvlup(pet):
     for ids in pet['lvlupers']:
         lvl+=1
     if lvl>0:
-        chats.update_one({'id':pet['id']},{'$inc':{'lvl':lvl, 'maxhunger':lvl*15, 'hunger':lvl*15}})
-        lvvl=chats.find_one({'id':pet['id']})['lvl']
-        chats.update_one({'id':pet['id']},{'$set':{'exp':nextlvl({'lvl':lvvl-1})}})
-        if pet['send_lvlup']==True:
-            bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
+        if pet['lvl']>=10:
+            chats.update_one({'id':pet['id']},{'$inc':{'lvl':lvl, 'maxhunger':lvl*15, 'hunger':lvl*15}})
+            lvvl=chats.find_one({'id':pet['id']})['lvl']
+            chats.update_one({'id':pet['id']},{'$set':{'exp':nextlvl({'lvl':lvvl-1})}})
+            if pet['send_lvlup']==True:
+                bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
+      
+            
     
 
 def pettoemoji(pet):
