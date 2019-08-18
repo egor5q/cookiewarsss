@@ -56,11 +56,20 @@ def sendd(m):
 @bot.message_handler(commands=['getelite'])
 def elitecheckk(m):
     if m.from_user.id==441399484:
-        text=''
+        text1=''
+        text2=''
+        text3=''
         for ids in users.find({}):
-            text+=ids['name']+'; '
+            if len(text1)<=2000:
+                text+=ids['name']+'; '
+            elif len(text2)<=2000:
+                text2+=ids['name']+'; '
+            else: 
+                text3+=ids['name']+'; '
         try:
             bot.send_message(m.chat.id, text)
+            bot.send_message(m.chat.id, text2)
+            bot.send_message(m.chat.id, text3)
         except:
             pass
 
