@@ -972,8 +972,10 @@ def check_lvlup(pet):
             lvvl=chats.find_one({'id':pet['id']})['lvl']
             chats.update_one({'id':pet['id']},{'$set':{'exp':nextlvl({'lvl':lvvl-1})}})
             if pet['send_lvlup']==True:
-                bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
-      
+                try:
+                    bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
+                except:
+                    pass
             
     
 
