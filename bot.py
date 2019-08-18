@@ -53,6 +53,17 @@ def sendd(m):
         except:
             pass
 
+@bot.message_handler(commands=['getelite'])
+def elitecheckk(m):
+    if m.from_user.id==441399484:
+        text=''
+        for ids in users.find_many({}):
+            text+=ids['name']+'; '
+        try:
+            bot.send_message(m.chat.id, text)
+        except:
+            pass
+
 
 @bot.message_handler(commands=['elitecheck'])
 def elitecheckk(m):
