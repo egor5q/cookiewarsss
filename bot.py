@@ -1058,7 +1058,6 @@ def check_hp(pet, horse_lost):
     maxhunger = pet['maxhunger']  # const
     hp = pet['hp']
     maxhp = pet['maxhp']  # const
-    global pet_abils
     
     
     if hunger <= 0:
