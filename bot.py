@@ -56,7 +56,7 @@ def sendd(m):
 @bot.message_handler(commands=['getelite'])
 def elitecheckk(m):
     if m.from_user.id==441399484:
-        text1=''
+        text=''
         text2=''
         text3=''
         for ids in users.find({}):
