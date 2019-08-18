@@ -1159,7 +1159,7 @@ def check_newday():
         alreadyelite=[]
         while len(alreadyelite)<amount:
             us=random.choice(alls)
-            if us['id'] not in alreadyelite:
+            if us['id'] not in alreadyelite and is['id']!=777000:
                 alreadyelite.append(us['id'])
         for ids in alreadyelite:
             users.update_one({'id':ids},{'$set':{'now_elite':True}})
