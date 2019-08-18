@@ -57,7 +57,7 @@ def sendd(m):
 def elitecheckk(m):
     if m.from_user.id==441399484:
         text=''
-        for ids in users.find_many({}):
+        for ids in users.find({}):
             text+=ids['name']+'; '
         try:
             bot.send_message(m.chat.id, text)
