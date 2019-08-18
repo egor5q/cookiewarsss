@@ -35,7 +35,9 @@ if lost.find_one({'amount': {'$exists': True}}) is None:
 botname = 'Chatpetsbot'
 admin_id = 441399484
 
+pet_abils=False
 
+chats.update_many({},{'$set':{'cock_check':0}})
 @bot.message_handler(commands=['fuck'])
 def fuuuuuuu(m):
     bot.send_message(m.chat.id, 'Fuck!')
@@ -103,6 +105,39 @@ def switch_lvlup(m):
 
   except:
     pass
+
+
+@bot.message_handler(commands=['cock'])
+def cockkkk(m):
+    global pet_abils
+    if pet_abils==True:
+        chat=chats.find_one({'id':m.chat.id})
+        if chat!=None:
+            if chat['type']=='cock':
+                user = bot.get_chat_member(m.chat.id, m.from_user.id)
+                if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
+                    m) and m.from_user.id != m.chat.id:
+                    bot.send_message(m.chat.id, 'Только админ может делать это!')
+                    return
+                if time.time()-chat['cock_check']>=1800:
+                    if m.reply_to_message!=None:
+                        x=users.find_one({'id':m.reply_to_message.from_user.id})
+                        if x!=None:
+                            if x['now_elite']==True:
+                                bot.send_message(m.chat.id, 'Выбранный юзер сегодня элита!', reply_to_message_id=m.message_id)
+                            else:
+                                bot.send_message(m.chat.id, 'Выбранный юзер сегодня НЕ элита!', reply_to_message_id=m.message_id)
+                            chats.update_one({'id':m.chat.id},{'$set':{'cock_check':time.time()}})
+                        else:
+                            bot.send_message(m.chat.id, 'Этого пользователя даже нет у меня в базе!')
+                    else:
+                        bot.send_message(m.chat.id, 'Сделайте реплай на сообщение юзера!')
+                else:
+                    bot.send_message(m.chat.id, 'Ещё не прошло пол часа с момента предыдущей проверки!')
+            else:
+                bot.send_message(m.chat.id, 'Только петух может делать это!')
+                    
+            
 
 @bot.message_handler(commands=['showlvl'])
 def lvlvlvlvl(m):
@@ -856,7 +891,8 @@ def createpet(id, typee='horse', name='Без имени'):
         'stats': {},  # Статы игроков: кто сколько кормит лошадь итд
         'spying': None,
         'send_lvlup':True,
-        'lvlupers':[]
+        'lvlupers':[],
+        'cock_check':0
     }
 
 
@@ -1175,7 +1211,7 @@ def is_from_admin(m):
 check_all_pets_hunger()
 check_all_pets_hp()
 check_newday()
-check_all_pets_lvlup()
+threading.Timer(900, check_all_pets_lvlup).start()
 
 print('7777')
 bot.polling(none_stop=True, timeout=600)
