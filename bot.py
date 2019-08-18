@@ -60,6 +60,7 @@ def elitecheckk(m):
         text2=''
         text3=''
         for ids in users.find({}):
+          if ids['now_elite']==True:
             if len(text)<=2000:
                 text+=ids['name']+'; '
             elif len(text2)<=2000:
