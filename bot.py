@@ -53,6 +53,14 @@ def sendd(m):
         except:
             pass
 
+
+@bot.message_handler(commands=['elitecheck'])
+def elitecheckk(m):
+    if m.from_user.id==725226227 or m.from_user.id==441399484:
+        if m.reply_to_message!=None:
+            if users.find_one({'id':m.reply_to_message.from_user.id})!=None:
+                bot.send_message(m.chat.id, str(users.find_one({'id':m.reply_to_message.from_user.id})['now_elite']))
+
 @bot.message_handler(commands=['switch_lvlup'])
 def switch_lvlup(m):
   try:
