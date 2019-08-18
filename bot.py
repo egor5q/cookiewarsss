@@ -37,7 +37,7 @@ admin_id = 441399484
 
 pet_abils=False
 
-chats.update_many({},{'$set':{'cock_check':0}})
+chats.update_many({},{'$set':{'panda_feed':0}})
 @bot.message_handler(commands=['fuck'])
 def fuuuuuuu(m):
     bot.send_message(m.chat.id, 'Fuck!')
@@ -892,7 +892,8 @@ def createpet(id, typee='horse', name='Без имени'):
         'spying': None,
         'send_lvlup':True,
         'lvlupers':[],
-        'cock_check':0
+        'cock_check':0,
+        'panda_feed':0
     }
 
 
@@ -911,6 +912,84 @@ def check_hunger(pet, horse_lost):
     exp = pet['exp']
     lvl = pet['lvl']
     lastminutefeed = pet['lastminutefeed']
+    global pet_abils
+    if pet_abils==True:
+        if pet['type']=='pig' and random.randint(1,1000)<=3:
+            lvl+=1
+            hunger+=15
+            maxhunger+=15
+            lvvl=lvl
+            exp=nextlvl({'lvl':lvvl-1})
+            if pet['send_lvlup']==True:
+                try:
+                    bot.send_message(pet['id'], 'Ваш питомец "свинка" повысил свой уровень на 1!')
+                except:
+                    pass
+        if pet['type']=='panda' and hunger==maxhunger:
+            chats.update_one({'id':pet['id']},{'$inc':{'panda_feed':len(lastminutefeed)*2}})
+        if pet['type']=='panda' and hunger<maxhunger:
+            addh=maxhunger-hunger
+            if pet['panda_feed']<addh:
+                addh=pet['panda_feed']
+            chats.update_one({'id':pet['id']},{'$inc':{'panda_feed':-addh}})
+            hunger+=addh
+        if pet['type']=='octopus' and hunger<maxhunger and random.randint(1,100)<=1:
+            db_pets = chats.find().sort('lvl', -1).limit(10)
+            if len(db_pets)>0:
+                trgt=random.choice(db_pets)
+                if trgt['type']=='dog' and random.randint(1,100)<=30:
+                    if trgt['send_lvlup']==True:
+                        bot.send_message(trgt['id'], 'Ваша собака спасла чат от осьминога "'+pet['name']+'"!')
+                    if pet['send_lvlup']==True:
+                        bot.send_message(pet['id'], 'Вашего осьминога прогнала собака "'+trgt['name']+'"!')
+                else:
+                    colvo=int(pet['maxhunger']*0.01)
+                    if colvo>int(trgt['maxhunger']*0.01):
+                        colvo=int(trgt['maxhunger']*0.01)
+                    chats.update_one({'id':trgt['id']},{'$inc':{'hunger':-colvo}})
+                    hunger+=colvo
+                    if trgt['send_lvlup']==True:
+                        bot.send_message(trgt['id'], 'Осьминог "'+pet['name']+'" украл у вас '+str(colvo)+' еды!')
+                    if pet['send_lvlup']==True:
+                        bot.send_message(pet['id'], 'Ваш осьминог украл у питомца "'+trgt['name']+'" '+str(colvo)+' еды!')
+        if pet['type']=='turtle' and random.randint(1,1000)<=3:
+            db_pets = chats.find().sort('lvl', -1).limit(10)
+            if len(db_pets)>0:
+                trgt=random.choice(db_pets)
+                if trgt['type']=='dog' and random.randint(1,100)<=30:
+                    if pet['send_lvlup']==True:
+                        try:
+                            bot.send_message(pet['id'], 'Ваш питомец "черепаха" попытался украсть уровень, но собака "'+trgt['name']+'" прогнала вас!')
+                        except:
+                            pass
+                    if trgt['send_lvlup']==True:
+                        try:
+                            bot.send_message(trgt['id'], 'Ваш питомец "собака" спас чат от черепахи "'+pet['name']+'"!')
+                        except:
+                            pass
+                else:
+                    lvl+=1
+                    hunger+=15
+                    maxhunger+=15
+                    lvvl=lvl
+                    exp=nextlvl({'lvl':lvvl-1})
+                    
+                    chats.update_one({'id':trgt['id']},{'$inc':{'lvl':-1, 'hunger':-15, 'maxhunger':-15}})
+                    lvvl=chats.find_one({'id':trgt['id']})['lvl']
+                    chats.update_one({'id':trgt['id']},{'$set':{'exp':nextlvl({'lvl':lvvl-1})}})
+                    if pet['send_lvlup']==True:
+                        try:
+                            bot.send_message(pet['id'], 'Ваш питомец "черепаха" украл уровень у питомца "'+trgt['name']+'"!')
+                        except:
+                            pass
+                    if trgt['send_lvlup']==True:
+                        try:
+                            bot.send_message(trgt['id'], 'Черепаха "'+pet['name']+'" украла у вас 1 уровень!')
+                        except:
+                            pass
+                    
+            
+            
 
     # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
     gchat=globalchats.find_one({'id':pet['id']})
@@ -930,6 +1009,8 @@ def check_hunger(pet, horse_lost):
         
     if len(lastminutefeed) > 0:
         hunger += len(lastminutefeed) * 2
+        if pet_abils==True and pet['type']=='bear':
+            hunger+=len(lastminutefeed)
         lastminutefeed = []
         if hunger > maxhunger:
             hunger = maxhunger
@@ -965,11 +1046,21 @@ def check_hunger(pet, horse_lost):
 
 
 def check_hp(pet, horse_lost):
-    hunger = pet['hunger'] - random.randint(3, 9)
+    global pet_abils
+    notlost=False
+    if pet_abils==True:
+        if pet['type']=='parrot' and random.randint(1,100)<=20:
+            notlost=True
+    if notlost==False:
+        hunger = pet['hunger'] - random.randint(3, 9)
+    else:
+        hunger = pet['hunger']
     maxhunger = pet['maxhunger']  # const
     hp = pet['hp']
     maxhp = pet['maxhp']  # const
-
+    global pet_abils
+    
+    
     if hunger <= 0:
         hunger = 0
         if not horse_lost:
