@@ -60,9 +60,9 @@ def elitecheckk(m):
         text2=''
         text3=''
         for ids in users.find({}):
-            if len(text1)<=2000:
+            if len(text1)<=1000:
                 text+=ids['name']+'; '
-            elif len(text2)<=2000:
+            elif len(text2)<=1000:
                 text2+=ids['name']+'; '
             else: 
                 text3+=ids['name']+'; '
