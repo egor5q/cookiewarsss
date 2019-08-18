@@ -37,7 +37,7 @@ admin_id = 441399484
 
 pet_abils=False
 
-chats.update_many({},{'$set':{'panda_feed':0}})
+#chats.update_many({},{'$set':{'panda_feed':0}})
 @bot.message_handler(commands=['fuck'])
 def fuuuuuuu(m):
     bot.send_message(m.chat.id, 'Fuck!')
