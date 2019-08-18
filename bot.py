@@ -36,6 +36,10 @@ botname = 'Chatpetsbot'
 admin_id = 441399484
 
 
+@bot.message_handler(commands=['fuck'])
+def fuuuuuuu(m):
+    bot.send_message(m.chat.id, 'Fuck!')
+
 #globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
 
 #users.update_many({},{'$set':{'now_elite':False}})
@@ -803,6 +807,8 @@ def messages(m):
   if m.chat.id not in block:
     if users.find_one({'id':m.from_user.id})==None:
         users.insert_one(createuser(m.from_user))
+    if m.from_user.first_name=='Telegram':
+        bot.send_message(441399484, str(m.from_user))
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
