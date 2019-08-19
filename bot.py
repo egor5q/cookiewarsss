@@ -340,8 +340,8 @@ def feeed(m):
             s = s2
         word = random.choice(s)
         name = m.from_user.first_name
-        name = name.replace('*', '').replace('_', '').replace("`", "")
-        name2=x['name'].replace('*', '').replace('_', '').replace("`", "")
+        name = name.replace('*', '\*').replace('_', '\_').replace("`", "\`")
+        name2=x['name'].replace('*', '\*').replace('_', '\_').replace("`", "\`")
         text = name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. '+petname+' с аппетитом съедает это!'
         bot.send_message(m.chat.id, text, parse_mode='markdown')
 
