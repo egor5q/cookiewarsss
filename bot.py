@@ -632,7 +632,7 @@ def name(m):
             pass
         bot.send_message(m.chat.id, 'Вы успешно сменили имя питомца на ' + name + '!')
     except:
-        bot.send_message(m.chat.id, 'Для переименования используйте формат\n/name *имя*\nГде *имя* - имя вашего питомца.', parse_mode='markdown')
+        bot.send_message(m.chat.id, 'Для переименования используйте формат:\n/name *имя*\nГде *имя* - имя вашего питомца.', parse_mode='markdown')
 
 
     
