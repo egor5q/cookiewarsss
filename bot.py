@@ -1064,13 +1064,13 @@ def check_hp(pet, horse_lost):
         if not horse_lost:
             send_message(pet['id'], 'Ваш питомец СИЛЬНО голодает! Осталось ' + str(
                 hunger) + ' сытости! СРОЧНО нужен актив в чат!')
-        hp -= random.randint(9, 15)
+        hp -= random.randint(1, 2)
 
     elif hunger / maxhunger * 100 <= 30:
         if not horse_lost:
             send_message(pet['id'], 'Ваш питомец голодает! Осталось всего ' + str(
                 hunger) + ' сытости! Срочно нужен актив в чат!')
-        hp -= random.randint(9, 15)
+        hp -= random.randint(0, 1)
 
     elif hunger / maxhunger * 100 >= 75 and hp < maxhp:
         hp += random.randint(3, 9)
