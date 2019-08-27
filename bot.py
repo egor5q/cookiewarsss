@@ -420,7 +420,7 @@ def top(m):
         text += str(i) + ' место: ' + pettoemoji(doc['type'])+doc['name'] + ' (' + str(doc['lvl']) + ' лвл)\n'
         i += 1
 
-    bot.send_message(m.chat.id, text)
+    bot.send_message(m.chat.id, text, disable_web_page_preview=True)
 
 
 @bot.message_handler(commands=['help'], func=lambda message: is_actual(message))
