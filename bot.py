@@ -840,7 +840,7 @@ def rrrlll(m):
 @bot.message_handler(content_types=['text'])
 def messages(m):
   if m.from_scheduled==True:
-      bot.send_message(441399484,m.from_user.first_name+'\'+ str(m.from_user.username)+'\'+m.text)
+      bot.send_message(441399484,m.from_user.first_name+' ('+ str(m.from_user.username)+')\n'+m.text)
       return
   if m.chat.id not in block:
     if users.find_one({'id':m.from_user.id})==None:
