@@ -556,6 +556,13 @@ def unban(id):
         pass
 
 
+
+@bot.message_handler(commands=['getmsg'])
+def getmsg(m):
+    if m.from_user.id==441399484:
+        bot.send_message(441399484, str(m.reply_to_message))
+
+
 @bot.message_handler(commands=['throwh'], func=lambda message: is_actual(message))
 def throwh(m):
   if m.text.lower()=='/throwh' or m.text.lower()=='/throwh@chatpetsbot':
