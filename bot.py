@@ -21,6 +21,7 @@ chats = db.chats
 globalchats = db.globalchats
 lost = db.lost
 chat_admins=db.chat_admins
+cyber=0
 
 ban = []
 totalban = [243153864, 866706209, 598442962,765420407, 
@@ -90,6 +91,7 @@ def elitecheckk(m):
 
 @bot.message_handler(commands=['switch_lvlup'])
 def switch_lvlup(m):
+  global cyber
   try:
     chat=chats.find_one({'id':m.chat.id})
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
@@ -99,10 +101,18 @@ def switch_lvlup(m):
             bot.send_message(m.chat.id, 'Теперь питомец *НЕ* будет присылать вам уведомления о повышении уровня!', parse_mode='markdown')
         else:
             chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':True}})
-            bot.send_message(m.chat.id, 'Теперь питомец будет присылать вам уведомления о повышении уровня!')
+            
+            if cyber!=1:
+                bot.send_message(m.chat.id, 'Теперь питомец будет присылать вам уведомления о повышении уровня!')
+            else:
+                bot.send_message(m.chat.id, 'Теперь киберпитомец будет присылать вам киберуведомления о киберповышении киберуровня!')
+            
     else:
-        bot.send_message(m.chat.id, 'Только администраторы чата могут делать это!')
-
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Только администраторы чата могут делать это!')
+        else:
+            bot.send_message(m.chat.id, 'Только киберадминистраторы киберчата могут киберделать это!')
+       
   except:
     pass
 
@@ -152,8 +162,14 @@ def lvlvlvlvl(m):
         
 @bot.message_handler(commands=['donate'])
 def donate(m):
-    text='Для совершения добровольного пожертвования можно использовать Сбербанк. '+\
+    global cyber
+    if cyber!=1:
+        text='Для совершения добровольного пожертвования можно использовать Сбербанк. '+\
     'Номер карты: `5336 6900 5562 4037`\nЗаранее благодарю!'
+    else:
+        text='Для совершения кибердобровольного киберпожертвования можно использовать КиберСбербанк. '+\
+    'Номер киберкарты: `5336 6900 5562 4037`\nЗаранее киберблагодарю!'
+   
     bot.send_message(m.chat.id, text, parse_mode='markdown')
         
 
@@ -192,19 +208,29 @@ def showchat(m):
 
 @bot.message_handler(commands=['growpet'])
 def grow(m):
+    global cyber
     animal = chats.find_one({'id': m.chat.id})
     if animal is not None:
-        bot.send_message(m.chat.id, 'У вас уже есть лошадь!')
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'У вас уже есть лошадь!')
+        else:
+            bot.send_message(m.chat.id, 'У вас уже есть киберлошадь!')
+       
         return
 
     chats.insert_one(createpet(m.chat.id))
-    bot.send_message(m.chat.id,
+    if cyber!=1:
+        bot.send_message(m.chat.id,
                      'Поздравляю! Вы завели питомца (лошадь)! О том, как за ней ухаживать, можно прочитать в /help.')
-
+    else:
+        bot.send_message(m.chat.id,
+                     'Кибероздравляю! Вы завели киберпитомца (киберлошадь)! О том, как за ней киберухаживать, можно киберпрочитать в киберхелп(/help).')
+ 
 
     
 @bot.message_handler(commands=['set_admin'])
 def set_admin(m):
+    global cyber
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status == 'creator':
         if m.reply_to_message!=None:
@@ -214,17 +240,33 @@ def set_admin(m):
                 chatt=chat_admins.find_one({'id':m.chat.id})
             if int(m.reply_to_message.from_user.id) not in chatt['admins']:
                 chat_admins.update_one({'id':m.chat.id},{'$push':{'admins':int(m.reply_to_message.from_user.id)}})
-                bot.send_message(m.chat.id, 'Успешно установлен админ лошади: '+m.reply_to_message.from_user.first_name)
+                if cyber!=1:
+                    bot.send_message(m.chat.id, 'Успешно установлен админ питомца: '+m.reply_to_message.from_user.first_name)
+                else:
+                    bot.send_message(m.chat.id, 'Киберуспешно установлен киберадмин кибеолошади: Кибер'+m.reply_to_message.from_user.first_name)
+               
             else:
-                bot.send_message(m.chat.id, 'Этот юзер уже является администратором лошади!')
+                if cyber!=1:
+                    bot.send_message(m.chat.id, 'Этот юзер уже является администратором лошади!')
+                else:
+                    bot.send_message(m.chat.id, 'Этот киберюзер уже киберявляется киберадминистратором киберлошади!')
+                
         else:
-            bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+            if cyber!=1:
+                bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+            else:
+                bot.send_message(m.chat.id, 'Сделайте киберреплай на киберсообщение киберцели!')
+           
     else:
-        bot.send_message(m.chat.id, 'Только создатель чата может делать это!')
-                    
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Только создатель чата может делать это!')
+        else:
+            bot.send_message(m.chat.id, 'Только киберсоздатель киберчата может киберделать это!')
+        
     
 @bot.message_handler(commands=['remove_admin'])
 def remove_admin(m):
+    global cyber
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status == 'creator':
         if m.reply_to_message!=None:
@@ -236,12 +278,23 @@ def remove_admin(m):
                 chat_admins.update_one({'id':m.chat.id},{'$pull':{'admins':int(m.reply_to_message.from_user.id)}})
                 bot.send_message(m.chat.id, 'Успешно удалён админ питомца: '+m.reply_to_message.from_user.first_name+'.')
             else:
-                bot.send_message(m.chat.id, 'Этот юзер не является администратором питомца!')
+                if cyber!=1:
+                    bot.send_message(m.chat.id, 'Этот юзер не является администратором питомца!')
+                else:
+                    bot.send_message(m.chat.id, 'Этот киберюзер не является киберадминистратором киберпитомца!')
+               
         else:
-            bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+            if cyber!=1:
+                bot.send_message(m.chat.id, 'Сделайте реплай на сообщение цели!')
+            else:
+                bot.send_message(m.chat.id, 'Сделайте киберреплай на киберсообщение киберцели!')
+            
     else:
-        bot.send_message(m.chat.id, 'Только создатель чата может делать это!')
-    
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Только создатель чата может делать это!')
+        else:
+            bot.send_message(m.chat.id, 'Только киберсоздатель чата может киберделать это!')
+       
     
     
 def createchatadmins(m):
@@ -261,10 +314,15 @@ def idssssss(m):
 
 @bot.message_handler(commands=['feed'])
 def feeed(m):
+    global cyber
     if m.text.lower()=='/feed' or m.text.lower()=='/feed@chatpetsbot':
         x = chats.find_one({'id': m.chat.id})
         if x is None:
-            bot.send_message(m.chat.id, 'А кормить некого:(')
+            if cyber!=1:
+                bot.send_message(m.chat.id, 'А кормить некого:(')
+            else:
+                bot.send_message(m.chat.id, 'А киберкормить некого:(')
+          
             return
         if x['type']=='horse':
             spisok = ['яблоко', 'сено', 'хлеб', 'шоколадку', 'кукурузу', 'сахар', 'траву', 'рыбу', 'сосиску', 'макароны']
@@ -342,21 +400,37 @@ def feeed(m):
         name = m.from_user.first_name
         name = name.replace('*', '\*').replace('_', '\_').replace("`", "\`")
         name2=x['name'].replace('*', '\*').replace('_', '\_').replace("`", "\`")
-        text = name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. '+petname+' с аппетитом съедает это!'
+        if cyber!=1:
+            text = ''+name + ' достаёт из кармана *' + word + '* и кормит ' + name2 + '. '+petname+' с аппетитом съедает это!'
+        else:
+            text = 'Кибер'+name + ' достаёт из киберкармана *кибер' + word + '* и кормит Кибер' + name2 + '. Кибер'+petname+' с кибераппетитом киберсъедает это!'
+      
         bot.send_message(m.chat.id, text, parse_mode='markdown')
 
 
 @bot.message_handler(commands=['commands'])
 def commands(m):
+  global cyber
   if m.text.lower()=='/commands' or m.text.lower()=='/commands@chatpetsbot':
-    text = '/feed - покормить питомца (ни на что не влияет, просто прикол);\n'
-    text += '/pogladit - погладить питомца\n'
-    text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять питомца из чата\n'
-    text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять питомца (только если ранее ему было это разрешено);\n'
-    text+='/achievement_list - список ачивок, за которые можно получить кубы;\n'
-    text+='/use_dice - попытка на получение нового типа питомцев;\n'
-    text+='/select_pet pet - выбор типа питомца.\n'
-    text+='@Chatpets - канал с обновлениями бота!'
+    if cyber!=1:
+        text = '/feed - покормить питомца (ни на что не влияет, просто прикол);\n'
+        text += '/pogladit - погладить питомца\n'
+        text+='/set_admin (только для создателя чата) - разрешить выбранному юзеру выгонять питомца из чата\n'
+        text+='/remove_admin (только для создателя чата) - запретить юзеру выгонять питомца (только если ранее ему было это разрешено);\n'
+        text+='/achievement_list - список ачивок, за которые можно получить кубы;\n'
+        text+='/use_dice - попытка на получение нового типа питомцев;\n'
+        text+='/select_pet pet - выбор типа питомца.\n'
+        text+='@Chatpets - канал с обновлениями бота!'
+    else:
+        text = '/feed - покормить киберпитомца (ни на что не кибервлияет, просто киберприкол);\n'
+        text += '/pogladit - погладить киберпитомца\n'
+        text+='/set_admin (только для киберсоздателя киберчата) - киберразрешить выбранному киберюзеру выгонять киберпитомца из киберчата\n'
+        text+='/remove_admin (только для киберсоздателя киберчата) - киберзапретить кибеоюзеру выгонять киберпитомца (только если киберранее ему было это киберразрешено);\n'
+        text+='/achievement_list - список киберачивок, за которые можно киберполучить киберкубы;\n'
+        text+='/use_dice - киберпопытка на киберполучение нового кибертипа киберпитомцев;\n'
+        text+='/select_pet pet - выбор кибеотипа киберпитомца.\n'
+        text+='@Chatpets - киберканал с киберобновлениями кибербота!'
+    
     bot.send_message(m.chat.id, text)
 
 
@@ -378,8 +452,13 @@ def getpet(m):
 
 @bot.message_handler(commands=['rules'])
 def rules(m):
+  global cyber
   if m.text.lower()=='/rules' or m.text.lower()=='/rules@chatpetsbot':
-    text = '1. Не использовать клиентских ботов для кормления питомца! За это будут наказания.\n2. Не давать рекламу в списке выброшенных питомцев.'
+    if cyber!=1:
+        text = '1. Не использовать клиентских ботов для кормления питомца! За это будут наказания.\n2. Не давать рекламу в списке выброшенных питомцев.'
+    else:
+        text = '1. Не использовать киберклиентских киберботов для киберкормления киберпитомца! За это будут кибернаказания.\n2. Не давать киберрекламу в киберсписке выброшенных киберпитомцев.'
+   
     bot.send_message(m.chat.id, text)
 
 
@@ -395,8 +474,13 @@ def removee(m):
 
 @bot.message_handler(commands=['start'], func=lambda message: is_actual(message))
 def startt(m):
+    global cyber
     if m.from_user.id == m.chat.id:
-        bot.send_message(m.chat.id, 'Здравствуй! /help для информации.')
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Здравствуй! /help для информации.')
+        else:
+            bot.send_message(m.chat.id, 'Киберздравствуй! /help для киберинформации.')
+       
 
 
 @bot.message_handler(commands=['info'])
