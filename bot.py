@@ -41,7 +41,12 @@ pet_abils=False
 #chats.update_many({},{'$set':{'panda_feed':0}})
 @bot.message_handler(commands=['fuck'])
 def fuuuuuuu(m):
-    bot.send_message(m.chat.id, 'Fuck!')
+    global cyber
+    if cyber!=1:
+        bot.send_message(m.chat.id, 'Fuck!')
+    else:
+        bot.send_message(m.chat.id, 'Киберfuck!')
+   
 
 #globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
 
@@ -1092,9 +1097,10 @@ def new_season(m):
 
 @bot.message_handler(commands=['refresh_lvl'])
 def rrrlll(m):
-    if m.from_user.id==441399484:
+    pass
+    #if m.from_user.id==441399484:
         
-        globalchats.update_many({},{'$set':{'avalaible_pets':['horse'], 'pet_access':2, 'achievements':[]}})
+     #   globalchats.update_many({},{'$set':{'avalaible_pets':['horse'], 'pet_access':2, 'achievements':[]}})
 
 
 @bot.message_handler(content_types=['text'])
@@ -1170,6 +1176,7 @@ def nextlvl(pet):
 
 
 def check_hunger(pet, horse_lost):
+    global cyber
     hunger = pet['hunger']
     maxhunger = pet['maxhunger']
     exp = pet['exp']
@@ -1260,13 +1267,21 @@ def check_hunger(pet, horse_lost):
         if len(lastminutefeed)>=10 and '10 users in one minute!' not in gchat['achievements']:
             globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'10 users in one minute!'}})
             globalchats.update_one({'id':pet['id']},{'$inc':{'pet_access':3}})
-            bot.send_message(pet['id'], 'Заработано достижение: супер-актив! Получено: 3 куба (/chat_stats).')
+            if cyber!=1:
+                bot.send_message(pet['id'], 'Заработано достижение: супер-актив! Получено: 3 куба (/chat_stats).')
+            else:
+                bot.send_message(pet['id'], 'Заработано кибердостижение: кибер-супер-актив! Получено: 3 киберкуба (/chat_stats).')
+          
             
     if gchat!=None:
         if 86190439 in lastminutefeed and 'dmitriy isaev' not in gchat['achievements']:
             globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'dmitriy isaev'}})
             globalchats.update_one({'id':pet['id']},{'$inc':{'pet_access':3}})
-            bot.send_message(pet['id'], 'Заработано достижение: Дмитрий Исаев! Получено: 3 куба (/chat_stats).')
+            if cyber!=1:
+                bot.send_message(pet['id'], 'Заработано достижение: Дмитрий Исаев! Получено: 3 куба (/chat_stats).')
+            else:
+                bot.send_message(pet['id'], 'Заработано кибердостижение: КиберДмитрий Исаев! Получено: 3 киберкуба (/chat_stats).')
+          
         
         
         
@@ -1290,7 +1305,11 @@ def check_hunger(pet, horse_lost):
         lvl += 1
         maxhunger += 15
         if not horse_lost:
-            send_message(pet['id'], 'Уровень вашего питомца повышен! Максимальный запас сытости увеличен на 15!', act='lvlup')
+            if cyber!=1:
+                send_message(pet['id'], 'Уровень вашего питомца повышен! Максимальный запас сытости увеличен на 15!', act='lvlup')
+            else:
+                send_message(pet['id'], 'Киберуровень вашего киберпитомца повышен! Максимальный киберзапас киберсытости киберувеличен на 15!', act='lvlup')
+          
      
     ii=100
     if gchat!=None:
@@ -1298,7 +1317,11 @@ def check_hunger(pet, horse_lost):
             if lvl>=ii and 'lvl '+str(ii) not in gchat['achievements']:
                 globalchats.update_one({'id':pet['id']},{'$push':{'achievements':'lvl '+str(ii)}})
                 globalchats.update_one({'id':pet['id']},{'$inc':{'pet_access':1}})
-                bot.send_message(pet['id'], 'Заработано достижение: '+str(ii)+' лвл! Получено: 1 куб (/chat_stats).')
+                if cyber!=1:
+                    bot.send_message(pet['id'], 'Заработано достижение: '+str(ii)+' лвл! Получено: 1 куб (/chat_stats).')
+                else:
+                    bot.send_message(pet['id'], 'Заработано кибердостижение: '+str(ii)+' киберлвл! Получено: 1 киберкуб (/chat_stats).')
+              
             ii+=100
 
     commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
@@ -1309,6 +1332,7 @@ def check_hunger(pet, horse_lost):
 
 
 def check_hp(pet, horse_lost):
+    global cyber
     global pet_abils
     notlost=False
     if pet_abils==True:
@@ -1326,14 +1350,24 @@ def check_hp(pet, horse_lost):
     if hunger <= 0:
         hunger = 0
         if not horse_lost:
-            send_message(pet['id'], 'Ваш питомец СИЛЬНО голодает! Осталось ' + str(
+            if cyber!=1:
+                send_message(pet['id'], 'Ваш питомец СИЛЬНО голодает! Осталось ' + str(
                 hunger) + ' сытости! СРОЧНО нужен актив в чат!')
+            else:
+                send_message(pet['id'], 'Ваш киберпитомец КИБЕРСИЛЬНО киберголодает! Осталось ' + str(
+                hunger) + ' киберсытости! КИБЕРСРОЧНО нужен киберактив в киберчат!')
+          
         hp -= random.randint(1, 2)
 
     elif hunger / maxhunger * 100 <= 30:
         if not horse_lost:
-            send_message(pet['id'], 'Ваш питомец голодает! Осталось всего ' + str(
+            if cyber!=1:
+                send_message(pet['id'], 'Ваш питомец голодает! Осталось всего ' + str(
                 hunger) + ' сытости! Срочно нужен актив в чат!')
+            else:
+                send_message(pet['id'], 'Ваш киберпитомец киберголодает! Осталось всего ' + str(
+                hunger) + ' киберсытости! Киберсрочно нужен киберактив в киберчат!')
+          
         hp -= random.randint(0, 1)
 
     elif hunger / maxhunger * 100 >= 75 and hp < maxhp:
@@ -1348,9 +1382,15 @@ def check_hp(pet, horse_lost):
         if not horse_lost:
             chats.delete_one({'id': pet['id']})
             try:
-                bot.send_message(pet['id'],
+                if cyber!=1:
+                    bot.send_message(pet['id'],
                                  'Вашему питомцу плохо в вашем чате, ему не хватает питания. Поэтому я забираю его, чтобы он не умер.\n' +
-                                 'Количество лошадей, которых мне пришлось забрать (во всех чатах): ' + str(total))
+                                 'Количество питомцев, которых мне пришлось забрать (во всех чатах): ' + str(total))
+                else:
+                    bot.send_message(pet['id'],
+                                 'Вашему киберпитомцу киберплохо в вашем киберчате, ему не хватает киберпитания. Поэтому я киберзабираю его, чтобы он не киберумер.\n' +
+                                 'Киберколичество киберпитомцев, которых мне пришлось киберзабрать (во всех киберчатах): ' + str(total))
+                
             except:
                 pass
         else:
