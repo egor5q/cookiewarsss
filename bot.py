@@ -940,6 +940,7 @@ def announce(m):
 
 @bot.message_handler(commands=['secret'])
 def cubeee(m):
+    global cyber
     chat=globalchats.find_one({'id':m.chat.id})
     if chat!=None:
         if 'so easy' not in chat['achievements']:
@@ -948,13 +949,24 @@ def cubeee(m):
                 if x['lvl']>=15:
                     globalchats.update_one({'id':m.chat.id},{'$push':{'a'+'c'+'h'+'i'+'evem'+'ents':'so easy'}})
                     globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':2}})
-                    bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.')
+                    if cyber!=1:
+                        bot.send_message(m.chat.id, 'Открыто достижение "Так просто?"! Награда: 2 куба.')
+                    else:
+                        bot.send_message(m.chat.id, 'Открыто кибердостижение "Так киберпросто?"! Кибернаграда: 2 киберкуба.')
+                   
                     bot.send_message(441399484, m.from_user.first_name+ '('+str(m.from_user.username)+') открыл секрет!')
                 else:
-                    bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
+                    if cyber!=1:
+                        bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
+                    else:
+                        bot.send_message(m.chat.id, 'Для кибероткрытия этого кибердостижения нужен минимум 15й киберуровень киберпитомца!')
+                 
             else:
-                bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
-
+                if cyber!=1:
+                    bot.send_message(m.chat.id, 'Для открытия этого достижения нужен минимум 15й уровень питомца!')
+                else:
+                    bot.send_message(m.chat.id, 'Для кибероткрытия этого кибердостижения нужен минимум 15й киберуровень киберпитомца!')
+                
 
 
 @bot.message_handler(func=lambda message: not is_actual(message))
