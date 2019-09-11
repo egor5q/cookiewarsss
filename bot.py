@@ -845,6 +845,7 @@ def name(m):
     
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
+    global cyber
     alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn']
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
@@ -853,19 +854,31 @@ def use_dice(m):
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
         if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
                 m) and m.from_user.id != m.chat.id:
-            bot.send_message(m.chat.id, 'Только администратор может делать это!')
+            if cyber!=1:
+                bot.send_message(m.chat.id, 'Только администратор может делать это!')
+            else:
+                bot.send_message(m.chat.id, 'Только киберадминистратор может киберделать это!')
+          
             return
         tt=random.choice(alltypes)
         globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':-1}})
         if tt not in chat['avalaible_pets']:
             globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':tt}})
-        bot.send_message(m.chat.id, 'Кручу-верчу, питомца выбрать хочу...\n...\n...\n...\n...\n...\nПоздравляю! Вам достался питомец "*'+pettype(tt)+'*"!', parse_mode='markdown')
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Кручу-верчу, питомца выбрать хочу...\n...\n...\n...\n...\n...\nПоздравляю! Вам достался питомец "*'+pettype(tt)+'*"!', parse_mode='markdown')
+        else:
+            bot.send_message(m.chat.id, 'Киберкручу-киберверчу, киберпитомца выбрать хочу...\n...\n...\n...\n...\n...\nКиберпоздравляю! Вам достался киберпитомец "*кибер'+pettype(tt)+'*"!', parse_mode='markdown')
+       
     else:
-        bot.send_message(m.chat.id, 'У вас нет кубов! Зарабатывайте достижения для их получения!')
-    
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'У вас нет кубов! Зарабатывайте достижения для их получения!')
+        else:
+            bot.send_message(m.chat.id, 'У вас нет киберкубов! Зарабатывайте кибердостижения для их киберполучения!')
+       
     
 @bot.message_handler(commands=['chat_stats'])
 def chatstats(m):
+    global cyber
     x=globalchats.find_one({'id':m.chat.id})
     if x==None:
         return
@@ -880,12 +893,24 @@ def chatstats(m):
     lastpets=''
     for ids in x['saved_pets']:
         hr=x['saved_pets'][ids]
-        lastpets+=pettoemoji(hr['type'])+hr['name']+': '+str(hr['lvl'])+'\n'
-    text=''
-    text+='Питомцы из прошлых сезонов: '+lastpets+'\n'
-    text+='🎖Максимальный уровень лошади в этом чате: '+str(x['pet_maxlvl'])+';\n'
-    text+='🌏Доступные типы питомцев: '+pts+'\n'
-    text+='🎲Количество попыток для увеличения доступных типов (кубы): '+str(x['pet_access'])+' (использовать: /use_dice).'
+        if cyber!=1:
+            lastpets+=pettoemoji(hr['type'])+hr['name']+': '+str(hr['lvl'])+' лвл\n'
+        else:
+            lastpets+=pettoemoji(hr['type'])+'Кибер'+hr['name']+': '+str(hr['lvl'])+' киберлвл\n'
+       
+    if cyber!=1:
+        text=''
+        text+='Питомцы из прошлых сезонов: '+lastpets+'\n'
+        text+='🎖Максимальный уровень питомца в этом чате: '+str(x['pet_maxlvl'])+';\n'
+        text+='🌏Доступные типы питомцев: '+pts+'\n'
+        text+='🎲Количество попыток для увеличения доступных типов (кубы): '+str(x['pet_access'])+' (использовать: /use_dice).'
+    else:
+        text=''
+        text+='Киберпитомцы из прошлых киберсезонов: '+lastpets+'\n'
+        text+='🎖Кибермаксимальный киберуровень киберпитомца в этом киберчате: '+str(x['pet_maxlvl'])+';\n'
+        text+='🌏Кибердоступные кибертипы киберпитомцев: '+pts+'\n'
+        text+='🎲Киберколичество киберпопыток для киберувеличения доступных кибертипов (киберкубы): '+str(x['pet_access'])+' (использовать: /use_dice).'
+   
     bot.send_message(m.chat.id, text)
     
 
