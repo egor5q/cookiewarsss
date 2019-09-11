@@ -504,7 +504,11 @@ def top(m):
   global cyber
   if m.text.lower()=='/top' or m.text.lower()=='/top@chatpetsbot':
     db_pets = chats.find().sort('lvl', -1).limit(10)
-    text = 'Топ-10 питомцев:\n\n'
+    if cyber!=1:
+        text = 'Топ-10 питомцев:\n\n'
+    else:
+        text = 'Кибертоп-10 киберпитомцев:\n\n'
+   
     i = 1
     for doc in db_pets:
         if cyber!=1:
