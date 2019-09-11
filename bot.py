@@ -21,7 +21,7 @@ chats = db.chats
 globalchats = db.globalchats
 lost = db.lost
 chat_admins=db.chat_admins
-cyber=0
+cyber=1
 
 ban = []
 totalban = [243153864, 866706209, 598442962,765420407, 
@@ -1427,6 +1427,7 @@ def check_all_pets_hp():
 
     
 def check_lvlup(pet):
+    global cyber
     lvl=0
     for ids in pet['lvlupers']:
         lvl+=1
@@ -1437,7 +1438,11 @@ def check_lvlup(pet):
             chats.update_one({'id':pet['id']},{'$set':{'exp':nextlvl({'lvl':lvvl-1})}})
             if pet['send_lvlup']==True:
                 try:
-                    bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень лошади на '+str(lvl)+'!')
+                    if cyber!=1:
+                        bot.send_message(pet['id'], '"Друзья животных" в вашем чате подняли уровень питомца на '+str(lvl)+'!')
+                    else:
+                        bot.send_message(pet['id'], '"Кибердрузья киберживотных" в вашем киберчате подняли киберуровень киберпитомца на '+str(lvl)+'!')
+                 
                 except:
                     pass
             
