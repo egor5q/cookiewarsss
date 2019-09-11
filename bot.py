@@ -987,6 +987,7 @@ def createuser(user):
 
 @bot.message_handler(commands=['select_pet'])
 def selectpett(m):
+    global cyber
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
         return
@@ -999,16 +1000,31 @@ def selectpett(m):
                 user = bot.get_chat_member(m.chat.id, m.from_user.id)
                 if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
                     m) and m.from_user.id != m.chat.id:
-                    bot.send_message(m.chat.id, 'Только админ может делать это!')
+                    if cyber!=1:
+                        bot.send_message(m.chat.id, 'Только админ может делать это!')
+                    else:
+                        bot.send_message(m.chat.id, 'Только киберадмин может киберделать это!')
+                  
                     return
                 if newpet in chat['avalaible_pets']:
                     chats.update_one({'id':m.chat.id},{'$set':{'type':newpet}})
-                    bot.send_message(m.chat.id, 'Вы успешшно сменили тип питомца на "'+pet+'"!')
+                    if cyber!=1:
+                        bot.send_message(m.chat.id, 'Вы успешно сменили тип питомца на "'+pet+'"!')
+                    else:
+                        bot.send_message(m.chat.id, 'Вы киберуспешно сменили кибертип киберпитомца на "кибер'+pet+'"!')
+                   
                 else:
-                    bot.send_message(m.chat.id, 'Вам сейчас не доступен этот тип питомцев (или его просто не существует)!')
+                    if cyber!=1:
+                        bot.send_message(m.chat.id, 'Вам сейчас не доступен этот тип питомцев!')
+                    else:
+                        bot.send_message(m.chat.id, 'Вам сейчас не кибердоступен этот кибертип киберпитомцев!')
+                    
     else:
-        bot.send_message(m.chat.id, 'Ошибка! Используйте формат\n/select_pet pet\nГде pet - доступный вам тип питомцев (посмотреть их можно в /chat_stats).')
-    
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Ошибка! Используйте формат\n/select_pet pet\nГде pet - доступный вам тип питомцев (посмотреть их можно в /chat_stats).')
+        else:
+            bot.send_message(m.chat.id, 'Киберошибка! Используйте киберформат\n/select_pet pet\nГде pet - доступный вам кибертип киберпитомцев (киберпосмотреть их можно в /chat_stats).')
+       
 
 def change_pet(pet):
     x=None
