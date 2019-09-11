@@ -670,20 +670,34 @@ def losthorses(m):
 
 @bot.message_handler(commands=['takeh'], func=lambda message: is_actual(message))
 def takeh(m):
+    global cyber
     try:
         horse_id = int(m.text.split(' ')[1])
         if lost.find_one({'id': horse_id}) is None:
-            bot.send_message(m.chat.id, "Питомец не существует!")
+            if cyber!=1:
+                bot.send_message(m.chat.id, "Питомец не существует!")
+            else:
+                bot.send_message(m.chat.id, "Киберпитомец не существует!")
+           
             return
 
         if chats.find_one({'id': m.chat.id}) is not None:
-            bot.send_message(m.chat.id, "У вас уже есть питомец!")
+            if cyber!=1:
+                bot.send_message(m.chat.id, "У вас уже есть питомец!")
+            else:
+                bot.send_message(m.chat.id, "У вас уже есть киберпитомец!")
+           
             return
 
         take_horse(horse_id, m.chat.id)
         chats.update_one({'id': horse_id}, {'$set': {'id': m.chat.id}})
-        bot.send_message(m.chat.id,
+        if cyber!=1:
+            bot.send_message(m.chat.id,
                          "Поздравляем, вы спасли питомца от голода! Следите за ним, чтобы он рос и не голодал!")
+        else:
+            bot.send_message(m.chat.id,
+                         "Киберпоздравляем, вы спасли киберпитомца от киберголода! Следите за ним, чтобы он киберрос и не киберголодал!")
+       
     except:
         pass
 
