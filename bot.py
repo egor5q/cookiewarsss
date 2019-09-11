@@ -718,6 +718,7 @@ def getmsg(m):
 
 @bot.message_handler(commands=['throwh'], func=lambda message: is_actual(message))
 def throwh(m):
+  global cyber
   if m.text.lower()=='/throwh' or m.text.lower()=='/throwh@chatpetsbot':
     if m.chat.id not in ban:
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
@@ -725,29 +726,49 @@ def throwh(m):
         if ch==None:
             if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
                     m) and m.from_user.id != m.chat.id:
-                bot.send_message(m.chat.id, 'Только админ может делать это!')
+                if cyber!=1:
+                    bot.send_message(m.chat.id, 'Только админ может делать это!')
+                else:
+                    bot.send_message(m.chat.id, 'Только киберадмин может киберделать это!')
+              
                 return
         else:
             if m.from_user.id not in ch['admins']:
-                bot.send_message(m.chat.id, 'Только админ лошади может делать это! Выставить админов может создатель чата по команде: /set_admin. Убрать админа можно командой /remove_admin.')
+                if cyber!=1:
+                    bot.send_message(m.chat.id, 'Только админ питомца может делать это! Выставить админов может создатель чата по команде: /set_admin. Убрать админа можно командой /remove_admin.')
+                else:
+                    bot.send_message(m.chat.id, 'Только киберадмин киберпитомца может киберделать это! Выставить киберадминов может киберсоздатель киберчата по киберкоманде: /set_admin. Убрать киберадмина можно киберкомандой /remove_admin.')
+              
                 return
     
         if chats.find_one({'id': m.chat.id}) is None:
-            bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались!")
+            if cyber!=1:
+                bot.send_message(m.chat.id, "У вас даже лошади нет, а вы ее выкидывать собрались!")
+            else:
+                bot.send_message(m.chat.id, "У вас даже киберлошади нет, а вы ее кибервыкидывать киберсобрались!")
+         
             return
     
         if lose_horse(m.chat.id):
             ban.append(m.chat.id)
             t = threading.Timer(3600, unban, args=[m.chat.id])
             t.start()
-            bot.send_message(m.chat.id,
+            if cyber!=1:
+                bot.send_message(m.chat.id,
                              "Вы выбросили питомца на улицу... Если его никто не подберет, он умрет от голода!")
+            else:
+                bot.send_message(m.chat.id,
+                             "Вы выбросили киберпитомца на киберулицу... Если его никто не киберподберет, он киберумрет от киберголода!")
+           
         else:
             bot.send_message(m.chat.id,
                                  "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
     else:
-        bot.send_message(m.chat.id, 'Можно выгонять только одного питомца в час!')
-
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Можно выгонять только одного питомца в час!')
+        else:
+            bot.send_message(m.chat.id, 'Можно кибервыгонять только одного киберпитомца в киберчас!')
+      
 
 @bot.message_handler(commands=['ban'])
 def bannn(m):
@@ -761,16 +782,26 @@ def bannn(m):
 
 @bot.message_handler(commands=['name'], func=lambda message: is_actual(message))
 def name(m):
+    global cyber
     try:
         if m.chat.id in totalban or m.from_user.id in totalban:
-            bot.send_message(m.chat.id,
+            if cyber!=1:
+                bot.send_message(m.chat.id,
                              'Вам было запрещено менять имя питомца! Разбан через рандомное время (1 минута - 24 часа).')
+            else:
+                bot.send_message(m.chat.id,
+                             'Вам было киберзапрещено киберменять имя киберпитомца! Киберразбан через киберрандомное кибервремя (1 минута - 24 часа).')
+
             return
 
         user = bot.get_chat_member(m.chat.id, m.from_user.id)
         if user.status != 'creator' and user.status != 'administrator' and not is_from_admin(
                 m) and m.from_user.id != m.chat.id:
-            bot.send_message(m.chat.id, 'Только админ может делать это!')
+            if cyber!=1:
+                bot.send_message(m.chat.id, 'Только админ может делать это!')
+            else:
+                bot.send_message(m.chat.id, 'Только киберадмин может киберделать это!')
+           
             return
 
         name = m.text.split('/name ')[1]
@@ -779,10 +810,18 @@ def name(m):
             return
 
         if len(name) > 50:
-            bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
+            if cyber!=1:
+                bot.send_message(m.chat.id, "Максимальная длина имени - 50 символов!")
+            else:
+                bot.send_message(m.chat.id, "Кибермаксимальная кибердлина киберимени - 50 киберсимволов!")
+         
             return
         if len(name) < 2:
-            bot.send_message(m.chat.id, "Минимальная длина имени - 2 символа!")
+            if cyber!=1:
+                bot.send_message(m.chat.id, "Минимальная длина имени - 2 символа!")
+            else:
+                bot.send_message(m.chat.id, "Киберминимальная кибердлина киберимени - 2 киберсимвола!")
+            
             return
         chats.update_one({'id': m.chat.id}, {'$set': {'name': name}})
         try:
@@ -790,9 +829,17 @@ def name(m):
                              str(m.from_user.id) + ' ' + m.from_user.first_name + ' (имя: ' + name + ')')
         except:
             pass
-        bot.send_message(m.chat.id, 'Вы успешно сменили имя питомца на ' + name + '!')
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Вы успешно сменили имя питомца на ' + name + '!')
+        else:
+            bot.send_message(m.chat.id, 'Вы успешно киберсменили киберимя киберпитомца на Кибер' + name + '!')
+      
     except:
-        bot.send_message(m.chat.id, 'Для переименования используйте формат:\n/name *имя*\nГде *имя* - имя вашего питомца.', parse_mode='markdown')
+        if cyber!=1:
+            bot.send_message(m.chat.id, 'Для переименования используйте формат:\n/name *имя*\nГде *имя* - имя вашего питомца.', parse_mode='markdown')
+        else:
+            bot.send_message(m.chat.id, 'Для киберпереименования используйте киберформат:\n/name *киберимя*\nГде *киберимя* - киберимя вашего киберпитомца.', parse_mode='markdown')
+      
 
 
     
