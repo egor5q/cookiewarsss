@@ -21,7 +21,7 @@ chats = db.chats
 globalchats = db.globalchats
 lost = db.lost
 chat_admins=db.chat_admins
-cyber=1
+cyber=0
 
 ban = []
 totalban = [243153864, 866706209, 598442962,765420407, 
