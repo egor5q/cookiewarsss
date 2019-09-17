@@ -1704,7 +1704,7 @@ threading.Timer(900, check_all_pets_lvlup).start()
 #      time.sleep(6)
 #   print(bar)
 #   print('Ожидание платежа')
-#   
+#   #########################################################################
 #def cancelpay(id):
 #   try:
 #     x=donates.find_one({})
@@ -1739,30 +1739,22 @@ threading.Timer(900, check_all_pets_lvlup).start()
 #         if z['price']==150:
 #            tovar='1_upgrade'
 #            amount=1
+#            tx='мини_буст'
 #         elif z['price']==350:
 #            tovar='2_upgrade'
 #            amount=2
+#            tx='средний_буст'
 #         elif z['price']==750:
 #            tovar='3_upgrade'
 #            amount=3
+#            tx='большой_буст'
 #         usr=users.find_one({'id':int(id)})
 #         dtxt=''
 #         globalchats.update_one({'id':int(id)},{'$inc':{tovar:amount}})
-#         if z['price']>=129 and '2slot' not in usr['buildings']:
-#             users.update_one({'id':int(id)},{'$push':{'buildings':'2slot'}})
-#             dtxt+=';\n2й слот для бойца!'
-#         elif z['price']>=219 and '3slot' not in usr['buildings']:
-#             users.update_one({'id':int(id)},{'$push':{'buildings':'3slot'}})
-#             dtxt+=';\n3й слот для бойца!'
-#         if z['price']>=300:
-#             dtxt+=';\nСмайлики для хп! Отпишите Пасюку, чтобы выбрать.'
-#         if z['price']>=300:
-#             dna=int(z['price']/150)
-#             users.update_one({'id':int(id)},{'$inc':{'dna':dna}})
-#             dtxt+=';\n'+str(dna)+' 🧬ДНК!'
-#         users.update_one({'id':int(id)},{'$inc':{'cookie':c}})
+#         dtxt+=tx+' ('+str(amount)+')!'
+#         
 #         pay.update_one({},{'$pull':{'donaters':removal}})
-#         bot.send_message(int(id),'Ваш платёж прошёл успешно! Получено: '+str(c)+'⚛'+dtxt)     
+#         bot.send_message(int(id),'Ваш платёж прошёл успешно! Получено: '+dtxt)     
 #         bot.send_message(441399484,'New payment!')
 #      print(bar)
 #      
