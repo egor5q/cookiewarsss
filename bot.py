@@ -22,6 +22,9 @@ chats = db.chats
 globalchats = db.globalchats
 lost = db.lost
 chat_admins=db.chat_admins
+pay=db.pay
+donates=db.donates
+
 cyber=0
 
 ban = []
@@ -30,6 +33,9 @@ totalban = [243153864, 866706209, 598442962,765420407,
    638625062,  872696708,941085059,  958911815, 579555709, 725226227] 
 block=[-1001365421933, 725226227]
 
+
+token=0
+mylogin=0
 
 if lost.find_one({'amount': {'$exists': True}}) is None:
     lost.insert_one({'amount': 0})
@@ -1615,6 +1621,157 @@ check_all_pets_hunger()
 check_all_pets_hp()
 check_newday()
 threading.Timer(900, check_all_pets_lvlup).start()
+
+
+
+#@bot.message_handler(commands=['buy'])
+#def allmesdonate(m):
+# if m.from_user.id==m.chat.id:
+#   x=users.find_one({'id':m.from_user.id})
+#   if x!=None:
+#    word=m.text.split(' ')
+#    if len(word)==2:
+#     try:
+#       price=None
+#       if word[1].lower()=='мини_буст':
+#            price=150
+#        if word[1].lower()=='средний_буст':
+#            price=350
+#        if word[1].lower()=='болшьшой_буст':
+#            price=750
+#       if price!=None:
+#         pay.update_one({},{'$inc':{'x':1}})
+#         pn=pay.find_one({})
+#         pn=pn['x']
+#         pay.update_one({},{'$push':{'donaters':createdonater(m.chat.id,pn)}})
+#         bot.send_message(m.chat.id,'Для совершения покупки улучшения "'+word[1].lower()+'" для чата "'+m.chat.title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
+#                        '`egor5q`\nС комментарием:\n`'+str(pn)+'`\n*Важно:* если сумма будет меньше указанной, или '+
+#                          'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
+#         comment=api.bill(comment=str(pn), price=price)
+#         print(comment)
+#       else:
+#         bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
+#                          '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
+#                          '`средний_буст` - первая выращенная лошадь в двух следующих сезонах начнёт с 200го уровня, цена: 350р.\n'+
+#                          '`болшьшой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 750р.\n'+
+#                          'ВАЖНО!\nЭту команду нужно ввести именно в том чате, в котором вы хотите получить улучшение!',parse_mode='markdown')
+#     except:
+#      pass
+#    else:
+#         bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
+#                          '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
+#                          '`средний_буст` - первая выращенная лошадь в двух следующих сезонах начнёт с 200го уровня, цена: 350р.\n'+
+#                          '`болшьшой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 750р.\n'+
+#                          'ВАЖНО!\nЭту команду нужно ввести именно в том чате, в котором вы хотите получить улучшение!',parse_mode='markdown')
+#
+#def createdonater(id,pn):
+#   return{'id':id,
+#         'comment':pn}
+#      
+#def payy(comment):
+#   x=0
+#   bar=api
+#   while True and x<100:
+#      if api.check(comment):
+#         print('success')
+#         id=None
+#         z=None
+#         a=donates.find_one({})
+#         for ids in a['donaters']:
+#           try:
+#              z=bar[ids]
+#              id=ids
+#           except:
+#              pass
+#         if z!=None and id!=None:
+#            c=int(bar[ids]['price']*20)
+#            usr=users.find_one({'id':int(id)})
+#            dtxt=''
+#            if bar[ids]['price']>=150 and '2slot' not in usr['buildings']:
+#                users.update_one({'id':int(id)},{'$push':{'buildings':'2slot'}})
+#                dtxt+=';\n2й слот для бойца!'
+#            elif bar[ids]['price']>=250 and '3slot' not in usr['buildings']:
+#                users.update_one({'id':int(id)},{'$push':{'buildings':'3slot'}})
+#                dtxt+=';\n3й слот для бойца!'
+#            users.update_one({'id':int(id)},{'$inc':{'cookie':c}})
+#            bot.send_message(int(id),'Ваш платёж прошёл успешно! Получено: '+str(c)+'⚛'+dtxt)
+#            donates.update_one({},{'$pull':{'donaters':id}})      
+#            api.stop()
+#            api.start()
+#            bot.send_message(441399484,'New payment!')
+#            break
+#         x+=1
+#      time.sleep(6)
+#   print(bar)
+#   print('Ожидание платежа')
+#   
+#def cancelpay(id):
+#   try:
+#     x=donates.find_one({})
+#     if str(id) in x['donaters']:
+#       donates.update_one({},{'$pull':{'donaters':str(id)}})
+#       bot.send_message(id,'Время ожидания вашего платежа истекло. Повторите попытку командой /buy.')
+#   except:
+#     pass
+#   
+#api=QApi(token=bearer,phone=mylogin)   
+#@api.bind_echo()
+#def foo(bar):
+#      id=None
+#      z=None
+#      a=pay.find_one({})
+#      i=0
+#      for ids in a['donaters']:
+#           print(ids)
+#           print(z)
+#           print(id)
+#           try:
+#             z=bar[str(ids['comment'])]
+#             id=ids['id']
+#             index=i
+#             removal=ids
+#           except:
+#             pass
+#           print(z)
+#           print(id)
+#           i+=1
+#      if z!=None and id!=None:
+#         if z['price']==150:
+#            tovar='1_upgrade'
+#            amount=1
+#         elif z['price']==350:
+#            tovar='2_upgrade'
+#            amount=2
+#         elif z['price']==750:
+#            tovar='3_upgrade'
+#            amount=3
+#         usr=users.find_one({'id':int(id)})
+#         dtxt=''
+#         globalchats.update_one({'id':int(id)},{'$inc':{tovar:amount}})
+#         if z['price']>=129 and '2slot' not in usr['buildings']:
+#             users.update_one({'id':int(id)},{'$push':{'buildings':'2slot'}})
+#             dtxt+=';\n2й слот для бойца!'
+#         elif z['price']>=219 and '3slot' not in usr['buildings']:
+#             users.update_one({'id':int(id)},{'$push':{'buildings':'3slot'}})
+#             dtxt+=';\n3й слот для бойца!'
+#         if z['price']>=300:
+#             dtxt+=';\nСмайлики для хп! Отпишите Пасюку, чтобы выбрать.'
+#         if z['price']>=300:
+#             dna=int(z['price']/150)
+#             users.update_one({'id':int(id)},{'$inc':{'dna':dna}})
+#             dtxt+=';\n'+str(dna)+' 🧬ДНК!'
+#         users.update_one({'id':int(id)},{'$inc':{'cookie':c}})
+#         pay.update_one({},{'$pull':{'donaters':removal}})
+#         bot.send_message(int(id),'Ваш платёж прошёл успешно! Получено: '+str(c)+'⚛'+dtxt)     
+#         bot.send_message(441399484,'New payment!')
+#      print(bar)
+#      
+#api.start()
+#
+#
+#
+#
+#
 
 print('7777')
 
