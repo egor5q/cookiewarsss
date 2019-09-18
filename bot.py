@@ -231,6 +231,24 @@ def grow(m):
         return
 
     chats.insert_one(createpet(m.chat.id))
+    gchat=globalchats.find_one({'id':m.chat.id})
+    if gchat!=None:
+        if gchat['new_season']==True:
+            lvl=0
+            upg=None
+            if gchat['1_upgrade']>0:
+                lvl=100
+                upg='1_upgrade'
+            if gchat['2_upgrade']>0:
+                lvl=200
+                upg='2_upgrade'
+            if gchat['3_upgrade']>0:
+                lvl=500
+                upg='3_upgrade'
+            if upg!=None:
+                chats.update_one({'id':m.chat.id},{'$set':{'lvl':lvl, 'maxhunger':100+lvl*15, 'hunger':100+lvl*15, 'exp':nextlvl({'lvl':lvl})}})
+                bot.send_message(m.chat.id, 'Использовано усиление. Теперь ваш питомец имеет '+str(lvl)+' уровень!')
+            globalchats.update_one({'id':m.chat.id},{'$set':{'new_season':False}})
     if cyber!=1:
         bot.send_message(m.chat.id,
                      'Поздравляю! Вы завели питомца (лошадь)! О том, как за ней ухаживать, можно прочитать в /help.')
