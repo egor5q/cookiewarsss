@@ -1642,8 +1642,6 @@ def is_from_admin(m):
     return m.from_user.id == admin_id
 
 
-globalchats.update_many({},{'$set':{'new_season':False}})
-
 check_all_pets_hunger()
 check_all_pets_hp()
 check_newday()
