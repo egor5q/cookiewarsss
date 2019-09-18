@@ -1151,7 +1151,10 @@ def createglobalchat(id):
         'saved_pets':{},
         'pet_access':0,
         'pet_maxlvl':0,
-        'achievements':[]
+        'achievements':[],
+        '1_upgrade':0,
+        '2_upgrade':0,
+        '3_upgrade':0
     }
     
     
@@ -1616,6 +1619,8 @@ def check_newday():
 def is_from_admin(m):
     return m.from_user.id == admin_id
 
+
+globalchats.update_many({},{'$set':{'1_upgrade':0, '2_upgrade':0, '3_upgrade':0}})
 
 check_all_pets_hunger()
 check_all_pets_hp()
