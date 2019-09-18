@@ -1084,26 +1084,29 @@ def change_pet(pet):
     
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
-    if m.from_user.id=='aab':
+    if m.from_user.id=='aaaaa':
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
-            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season1':ids}})
-            globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
+                x=globalchats.find_one({'id':ids['id']})
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season2':ids}})
+            if ids['lvl']>x['pet_maxlvl']:
+                globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
     
         for ids in globalchats.find({}):
-            globalchats.update_one({'id':ids['id']},{'$set':{'achievements':[]}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'new_season':True}})
         db_pets = chats.find().sort('lvl', -1).limit(10)
         
         for doc in db_pets:
-            globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':3}})
+            globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':2}})
         for ids in chats.find({}):
             try:
-                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие лошади добавлены вам в конюшню, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топа получают 3 куба в подарок!')
+                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие питомцы добавлены вам в дом, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топ-10 получают 2 куба в подарок!')
             except:
                 pass
         chats.remove({})
+        lost.remove({})
     
 
 @bot.message_handler(commands=['refresh_lvl'])
@@ -1154,7 +1157,8 @@ def createglobalchat(id):
         'achievements':[],
         '1_upgrade':0,
         '2_upgrade':0,
-        '3_upgrade':0
+        '3_upgrade':0,
+        'new_season':False
     }
     
     
@@ -1620,7 +1624,7 @@ def is_from_admin(m):
     return m.from_user.id == admin_id
 
 
-globalchats.update_many({},{'$set':{'1_upgrade':0, '2_upgrade':0, '3_upgrade':0}})
+globalchats.update_many({},{'$set':{'new_season':False}})
 
 check_all_pets_hunger()
 check_all_pets_hp()
@@ -1645,7 +1649,7 @@ threading.Timer(900, check_all_pets_lvlup).start()
 #        if word[1].lower()=='болшьшой_буст':
 #            price=750
 #       if price!=None:
-#         pay.update_one({},{'$inc':{'x':1}})
+#         pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
 #         pn=pay.find_one({})
 #         pn=pn['x']
 #         pay.update_one({},{'$push':{'donaters':createdonater(m.chat.id,pn)}})
