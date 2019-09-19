@@ -274,6 +274,8 @@ def grow(m):
             if upg!=None:
                 chats.update_one({'id':m.chat.id},{'$set':{'lvl':lvl, 'maxhunger':100+lvl*15, 'hunger':100+lvl*15, 'exp':nextlvl({'lvl':lvl})}})
                 bot.send_message(m.chat.id, 'Использовано усиление. Теперь ваш питомец имеет '+str(lvl)+' уровень!')
+                globalchats.update_one({'id':m.chat.id},{'$inc':{upg:-1}})
+    
             globalchats.update_one({'id':m.chat.id},{'$set':{'new_season':False}})
     if cyber!=1:
         bot.send_message(m.chat.id,
