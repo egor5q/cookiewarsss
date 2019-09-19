@@ -1131,7 +1131,7 @@ def allmesdonate(m):
                pet=x
            elif word[1].lower()=='куб':
                price=25
-       if pet==None:
+       if pet==None and price!=None:
         
          pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
          pn=pay.find_one({})
