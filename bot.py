@@ -1805,13 +1805,14 @@ def foo(bar):
            print(z)
            print(id)
            try:
-             pet=a['donaters'][ids]['pet']
              z=bar[str(ids['comment'])]
              id=ids['id']
              index=i
              removal=ids
+             pet=ids['pet']
+          
            except:
-             pass
+             bot.send_message(441399484, traceback.format_exc())
            print(z)
            print(id)
            i+=1
