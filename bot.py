@@ -1124,13 +1124,15 @@ def allmesdonate(m):
             price=450
        if word[1].lower()=='большой_буст':
             price=1000
-       if price==None:
-           
+       if price==None:    
            x=change_pet(word[1])
            if x!=None:
                price=100
                pet=x
-       if price!=None:
+           elif word[1].lower()=='куб':
+               price=25
+       if pet==None:
+        
          pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
          pn=pay.find_one({})
          pn=pn['x']
@@ -1139,18 +1141,37 @@ def allmesdonate(m):
          if title==None:
              title=m.from_user.first_name
          w=word[1].lower().replace('_', '\_')
-         bot.send_message(m.chat.id,'Для совершения покупки улучшения "'+w+'" для чата "'+title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
+         if price!=25:
+             bot.send_message(m.chat.id,'Для совершения покупки улучшения "'+w+'" для чата "'+title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
                         '`egor5q`\nС комментарием:\n`'+str(pn)+'`\n*Важно:* если сумма будет меньше указанной, или '+
                           'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
+         else:
+             bot.send_message(m.chat.id,'Для совершения покупки куба для чата "'+title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
+                        '`egor5q`\nС комментарием:\n`'+str(pn)+'`\n*Важно:* если сумма будет меньше указанной, или '+
+                          'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
+        
          comment=api.bill(comment=str(pn), price=price)
          print(comment)
+        
+            
        elif pet!=None:
-           pass
+         pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
+         pn=pay.find_one({})
+         pn=pn['x']
+         pay.update_one({},{'$push':{'donaters':createdonater(m.chat.id,pn, pet=pet)}})
+         title=m.chat.title
+         if title==None:
+             title=m.from_user.first_name
+         w=word[1].lower().replace('_', '\_')
+         bot.send_message(m.chat.id,'Для совершения покупки типа питомца "'+w+'" для чата "'+title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
+                        '`egor5q`\nС комментарием:\n`'+str(pn)+'`\n*Важно:* если сумма будет меньше указанной, или '+
+                          'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
+      
        else:
-         bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
-                          '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
-                          '`средний_буст` - первая выращенная лошадь в двух следующих сезонах начнёт с 200го уровня, цена: 450р.\n'+
-                          '`большой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 1000р.\n'+
+         bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n\n'+
+                          '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n\n'+
+                          '`средний_буст` - первая выращенная лошадь в двух следующих сезонах начнёт с 200го уровня, цена: 450р.\n\n'+
+                          '`большой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 1000р.\n\n'+
                           'ВАЖНО!\nЭту команду нужно ввести именно в том чате, в котором вы хотите получить улучшение!',parse_mode='markdown')
      except:
       bot.send_message(441399484, traceback.format_exc())
@@ -1714,10 +1735,11 @@ threading.Timer(900, check_all_pets_lvlup).start()
 
 
 
-def createdonater(id,pn):
+def createdonater(id, pn, pet=None):
    return{'id':id,
          'comment':pn,
-         'date':time.time()}
+         'date':time.time(),
+         'pet':pet}
       
 #def payy(comment):
 #   x=0
@@ -1777,6 +1799,7 @@ def foo(bar):
            print(z)
            print(id)
            try:
+             pet=a['donaters'][ids]['pet']
              z=bar[str(ids['comment'])]
              id=ids['id']
              index=i
@@ -1787,6 +1810,7 @@ def foo(bar):
            print(id)
            i+=1
       if z!=None and id!=None:
+         cube=None
          if z['price']==150:
             tovar='1_upgrade'
             amount=1
@@ -1799,9 +1823,26 @@ def foo(bar):
             tovar='3_upgrade'
             amount=3
             tx='большой_буст'
+         elif z['price']==100:
+            tovar=pet
+            amount=1
+            tx=pettype(pet)
+         elif z['price']==25:
+            cube=1
+            amount=1
+            tx='куб'
          usr=users.find_one({'id':int(id)})
          dtxt=''
-         globalchats.update_one({'id':int(id)},{'$inc':{tovar:amount}})
+         if pet==None:
+             globalchats.update_one({'id':int(id)},{'$inc':{tovar:amount}})
+         else:
+             if cube==None:
+                 if pet not in globalchats.find_one({'id':int(id)})['avalaible_pets']:
+                     globalchats.update_one({'id':int(id)},{'$push':{'avalaible_pets':pet}})
+             else:
+                 globalchats.update_one({'id':int(id)},{'$inc':{'pet_access':1}})
+            
+        
          dtxt+=tx+' ('+str(amount)+')!'
          
          pay.update_one({},{'$pull':{'donaters':removal}})
