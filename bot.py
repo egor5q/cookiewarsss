@@ -1136,8 +1136,6 @@ def change_pet(pet):
 
 @bot.message_handler(commands=['buy'])
 def allmesdonate(m):
- if m.chat.id!=324316537 and m.chat.id!=441399484:
-    return
  if True:
    x=users.find_one({'id':m.from_user.id})
    if x!=None:
