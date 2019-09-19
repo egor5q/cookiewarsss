@@ -1257,11 +1257,12 @@ def messages(m):
         users.insert_one(createuser(m.from_user))
     if m.from_user.first_name=='Telegram':
         pass #bot.send_message(441399484, str(m.from_user))
+    if globalchats.find_one({'id':m.chat.id})==None:
+        globalchats.insert_one(createglobalchat(m.chat.id))
+  
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
-    if globalchats.find_one({'id':m.chat.id})==None:
-        globalchats.insert_one(createglobalchat(m.chat.id))
     if m.from_user.id not in animal['lastminutefeed']:
         chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
     if m.from_user.id not in animal['lvlupers'] and users.find_one({'id':m.from_user.id})['now_elite']==True:
