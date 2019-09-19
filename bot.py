@@ -1665,11 +1665,11 @@ def allmesdonate(m):
      try:
        price=None
        if word[1].lower()=='мини_буст':
-            price=150
+            price=1
        if word[1].lower()=='средний_буст':
-            price=350
+            price=2
        if word[1].lower()=='болшьшой_буст':
-            price=750
+            price=3
        if price!=None:
          pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
          pn=pay.find_one({})
@@ -1745,52 +1745,53 @@ def cancelpay(id):
    except:
      pass
 #   
-#api=QApi(token=bearer,phone=mylogin)   
-#@api.bind_echo()
-#def foo(bar):
-#      id=None
-#      z=None
-#      a=pay.find_one({})
-#      i=0
-#      for ids in a['donaters']:
-#           print(ids)
-#           print(z)
-#           print(id)
-#           try:
-#             z=bar[str(ids['comment'])]
-#             id=ids['id']
-#             index=i
-#             removal=ids
-#           except:
-#             pass
-#           print(z)
-#           print(id)
-#           i+=1
-#      if z!=None and id!=None:
-#         if z['price']==150:
-#            tovar='1_upgrade'
-#            amount=1
-#            tx='мини_буст'
-#         elif z['price']==350:
-#            tovar='2_upgrade'
-#            amount=2
-#            tx='средний_буст'
-#         elif z['price']==750:
-#            tovar='3_upgrade'
-#            amount=3
-#            tx='большой_буст'
-#         usr=users.find_one({'id':int(id)})
-#         dtxt=''
-#         globalchats.update_one({'id':int(id)},{'$inc':{tovar:amount}})
-#         dtxt+=tx+' ('+str(amount)+')!'
-#         
-#         pay.update_one({},{'$pull':{'donaters':removal}})
-#         bot.send_message(int(id),'Ваш платёж прошёл успешно! Получено: '+dtxt)     
-#         bot.send_message(441399484,'New payment!')
-#      print(bar)
-#      
-#api.start()
-#
+api=QApi(token=bearer,phone=mylogin)   
+@api.bind_echo()
+def foo(bar):
+      id=None
+      z=None
+      a=pay.find_one({})
+      i=0
+      for ids in a['donaters']:
+           print(ids)
+           print(z)
+           print(id)
+           try:
+             z=bar[str(ids['comment'])]
+             id=ids['id']
+             index=i
+             removal=ids
+           except:
+             pass
+           print(z)
+           print(id)
+           i+=1
+      if z!=None and id!=None:
+         if z['price']==1:
+            tovar='1_upgrade'
+            amount=1
+            tx='мини_буст'
+         elif z['price']==2:
+            tovar='2_upgrade'
+            amount=2
+            tx='средний_буст'
+         elif z['price']==3:
+            tovar='3_upgrade'
+            amount=3
+            tx='большой_буст'
+         usr=users.find_one({'id':int(id)})
+         dtxt=''
+         globalchats.update_one({'id':int(id)},{'$inc':{tovar:amount}})
+         dtxt+=tx+' ('+str(amount)+')!'
+         
+         pay.update_one({},{'$pull':{'donaters':removal}})
+         bot.send_message(int(id),'Ваш платёж прошёл успешно! Получено: '+dtxt)     
+         bot.send_message(441399484,'New payment!')
+      print(bar)
+      
+
+api.start()
+
 #
 #
 #
