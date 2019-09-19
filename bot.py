@@ -1105,6 +1105,53 @@ def change_pet(pet):
     return x
     
     
+
+@bot.message_handler(commands=['buy'])
+def allmesdonate(m):
+ if m.from_user.id!=324316537 and m.from_user.id!=441399484:
+    return
+ if m.from_user.id==m.chat.id:
+   x=users.find_one({'id':m.from_user.id})
+   if x!=None:
+    word=m.text.split(' ')
+    if len(word)==2:
+     try:
+       price=None
+       if word[1].lower()=='мини_буст':
+            price=1
+       if word[1].lower()=='средний_буст':
+            price=2
+       if word[1].lower()=='болшьшой_буст':
+            price=3
+       if price!=None:
+         pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
+         pn=pay.find_one({})
+         pn=pn['x']
+         pay.update_one({},{'$push':{'donaters':createdonater(m.chat.id,pn)}})
+         bot.send_message(m.chat.id,'Для совершения покупки улучшения "'+word[1].lower()+'" для чата "'+m.chat.title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
+                        '`egor5q`\nС комментарием:\n`'+str(pn)+'`\n*Важно:* если сумма будет меньше указанной, или '+
+                          'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
+         comment=api.bill(comment=str(pn), price=price)
+         print(comment)
+       else:
+         bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
+                          '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
+                          '`средний_буст` - первая выращенная лошадь в двух следующих сезонах начнёт с 200го уровня, цена: 350р.\n'+
+                          '`болшьшой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 750р.\n'+
+                          'ВАЖНО!\nЭту команду нужно ввести именно в том чате, в котором вы хотите получить улучшение!',parse_mode='markdown')
+     except:
+      pass
+    else:
+         bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
+                          '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
+                          '`средний_буст` - первая выращенная лошадь в двух следующих сезонах начнёт с 200го уровня, цена: 350р.\n'+
+                          '`болшьшой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 750р.\n'+
+                          'ВАЖНО!\nЭту команду нужно ввести именно в том чате, в котором вы хотите получить улучшение!',parse_mode='markdown')
+
+
+
+
+
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
     if m.from_user.id=='aaaaa':
