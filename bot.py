@@ -1863,7 +1863,7 @@ api.start()
 
 
 def checks():
-    tt=5
+    tt=10
     t=threading.Timer(60, checks)
     t.start()
     for ids in pay.find_one({})['donaters']:
