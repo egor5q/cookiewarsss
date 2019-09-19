@@ -1128,7 +1128,10 @@ def allmesdonate(m):
          pn=pay.find_one({})
          pn=pn['x']
          pay.update_one({},{'$push':{'donaters':createdonater(m.chat.id,pn)}})
-         bot.send_message(m.chat.id,'Для совершения покупки улучшения "'+word[1].lower()+'" для чата "'+m.chat.title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
+         title=m.chat.title
+         if title==None:
+             title=m.from_user.first_name
+         bot.send_message(m.chat.id,'Для совершения покупки улучшения "'+word[1].lower()+'" для чата "'+title+'", отправьте '+str(price)+' рублей на киви-кошелёк по логину:\n'+
                         '`egor5q`\nС комментарием:\n`'+str(pn)+'`\n*Важно:* если сумма будет меньше указанной, или '+
                           'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
          comment=api.bill(comment=str(pn), price=price)
