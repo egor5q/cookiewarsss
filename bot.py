@@ -1110,7 +1110,7 @@ def change_pet(pet):
 def allmesdonate(m):
  if m.from_user.id!=324316537 and m.from_user.id!=441399484:
     return
- if m.from_user.id==m.chat.id:
+ if True:
    x=users.find_one({'id':m.from_user.id})
    if x!=None:
     word=m.text.split(' ')
@@ -1140,7 +1140,7 @@ def allmesdonate(m):
                           '`болшьшой_буст` - первая выращенная лошадь в трёх следующих сезонах начнёт с 500го уровня, цена: 750р.\n'+
                           'ВАЖНО!\nЭту команду нужно ввести именно в том чате, в котором вы хотите получить улучшение!',parse_mode='markdown')
      except:
-      pass
+      bot.send_message(441399484, traceback.format_exc())
     else:
          bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
                           '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
