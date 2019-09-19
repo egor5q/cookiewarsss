@@ -1707,7 +1707,8 @@ threading.Timer(900, check_all_pets_lvlup).start()
 
 def createdonater(id,pn):
    return{'id':id,
-         'comment':pn}
+         'comment':pn,
+         'date':time.time()}
       
 #def payy(comment):
 #   x=0
@@ -1802,6 +1803,15 @@ def foo(bar):
 
 api.start()
 
+
+def checks():
+    t=threading.Timer(60, checks)
+    t.start()
+    for ids in pay.find_one({})['donaters']:
+        if time.time()-ids['date']>=600:
+            pay.update_one({},{'$pull':{'donaters':ids['id']}})
+            bot.send_message(ids['id'], 'Время ожидания вашего платежа (10 минут) истекло! Повторите попытку.')
+            
 #
 #
 #
