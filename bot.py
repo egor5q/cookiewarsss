@@ -1805,14 +1805,15 @@ api.start()
 
 
 def checks():
+    tt=5
     t=threading.Timer(60, checks)
     t.start()
     for ids in pay.find_one({})['donaters']:
         try:
             x=ids['date']
-            if time.time()-ids['date']>=300:
-                pay.update_one({},{'$pull':{'donaters':ids['id']}})
-                bot.send_message(ids['id'], 'Время ожидания вашего платежа (10 минут) истекло! Повторите попытку.')
+            if time.time()-ids['date']>=60*tt:
+                pay.update_one({},{'$pull':{'donaters':ids}})
+                bot.send_message(ids['id'], 'Время ожидания вашего платежа ('+str(tt)+' минут) истекло! Повторите попытку.')
             
         except:
             pay.update_one({},{'$pull':{'donaters':ids}})
