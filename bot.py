@@ -846,7 +846,7 @@ def name(m):
         name = m.text.split('/name ')[1]
 
         if chats.find_one({'id': m.chat.id}) is None:
-            return
+            bot.send_message(m.chat.id, 'Для начала питомца нужно завести (/growpet)!')
 
         if len(name) > 50:
             if cyber!=1:
