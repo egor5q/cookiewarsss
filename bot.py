@@ -43,6 +43,10 @@ if lost.find_one({'amount': {'$exists': True}}) is None:
 botname = 'Chatpetsbot'
 admin_id = 441399484
 
+bearer=os.environ['bearer']
+mylogin=int(os.environ['phone'])
+
+
 pet_abils=False
 
 #chats.update_many({},{'$set':{'panda_feed':0}})
@@ -1662,9 +1666,9 @@ def allmesdonate(m):
        price=None
        if word[1].lower()=='мини_буст':
             price=150
-        if word[1].lower()=='средний_буст':
+       if word[1].lower()=='средний_буст':
             price=350
-        if word[1].lower()=='болшьшой_буст':
+       if word[1].lower()=='болшьшой_буст':
             price=750
        if price!=None:
          pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
