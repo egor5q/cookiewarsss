@@ -1810,13 +1810,15 @@ def checks():
     for ids in pay.find_one({})['donaters']:
         try:
             x=ids['date']
+            if time.time()-ids['date']>=600:
+                pay.update_one({},{'$pull':{'donaters':ids['id']}})
+                bot.send_message(ids['id'], 'Время ожидания вашего платежа (10 минут) истекло! Повторите попытку.')
+            
         except:
             pay.update_one({},{'$pull':{'donaters':ids}})
-        if time.time()-ids['date']>=600:
-            pay.update_one({},{'$pull':{'donaters':ids['id']}})
-            bot.send_message(ids['id'], 'Время ожидания вашего платежа (10 минут) истекло! Повторите попытку.')
-            
-#
+  
+checks()
+      
 #
 #
 #
