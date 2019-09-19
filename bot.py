@@ -1655,7 +1655,7 @@ threading.Timer(900, check_all_pets_lvlup).start()
 
 @bot.message_handler(commands=['buy'])
 def allmesdonate(m):
- if m.from_user.id!='a':
+ if m.from_user.id!=324316537 and m.from_user.id!=441399484:
     return
  if m.from_user.id==m.chat.id:
    x=users.find_one({'id':m.from_user.id})
