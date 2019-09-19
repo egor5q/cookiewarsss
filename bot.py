@@ -1116,6 +1116,7 @@ def allmesdonate(m):
     word=m.text.split(' ')
     if len(word)==2:
      try:
+       pet=None
        price=None
        if word[1].lower()=='мини_буст':
             price=150
@@ -1123,6 +1124,12 @@ def allmesdonate(m):
             price=450
        if word[1].lower()=='большой_буст':
             price=1000
+       if price==None:
+           
+           x=change_pet(word[1])
+           if x!=None:
+               price=100
+               pet=x
        if price!=None:
          pay.update_one({},{'$inc':{'x':random.randint(1, 10)}})
          pn=pay.find_one({})
@@ -1137,6 +1144,8 @@ def allmesdonate(m):
                           'комментарий не будет соответствовать указанному выше, платёж не пройдёт!',parse_mode='markdown')
          comment=api.bill(comment=str(pn), price=price)
          print(comment)
+       elif pet!=None:
+           pass
        else:
          bot.send_message(m.chat.id, 'Для совершения покупки используйте формат:\n/`buy товар`;\nДоступные товары:\n'+
                           '`мини_буст` - первая выращенная лошадь в одном следующем сезоне начнёт с 100го уровня, цена: 150р.\n'+
