@@ -1270,12 +1270,13 @@ def messages(m):
         chats.update_one({'id': m.chat.id}, {'$push': {'lvlupers': m.from_user.id}})
     if m.chat.title != animal['title']:
         chats.update_one({'id': m.chat.id}, {'$set': {'title': m.chat.title}})
-    try:
-        if animal['spying'] is not None:
-            bot.send_message(animal['spying'], '(Name: ' + m.from_user.first_name + ') (id: ' + str(
-                m.from_user.id) + ') (text: ' + m.text + ')')
-    except:
-        pass
+  #  try:
+  #      if animal['spying'] is not None:
+  #          bot.send_message(animal['spying'], '(Name: ' + m.from_user.first_name + ') (id: ' + str(
+  #              m.from_user.id) + ') (text: ' + m.text + ')')
+  #  except:
+  #      pass
+
 
 
     
