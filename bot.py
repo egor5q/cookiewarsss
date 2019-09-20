@@ -92,8 +92,8 @@ def neww(m):
 def addddd(m):
     if m.from_user.id==441399484:
         try:
-            globalchats.update_one({'id':m.chat.id},{'$inc':{'2_upgrade':1}})
-            bot.send_message(m.chat.id, 'add2')
+            globalchats.update_one({'id':m.chat.id},{'$inc':{'3_upgrade':1}})
+            bot.send_message(m.chat.id, 'add3')
         except:
             pass
 
