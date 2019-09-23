@@ -371,6 +371,16 @@ def idssssss(m):
         bot.send_message(m.chat.id, text)
 
 
+@bot.message_handler(commands=['addgoose'])
+def addgoose(m):
+    if m.from_user.id==441399484:
+        try:
+            globalchats.update_one({'id':m.chat.id},{'$push':'avalaible_pets':'goose'}})
+            bot.send_message(m.chat.id, 'Ура, гусь')
+        except:
+            pass
+
+
 @bot.message_handler(commands=['feed'])
 def feeed(m):
     global cyber
@@ -451,6 +461,10 @@ def feeed(m):
             spisok=['радугу', 'сено', 'овёс', 'картошку']
             s2=['автобус', 'телефон', 'того, кто не верит в единорогов']
             petname='Единорог'
+        if x['type']=='goose':
+            spisok=['траву', 'зёрна', 'семена', 'клубнику', 'чернику']
+            s2=['работягу', 'ЗАПУСКАЕМ ГУСЯ, РАБОТЯГИ', 'твич', 'Дуров, добавь эмодзи гуся в ТГ!']
+            petname='Гусь'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -910,7 +924,7 @@ def name(m):
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
     global cyber
-    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn']
+    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn', 'goose']
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
         return
@@ -1130,6 +1144,8 @@ def change_pet(pet):
         x='cock'
     if pet=='единорог':
         x='onehorn'
+    if pet=='гусь':
+        retorn 'goose'
     return x
     
     
@@ -1634,6 +1650,8 @@ def pettoemoji(pet):
         return '🐓'
     if pet=='onehorn':
         return '🦄'
+    if pet=='goose':
+        return '🦆'
     
     
     
@@ -1673,6 +1691,8 @@ def pettype(pet):
         return 'петух'
     if pet=='onehorn':
         return 'единорог'
+    if pet=='goose':
+        return 'гусь'
     return t
     
 
