@@ -1145,7 +1145,7 @@ def change_pet(pet):
     if pet=='единорог':
         x='onehorn'
     if pet=='гусь':
-        retorn 'goose'
+        x='goose'
     return x
     
     
