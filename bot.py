@@ -1215,7 +1215,7 @@ def allmesdonate(m):
 
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
-    if m.from_user.id=='aaaaa':
+    if m.from_user.id==441399484:
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
@@ -1233,7 +1233,7 @@ def new_season(m):
             globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':2}})
         for ids in chats.find({}):
             try:
-                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие питомцы добавлены вам в дом, но кормить их больше не нужно, и уровень у них больше не поднимется. Она останется у вас как память. Все чаты из топ-10 получают 2 куба в подарок!')
+                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие питомцы добавлены вам в дом, но кормить их больше не нужно, и уровень у них больше не поднимется. Они останутся у вас как память. Все чаты из топ-10 получают 2 куба в подарок!')
             except:
                 pass
         chats.remove({})
