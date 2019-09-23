@@ -375,7 +375,7 @@ def idssssss(m):
 def addgoose(m):
     if m.from_user.id==441399484:
         try:
-            globalchats.update_one({'id':m.chat.id},{'$push':'avalaible_pets':'goose'}})
+            globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':'goose'}})
             bot.send_message(m.chat.id, 'Ура, гусь')
         except:
             pass
