@@ -1215,7 +1215,7 @@ def allmesdonate(m):
 
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
-    if m.from_user.id==441399484:
+    if m.from_user.id=='а':
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
