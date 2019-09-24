@@ -1788,8 +1788,7 @@ threading.Timer(900, check_all_pets_lvlup).start()
 def createdonater(id, pn, pet=None):
    return{'id':id,
          'comment':pn,
-         'date':time.time(),
-         'pet':pet}
+         'date':time.time()}
       
 #def payy(comment):
 #   x=0
