@@ -1230,13 +1230,13 @@ def allmesdonate(m):
 
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
-    if m.from_user.id=='а':
+    if m.from_user.id==441399484:
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
                 x=globalchats.find_one({'id':ids['id']})
-            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season2':ids}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season3':ids}})
             if ids['lvl']>x['pet_maxlvl']:
                 globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
     
