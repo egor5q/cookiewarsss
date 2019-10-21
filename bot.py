@@ -133,7 +133,7 @@ def switch_lvlup(m):
   try:
     chat=chats.find_one({'id':m.chat.id})
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
-    if user.status == 'creator' or user.status=='administrator' or m.from_user.id==m.chat.id:
+    if user.status == 'creator' or user.status=='administrator' or m.from_user.id==m.chat.id or m.from_user.id == 441399484:
         if chat['send_lvlup']==True:
             chats.update_one({'id':m.chat.id},{'$set':{'send_lvlup':False}})
             bot.send_message(m.chat.id, 'Теперь питомец *НЕ* будет присылать вам уведомления о повышении уровня!', parse_mode='markdown')
