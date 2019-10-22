@@ -579,7 +579,7 @@ def top(m):
     i = 1
     for doc in db_pets:
         if cyber!=1:
-            text += str(i) + ' место: ' + pettoemoji(doc['type'])+doc['name'] + ' (' + str(doc['lvl']) + ' лвл)\n'
+            text += str(i) + ' место: ' + pettoemoji(doc['type'])+doc['name'].replace('\n', '') + ' (' + str(doc['lvl']) + ' лвл)\n'
         else:
             text += str(i) + ' киберместо: ' + pettoemoji(doc['type'])+'Кибер'+doc['name'] + ' (' + str(doc['lvl']) + ' киберлвл)\n'
        
