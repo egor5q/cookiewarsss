@@ -1236,7 +1236,7 @@ def new_season(m):
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
                 x=globalchats.find_one({'id':ids['id']})
-            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season3':ids}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season4':ids}})
             if ids['lvl']>x['pet_maxlvl']:
                 globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
     
