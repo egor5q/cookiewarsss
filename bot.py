@@ -1541,6 +1541,7 @@ def check_hp(pet, horse_lost):
             hp = maxhp
 
     if hp <= 0:
+      try:
         total = lost.find_one({})['amount']
         total += 1
         lost.update_one({'amount': {'$exists': True}}, {'$inc': {'amount': 1}})
@@ -1560,6 +1561,8 @@ def check_hp(pet, horse_lost):
                 pass
         else:
             lost.delete_one({'id': pet['id']})
+      except:
+        bot.send_message(441399484, traceback.format_exc())
 
     else:
         commit = {'hunger': hunger, 'hp': hp}
@@ -1567,7 +1570,7 @@ def check_hp(pet, horse_lost):
             chats.update_one({'id': pet['id']}, {'$set': commit})
         else:
             lost.update_one({'id': pet['id']}, {'$set': commit})
-
+    
 
 def check_all_pets_hunger():
     for pet in lost.find({'id': {'$exists': True}}):
