@@ -1541,8 +1541,7 @@ def check_hp(pet, horse_lost):
             hp = maxhp
 
     if hp <= 0:
-      try:
-        total = lost.find_one({})['amount']
+        total = lost.find_one({'amount': {'$exists': True}})['amount']
         total += 1
         lost.update_one({'amount': {'$exists': True}}, {'$inc': {'amount': 1}})
         if not horse_lost:
@@ -1561,8 +1560,6 @@ def check_hp(pet, horse_lost):
                 pass
         else:
             lost.delete_one({'id': pet['id']})
-      except:
-        bot.send_message(441399484, traceback.format_exc())
 
     else:
         commit = {'hunger': hunger, 'hp': hp}
