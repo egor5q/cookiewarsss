@@ -1490,6 +1490,7 @@ def check_hunger(pet, horse_lost):
             ii+=100
 
     commit = {'hunger': hunger, 'maxhunger': maxhunger, 'exp': exp, 'lvl': lvl, 'lastminutefeed': lastminutefeed}
+    print("here")
     if not horse_lost:
         chats.update_one({'id': pet['id']}, {'$set': commit})
     else:
