@@ -1571,18 +1571,19 @@ def check_hp(pet, horse_lost):
     
 
 def check_all_pets_hunger():
+    threading.Timer(60, check_all_pets_hunger).start()
+    
     for pet in lost.find({'id': {'$exists': True}}):
         check_hunger(pet, True)
     for pet in chats.find({}):
         check_hunger(pet, False)
-    threading.Timer(60, check_all_pets_hunger).start()
     
 def check_all_pets_lvlup():
+    threading.Timer(1800, check_all_pets_lvlup).start()
     for pet in chats.find({}):
         check_lvlup(pet)
     chats.update_many({},{'$set':{'lvlupers':[]}})
-    threading.Timer(1800, check_all_pets_lvlup).start()
-
+    
 
 def check_all_pets_hp():
     for pet in lost.find({'id': {'$exists': True}}):
