@@ -976,7 +976,17 @@ def chatstats(m):
             lastpets+=pettoemoji(hr['type'])+'Кибер'+hr['name']+': '+str(hr['lvl'])+' киберлвл\n'
        
     if cyber!=1:
+        mult = 100
+        try:
+            for ids in x['saved_pets']:
+                z = x['saved_pets'][ids]['lvl']/200
+                if z > 0:
+                    mult += z
+            mult = round(mult, 2)
+        except:
+            print(traceback.format_exc())
         text=''
+        text += '➕Текущий бонус опыта за питомцев прошлых сезонов: '+str(mult)+'%\n'
         text+='Питомцы из прошлых сезонов: '+lastpets+'\n'
         text+='🎖Максимальный уровень питомца в этом чате: '+str(x['pet_maxlvl'])+';\n'
         text+='🌏Доступные типы питомцев: '+pts+'\n'
@@ -1467,6 +1477,19 @@ def check_hunger(pet, horse_lost):
         exp += lvl
     if h >= 99:
         exp += lvl
+    mult = 100
+    z = globalchats.find_one({'id':pet['id']})
+    try:
+        for ids in z['saved_pets']:
+            x = z['saved_pets'][ids]['lvl']/200
+            if x > 0:
+                mult += x
+        mult = mult/100
+        print(exp)
+        exp = exp*mult
+        print(exp)
+    except:
+        print(traceback.format_exc())
     if exp >= nextlvl(pet):
         lvl += 1
         maxhunger += 15
