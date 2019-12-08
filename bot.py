@@ -1487,10 +1487,7 @@ def check_hunger(pet, horse_lost):
                 if x > 0:
                     mult += x
             mult = mult/100
-            print(mult)
-            print(bexp)
             bexp = bexp*mult
-            print(bexp)
         except:
             print(traceback.format_exc())
     exp += bexp
