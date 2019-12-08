@@ -1489,10 +1489,11 @@ def check_hunger(pet, horse_lost):
             mult = mult/100
             print(mult)
             print(bexp)
-            exp += bexp*mult
-            print(exp)
+            bexp = bexp*mult
+            print(bexp)
         except:
             print(traceback.format_exc())
+    exp += bexp
     if exp >= nextlvl(pet):
         lvl += 1
         maxhunger += 15
