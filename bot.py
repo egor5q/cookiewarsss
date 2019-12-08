@@ -1486,6 +1486,7 @@ def check_hunger(pet, horse_lost):
                 if x > 0:
                     mult += x
             mult = mult/100
+            print(mult)
             print(exp)
             exp = exp*mult
             print(exp)
