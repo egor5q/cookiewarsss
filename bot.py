@@ -1471,12 +1471,13 @@ def check_hunger(pet, horse_lost):
 
     # если лошадь накормлена на 85% и выше, прибавить опыта
     h = hunger / maxhunger * 100
+    bexp = 0
     if h >= 85:
-        exp += int(lvl * (2 + (random.randint(-100, 100) / 100)))
+        bexp += int(lvl * (2 + (random.randint(-100, 100) / 100)))
     if h >= 90:
-        exp += lvl
+        bexp += lvl
     if h >= 99:
-        exp += lvl
+        bexp += lvl
     mult = 100
     z = globalchats.find_one({'id':pet['id']})
     if z != None:
@@ -1487,8 +1488,8 @@ def check_hunger(pet, horse_lost):
                     mult += x
             mult = mult/100
             print(mult)
-            print(exp)
-            exp = exp*mult
+            print(bexp)
+            exp += bexp*mult
             print(exp)
         except:
             print(traceback.format_exc())
