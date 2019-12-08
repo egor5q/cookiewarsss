@@ -1479,17 +1479,18 @@ def check_hunger(pet, horse_lost):
         exp += lvl
     mult = 100
     z = globalchats.find_one({'id':pet['id']})
-    try:
-        for ids in z['saved_pets']:
-            x = z['saved_pets'][ids]['lvl']/200
-            if x > 0:
-                mult += x
-        mult = mult/100
-        print(exp)
-        exp = exp*mult
-        print(exp)
-    except:
-        print(traceback.format_exc())
+    if z != None:
+        try:
+            for ids in z['saved_pets']:
+                x = z['saved_pets'][ids]['lvl']/200
+                if x > 0:
+                    mult += x
+            mult = mult/100
+            print(exp)
+            exp = exp*mult
+            print(exp)
+        except:
+            print(traceback.format_exc())
     if exp >= nextlvl(pet):
         lvl += 1
         maxhunger += 15
