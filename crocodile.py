@@ -5,7 +5,7 @@ import time
 import traceback
 
 import os
-
+from pymongo import MongoClient
 import requests
 from telebot import types, TeleBot
 
@@ -15,7 +15,7 @@ key = 'trnsl.1.1.20190227T075339Z.1b02a9ab6d4a47cc.f37d50831b51374ee600fd6aa0259
 lang = 'ru-en'
 
 bot = TeleBot(os.environ['crocodile'])
-client = config.mongo_client
+client = MongoClient(os.environ['database'])
 db = client.crocodile
 users = db.users
 chats = db.chats
