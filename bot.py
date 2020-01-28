@@ -1957,5 +1957,11 @@ checks()
 #        bot.send_message(441399484, 'error!') # или просто print(e) если у вас логгера нет, # или import traceback; traceback.print_exc() для печати полной инфы
 #        time.sleep(15)
 
+import crocodile
+
+def poll(b):
+    b.polling(none_stop = True)
+
+threading.Thread(target = poll, args = [crocodile.bot]).start()
 print('7777')
 bot.polling(none_stop=True, timeout=600)
