@@ -1958,10 +1958,11 @@ checks()
 #        time.sleep(15)
 
 import crocodile
-
+import cookiewars
 def poll(b):
     b.polling(none_stop = True)
 
 threading.Thread(target = poll, args = [crocodile.bot]).start()
+threading.Thread(target = poll, args = [cookiewars.bot]).start()
 print('7777')
 bot.polling(none_stop=True, timeout=600)
