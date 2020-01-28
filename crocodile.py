@@ -4,7 +4,7 @@ import random
 import time
 import traceback
 
-
+import os
 
 import requests
 from telebot import types, TeleBot
@@ -14,7 +14,7 @@ url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?'
 key = 'trnsl.1.1.20190227T075339Z.1b02a9ab6d4a47cc.f37d50831b51374ee600fd6aa0259419fd7ecd97'
 lang = 'ru-en'
 
-bot = TeleBot(config.crocodilebot_token)
+bot = TeleBot(os.environ['crocodile'])
 client = config.mongo_client
 db = client.crocodile
 users = db.users
