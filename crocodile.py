@@ -102,6 +102,8 @@ def unblock(m):
 
 @bot.message_handler(commands=['offer'])
 def offer(m):
+  bot.send_message(m.chat.id, 'Функция временно отключена!')
+  return
   try:
     if blocked.find_one({'id': str(m.from_user.id)}) != None:
         return
