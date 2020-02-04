@@ -1969,4 +1969,4 @@ def poll(b):
 threading.Thread(target = poll, args = [crocodile.bot]).start()
 threading.Thread(target = poll, args = [cookiewars.bot]).start()
 print('7777')
-bot.polling(none_stop=True, timeout=600)
+threading.Thread(target = poll, args = [bot]).start()
