@@ -970,10 +970,10 @@ def name(m):
        bot.send_message(m.chat.id, 'Для переименования используйте формат:\n/name *имя*, где *имя* - имя вашего бойца.', parse_mode='markdown')
         
 
-@bot.message_handler(commands=['stop'])
-def stopm(m):
-  if m.from_user.id in info.lobby.game:
-    del info.lobby.game[m.from_user.id]
+#@bot.message_handler(commands=['stop'])
+#def stopm(m):
+#  if m.from_user.id in info.lobby.game:
+#    del info.lobby.game[m.from_user.id]
   
 def itemselect():
     x=[]
