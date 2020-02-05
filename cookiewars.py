@@ -15,6 +15,7 @@ import sys
 import info
 
 
+
 token = os.environ['cookiewars']
 bot = telebot.TeleBot(token)
 vip=[441399484, 55888804]
@@ -67,7 +68,8 @@ energies={
 }
         
 
-    
+ 
+   
 def accuracy(x,energy):
     if energy>5:
         energy=5
