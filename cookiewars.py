@@ -12,8 +12,7 @@ from emoji import emojize
 from SimpleQIWI import *
 import traceback
 import sys
-
-
+import info
 
 
 token = os.environ['cookiewars']
