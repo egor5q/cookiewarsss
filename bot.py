@@ -1959,7 +1959,7 @@ checks()
 #        bot.send_message(441399484, 'error!') # или просто print(e) если у вас логгера нет, # или import traceback; traceback.print_exc() для печати полной инфы
 #        time.sleep(15)
 
-import crocodile
+#import crocodile
 import cookiewars
 def poll(b):
     try:
@@ -1968,6 +1968,6 @@ def poll(b):
         b.send_message(441399484, traceback.format_exc())
 
 threading.Thread(target = poll, args = [crocodile.bot]).start()
-threading.Thread(target = poll, args = [cookiewars.bot]).start()
+#threading.Thread(target = poll, args = [cookiewars.bot]).start()
 print('7777')
 threading.Thread(target = poll, args = [bot]).start()
