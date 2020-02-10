@@ -184,6 +184,8 @@ def stats(m):
     chat = chats.find_one({'id': m.chat.id})
     db_top = []
     text = 'Статистика чата:\n\n'
+    if chat == None:
+        return
     while len(db_top) < len(chat['users']) and len(db_top) <= 20:
         nowu = None
         nowsc = 0
