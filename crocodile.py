@@ -23,6 +23,7 @@ words = db.words
 blocked = db.blocked
 if words.find_one({}) == None:
     words.insert_one({'words': []})
+   
     
 cache = []
 cache_old = []
@@ -62,6 +63,31 @@ def pinsendg(m):
             except:
                 pass
         bot.send_message(441399484, str(i)+' чатов получили сообщение!')
+    
+    
+@bot.message_handler(commands=['upd_croco'])
+def updccccc(m):
+    if m.from_user.id == 441399484:
+        chats.update_many({},{'$set':{'customusers':None}})
+        
+@bot.message_handler(commands=['set_list'])
+def updccccclist(m):
+    if m.from_user.id == 441399484:
+        chats.update_one({'id':m.chat.id},{'$set':{'customusers':[]}})
+        bot.send_message(m.chat.id, 'Список чата создан!')
+        
+@bot.message_handler(commands=['add_list'])
+def updccccclistsss(m):
+    if m.from_user.id == 441399484:
+        try:
+            if m.reply_to_message.from_user.id not in chats.find_one({'id':m.chat.id}):
+                chats.update_one({'id':m.chat.id},{'$push':{'customusers':m.reply_to_message.from_user.id}})
+                bot.send_message(m.chat.id, m.reply_to_message.from_user.first_name+' добавлен в список чата!')
+            else:
+                bot.send_message(m.chat.id, m.reply_to_message.from_user.first_name+' уже был в списке!')
+        except:
+            bot.send_message(m.chat.id, 'Ошибка!')
+          
     
     
 @bot.message_handler(commands=['massadd'])
@@ -451,5 +477,6 @@ def createchat(m):
         'currentmaster': None,
         'answer_time': None,
         'lang': 'ru',
-        'old':False
+        'old':False,
+        'customusers':None
     }
