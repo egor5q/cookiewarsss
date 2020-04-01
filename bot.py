@@ -5,7 +5,6 @@ import threading
 import time
 import traceback
 from SimpleQIWI import *
-
 import telebot
 from pymongo import MongoClient
 
