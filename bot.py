@@ -370,12 +370,12 @@ def idssssss(m):
         bot.send_message(m.chat.id, text)
 
 
-@bot.message_handler(commands=['addgoose'])
+@bot.message_handler(commands=['addkaza'])
 def addgoose(m):
     if m.from_user.id==441399484:
         try:
-            globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':'goose'}})
-            bot.send_message(m.chat.id, 'Ура, гусь')
+            globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':'kaza'}})
+            bot.send_message(m.chat.id, 'Ура, коза')
         except:
             pass
 
@@ -464,6 +464,10 @@ def feeed(m):
             spisok=['траву', 'зёрна', 'семена', 'клубнику', 'чернику']
             s2=['работягу', 'ЗАПУСКАЕМ ГУСЯ, РАБОТЯГИ', 'твич', 'Дуров, добавь эмодзи гуся в ТГ!']
             petname='Гусь'
+        if x['type']=='kaza':
+            spisok=['траву', 'яблоко']
+            s2=['яблофон', 'резиновый мяч']
+            petname='Коза'
         if random.randint(1, 100) <= 80:
             s = spisok
         else:
@@ -923,7 +927,7 @@ def name(m):
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
     global cyber
-    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn', 'goose']
+    alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn', 'goose', 'kaza']
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
         return
@@ -1158,6 +1162,8 @@ def change_pet(pet):
         x='onehorn'
     if pet=='гусь':
         x='goose'
+    if pet=='коза':
+        x = 'kaza'
     return x
     
     
@@ -1679,6 +1685,8 @@ def pettoemoji(pet):
         return '🦄'
     if pet=='goose':
         return '🦆'
+    if pet=='kaza':
+        return '🐐'
     
     
     
@@ -1720,6 +1728,8 @@ def pettype(pet):
         return 'единорог'
     if pet=='goose':
         return 'гусь'
+    if pet=='kaza':
+        return 'коза'
     return t
     
 
