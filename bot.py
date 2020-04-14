@@ -843,26 +843,9 @@ def throwh(m):
                 bot.send_message(m.chat.id, "У вас даже киберлошади нет, а вы ее кибервыкидывать киберсобрались!")
          
             return
-    
-        if lose_horse(m.chat.id):
-            ban.append(m.chat.id)
-            t = threading.Timer(3600, unban, args=[m.chat.id])
-            t.start()
-            if cyber!=1:
-                bot.send_message(m.chat.id,
-                             "Вы выбросили питомца на улицу... Если его никто не подберет, он умрет от голода!")
-            else:
-                bot.send_message(m.chat.id,
-                             "Вы выбросили киберпитомца на киберулицу... Если его никто не киберподберет, он киберумрет от киберголода!")
-           
-        else:
-            bot.send_message(m.chat.id,
-                                 "На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!")
-    else:
-        if cyber!=1:
-            bot.send_message(m.chat.id, 'Можно выгонять только одного питомца в час!')
-        else:
-            bot.send_message(m.chat.id, 'Можно кибервыгонять только одного киберпитомца в киберчас!')
+        kb = types.InlineKeyboardMarkup()
+        kb.add(types.InlineKeyboardButton(text = 'Подтверждаю.', callback_data = 'throwh '+str(m.from_user.id)),types.InlineKeyboardButton(text = 'Отмена!', callback_data = 'cancel '+str(m.from_user.id)))
+        bot.send_message(m.chat.id, 'Подтвердите, что вы хотите выбросить лошадь.', reply_markup = kb)
       
 
 @bot.message_handler(commands=['ban'])
@@ -1373,6 +1356,10 @@ def calllsssff(call):
                   medit('Можно выгонять только одного питомца в час!', call.message.chat.id, call.message.message_id)
               else:
                   pass
+                
+    elif 'cancel' in call.data:
+        if call.from_user.id == int(call.data.split(' ')[1]):
+            medit('Отменено.', call.message.chat.id, call.message.message_id)
     
     
 def createglobalchat(id):
