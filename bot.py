@@ -70,8 +70,8 @@ def swpts(m):
     pet1 = chats.find_one({'id':chat1})
     pet2 = chats.find_one({'id':chat2})
     
-    chats.update_one({'id':chat1},{'$set':{'lvl':pet2['lvl'], 'hunger':pet2['hunger'], 'maxhunger':pet2['maxhunger']}})
-    chats.update_one({'id':chat2},{'$set':{'lvl':pet1['lvl'], 'hunger':pet1['hunger'], 'maxhunger':pet1['maxhunger']}})
+    chats.update_one({'id':chat1},{'$set':{'lvl':pet2['lvl'], 'hunger':pet2['hunger'], 'maxhunger':pet2['maxhunger'], 'exp':pet2['exp']}})
+    chats.update_one({'id':chat2},{'$set':{'lvl':pet1['lvl'], 'hunger':pet1['hunger'], 'maxhunger':pet1['maxhunger'], 'exp':pet1['exp']}})
   except:
     pass
 
