@@ -1320,7 +1320,7 @@ def calllsssff(call):
               user = bot.get_chat_member(call.message.chat.id, call.from_user.id)
               ch=chat_admins.find_one({'id':call.message.chat.id})
               if ch==None:
-                  if user.id != int(call.data.split(' ')[1]):
+                  if call.from_user.id != int(call.data.split(' ')[1]):
                       return
                   if (user.status != 'creator' and user.status != 'administrator') and m.from_user.id != m.chat.id:
                         medit('Только админ может делать это!', call.message.chat.id, call.message.message_id)
