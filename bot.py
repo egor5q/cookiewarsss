@@ -847,7 +847,10 @@ def throwh(m):
         kb = types.InlineKeyboardMarkup()
         kb.add(types.InlineKeyboardButton(text = 'Подтверждаю.', callback_data = 'throwh '+str(m.from_user.id)),types.InlineKeyboardButton(text = 'Отмена!', callback_data = 'cancel '+str(m.from_user.id)))
         bot.send_message(m.chat.id, 'Подтвердите, что вы хотите выбросить лошадь.', reply_markup = kb)
-      
+        
+    else:
+        bot.send_message(m.chat.id, 'Выкидывать питомца можно только раз в час!')
+        return
 
 @bot.message_handler(commands=['ban'])
 def bannn(m):
