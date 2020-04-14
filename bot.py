@@ -60,6 +60,21 @@ def fuuuuuuu(m):
         bot.send_message(m.chat.id, 'Киберfuck!')
    
 
+@bot.message_handler(commands=['switch_pets'])
+def swpts(m):
+  try:
+    if m.from_user.id != 441399484:
+        return
+    chat1 = int(m.text.split(' ')[1])
+    chat2 = int(m.text.split(' ')[2])
+    pet1 = chats.find_one({'id':chat1})
+    pet2 = chats.find_one({'id':chat2})
+    
+    chats.update_one({'id':chat1},{'$set':{'lvl':pet2['lvl'], 'hunger':pet2['hunger'], 'maxhunger':pet2['maxhunger']}})
+    chats.update_one({'id':chat2},{'$set':{'lvl':pet1['lvl'], 'hunger':pet1['hunger'], 'maxhunger':pet1['maxhunger']}})
+  except:
+    pass
+
 #globalchats.update_many({},{'$push':{'avalaible_pets':'horse'}})
 
 #users.update_many({},{'$set':{'now_elite':False}})
@@ -1313,6 +1328,52 @@ def messages(m):
 
 
 
+@bot.callback_query_handler(func = lambda call:True)
+def calllsssff(call):
+    if 'throwh' in call.data:
+          global cyber
+          if call.message.chat.id not in ban:
+              user = bot.get_chat_member(call.message.chat.id, call.from_user.id)
+              ch=chat_admins.find_one({'id':call.message.chat.id})
+              if ch==None:
+                  if user.id != int(call.data.split(' ')[1]):
+                      return
+                  if (user.status != 'creator' and user.status != 'administrator') and m.from_user.id != m.chat.id:
+                        medit('Только админ может делать это!', call.message.chat.id, call.message.message_id)
+                        return
+              else:
+                  if call.from_user.id not in ch['admins']:
+                      if cyber!=1:
+                          medit('Только админ питомца может делать это! Выставить админов может создатель чата по команде: /set_admin. Убрать админа можно командой /remove_admin.', call.message.chat.id, call.message.message_id)
+                      else:
+                          pass
+                      return
+          
+              if chats.find_one({'id': call.message.chat.id}) is None:
+                  if cyber!=1:
+                      medit("У вас даже лошади нет, а вы ее выкидывать собрались!", call.message.chat.id, call.message.message_id)
+                  else:
+                      pass
+               
+                  return
+          
+              if lose_horse(call.message.chat.id):
+                  ban.append(call.message.chat.id)
+                  t = threading.Timer(3600, unban, args=[call.message.chat.id])
+                  t.start()
+                  if cyber!=1:
+                      medit("Вы выбросили питомца на улицу... Если его никто не подберет, он умрет от голода!", call.message.chat.id, call.message.message_id)
+                  else:
+                      pass
+                 
+              else:
+                  medit("На улице гуляет слишком много лошадей, поэтому, как только вы ее выкинули, лошадь украли цыгане!", call.message.chat.id, call.message.message_id)
+          else:
+              if cyber!=1:
+                  medit('Можно выгонять только одного питомца в час!', call.message.chat.id, call.message.message_id)
+              else:
+                  pass
+    
     
 def createglobalchat(id):
     return {
