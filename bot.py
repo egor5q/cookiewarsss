@@ -7,6 +7,7 @@ import traceback
 from SimpleQIWI import *
 import telebot
 from pymongo import MongoClient
+from telebot import types
 
 token = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(token)
