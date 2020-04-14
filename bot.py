@@ -1322,7 +1322,7 @@ def calllsssff(call):
               if ch==None:
                   if call.from_user.id != int(call.data.split(' ')[1]):
                       return
-                  if (user.status != 'creator' and user.status != 'administrator') and m.from_user.id != m.chat.id:
+                  if (user.status != 'creator' and user.status != 'administrator') and call.from_user.id != call.message.chat.id:
                         medit('Только админ может делать это!', call.message.chat.id, call.message.message_id)
                         return
               else:
