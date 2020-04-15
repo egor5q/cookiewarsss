@@ -879,6 +879,17 @@ def k(m):
     except:
         pass
 
+@bot.message_handler(commands=['exp'])
+def k(m):
+  if m.from_user.id==441399484 or m.from_user.id==55888804:
+    x=m.text.split('/exp')
+    try:
+      int(x[1])
+      users.update_one({'id':m.reply_to_message.from_user.id}, {'$inc':{'bot.exp':int(x[1])}})
+      bot.send_message(m.chat.id, x[1]+'❇️ опыта успешно выдано!')
+    except:
+        pass
+
       
       
 @bot.message_handler(commands=['j'])
