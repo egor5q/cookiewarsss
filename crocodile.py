@@ -25,6 +25,7 @@ if words.find_one({}) == None:
     words.insert_one({'words': []})
    
     
+banned = [787340171]
 cache = []
 cache_old = []
 ws = words.find_one({})['words']
@@ -230,6 +231,8 @@ def stats(m):
 
 @bot.message_handler(commands=['start'])
 def creategame(m):
+    if m.from_user.id in banned:
+        return
     chat = chats.find_one({'id': m.chat.id})
     if chat == None:
         chats.insert_one(createchat(m))
@@ -269,6 +272,8 @@ def swwww(m):
 @bot.message_handler(content_types=['text'])
 def allmsg(m):
     try:
+        if m.from_user.id in banned:
+            return
         chat = newchat(m)
         if m.forward_from != None:
             if m.forward_from.id == 728114349 and m.from_user.id == 441399484:
@@ -337,6 +342,8 @@ def newchat(m):
 @bot.callback_query_handler(func=lambda call: True)
 def calls(call):
     try:
+        if call.from_user.id in banned:
+            return
         chat = chats.find_one({'id': call.message.chat.id})
         if chat == None:
             return
