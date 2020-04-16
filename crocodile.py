@@ -25,7 +25,7 @@ if words.find_one({}) == None:
     words.insert_one({'words': []})
    
     
-banned = [787340171, 86190439]
+banned = [787340171]
 cache = []
 cache_old = []
 ws = words.find_one({})['words']
