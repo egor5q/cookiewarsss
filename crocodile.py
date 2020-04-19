@@ -65,6 +65,13 @@ def pinsendg(m):
                 pass
         bot.send_message(441399484, str(i)+' чатов получили сообщение!')
     
+@bot.message_handler(commands=['resetstats_crocodile'])
+def resetstats(m):
+    if m.from_user.id != 441399484:
+        return
+    chats.update_one({'id':m.chat.id},{'$set':{'users':{}}})
+    bot.send_message(m.chat.id, 'Обнулено!')
+
     
 @bot.message_handler(commands=['upd_croco'])
 def updccccc(m):
