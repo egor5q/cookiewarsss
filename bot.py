@@ -2026,7 +2026,7 @@ import crocodile
 import cookiewars
 def poll(b):
     try:
-        b.polling(none_stop = True, skip_pending = True)
+        b.polling(none_stop = True, skip_pendings = True)
     except:
         b.send_message(441399484, traceback.format_exc())
 
