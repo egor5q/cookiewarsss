@@ -68,10 +68,13 @@ def pinsendg(m):
     
 @bot.message_handler(commands=['resetstats_crocodile'])
 def resetstats(m):
-    if m.from_user.id != 441399484:
-        return
+    user = bot.get_chat_member(m.chat.id, m.from_user.id)
+    if user.status != 'creator':
+        bot.send_message(m.chat.id, 'Только создатель чата может сбросить статистику!')
+        return 
+   
     chats.update_one({'id':m.chat.id},{'$set':{'users':{}}})
-    bot.send_message(m.chat.id, 'Обнулено!')
+    bot.send_message(m.chat.id, 'Статистика чата сброшена!')
 
     
 @bot.message_handler(commands=['upd_croco'])
