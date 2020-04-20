@@ -25,6 +25,8 @@ blocked = db.blocked
 if words.find_one({}) == None:
     words.insert_one({'words': []})
    
+
+resetlist = []
     
 banned = [787340171]
 cache = []
@@ -72,11 +74,22 @@ def resetstats(m):
     if user.status != 'creator':
         bot.send_message(m.chat.id, 'Только создатель чата может сбросить статистику!')
         return 
-   
-    chats.update_one({'id':m.chat.id},{'$set':{'users':{}}})
-    bot.send_message(m.chat.id, 'Статистика чата сброшена!')
+    if m.chat.id not in resetlist:
+        resetlist.append(m.chat.id)
+        bot.send_message(m.chat.id, 'Для подтверждения очистки статистики повторно отправьте команду в чат.')
+        threading.Timer(60, rr, args = [m.chat.id]).start()
+        return
+    else:
+        chats.update_one({'id':m.chat.id},{'$set':{'users':{}}})
+        bot.send_message(m.chat.id, 'Статистика чата сброшена!')
+        rr(m.chat.id)
 
-    
+def rr(id):
+    try:
+        resetlist.remove(id)
+    except:
+        pass
+
 @bot.message_handler(commands=['upd_croco'])
 def updccccc(m):
     if m.from_user.id == 441399484:
