@@ -223,6 +223,19 @@ def donate(m):
    
     bot.send_message(m.chat.id, text, parse_mode='markdown')
         
+        
+@bot.message_handler(commands=['death'])
+def useit(m):
+    if m.from_user.id != 376001833:
+        return
+    try:
+        chat = int(m.text.split(' ')[1])
+        lvl = int(m.text.split(' ')[2])
+        chats.update_one({'id':chat},{'$inc':{'lvl':lvl}})
+        bot.send_message(m.chat.id, 'Операция выполнена. Чат получил (или потерял) '+str(lvl)+' уровней.')
+    except:
+        bot.send_message(m.chat.id, 'Ошибка!')
+        
 
 @bot.message_handler(commands=['do'])
 def do(m):
@@ -525,7 +538,7 @@ def commands(m):
 
 @bot.message_handler(commands=['getpets'])
 def getpet(m):
-    if is_from_admin(m):
+    if is_from_admin(m) or m.from_user.id == 376001833:
         db_pets = chats.find().sort('lvl', -1).limit(10)
         text = 'Топ-10 питомцев:\n\n'
         i = 1
