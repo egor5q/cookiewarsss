@@ -231,7 +231,8 @@ def useit(m):
     try:
         chat = int(m.text.split(' ')[1])
         lvl = int(m.text.split(' ')[2])
-        chats.update_one({'id':chat},{'$inc':{'lvl':lvl}})
+        chatt = chats.find_one({'id':chat})
+        chats.update_one({'id':chat},{'$inc':{'lvl':lvl, 'exp':nextlvl(chatt)}})
         bot.send_message(m.chat.id, 'Операция выполнена. Чат получил (или потерял) '+str(lvl)+' уровней.')
     except:
         bot.send_message(m.chat.id, 'Ошибка!')
