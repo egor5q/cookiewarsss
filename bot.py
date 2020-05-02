@@ -556,7 +556,7 @@ def getpet(m):
         text = 'Топ-10 питомцев:\n\n'
         i = 1
         for doc in db_pets:
-            text += str(i) + ' место: ' + doc['name'] + ' (' + str(doc['lvl']) + ' лвл) (`' + str(
+            text += str(i) + ' место: ' + make_safe_markdown(doc['name']) + ' (' + str(doc['lvl']) + ' лвл) (`' + str(
                 doc['id']) + '`)' + '\n'
             i += 1
         try:
@@ -564,7 +564,10 @@ def getpet(m):
         except:
             bot.send_message(m.chat.id, text)
 
-
+def make_safe_markdown(string):
+    string = str(string)
+    return string.replace('_', '\\_').replace('*', '\\*').replace('`', '\\`')
+          
 @bot.message_handler(commands=['rules'])
 def rules(m):
   global cyber
