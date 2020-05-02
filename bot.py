@@ -244,11 +244,30 @@ def useit(m):
         chat = int(m.text.split(' ')[1])
         lvl = int(m.text.split(' ')[2])
         chatt = chats.find_one({'id':chat})
+        chats.update_one({'id':chat},{'$inc':{'lvl':lvl}})
+        chats.update_one({'id':chat},{'$set':{'exp':nextlvl(chatt)}})
+        
+        bot.send_message(m.chat.id, 'Операция выполнена. Чат получил (или потерял) '+str(lvl)+' уровней.')
+    except:
+        bot.send_message(m.chat.id, 'Ошибка!')
+        
+
+@bot.message_handler(commands=['new_name'])
+def useitt(m):
+    if m.from_user.id != 376001833:
+        return
+    try:
+        chat = int(m.text.split(' ')[1])
+        name = ''
+        for ids in name:
+            pass
+        chatt = chats.find_one({'id':chat})
         chats.update_one({'id':chat},{'$inc':{'lvl':lvl, 'exp':nextlvl(chatt)}})
         bot.send_message(m.chat.id, 'Операция выполнена. Чат получил (или потерял) '+str(lvl)+' уровней.')
     except:
         bot.send_message(m.chat.id, 'Ошибка!')
         
+
 
 @bot.message_handler(commands=['do'])
 def do(m):
