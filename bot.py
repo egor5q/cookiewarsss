@@ -103,6 +103,17 @@ def chatiddfdd(m):
     bot.send_message(m.chat.id, 'Айди чата: `'+str(m.chat.id)+'`', parse_mode='markdown')
   
 
+@bot.message_handler(commands=['chat_amount'])
+def chatsssstats(m):
+    if m.from_user.id not in [441399484, 376001833]:
+        return
+    i = 0
+    for ids in chats.find({}):
+        if ids['id'] < 0:
+            i += 1
+    bot.send_message(m.chat.id, 'Всего я знаю '+str(i)+' чатов!')
+    
+
 @bot.message_handler(commands=['newses'])
 def neww(m):
     if m.from_user.id==441399484:
