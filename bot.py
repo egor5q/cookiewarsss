@@ -97,6 +97,15 @@ def sendd(m):
         except:
             pass
 
+         
+@bot.message_handler(commands=['chatid'])
+def chatid(m):
+ try:
+  if m.from_user.id not in ban:
+    incmsg(m.from_user.id, m.chat.id, m.message_id)
+    bot.send_message(m.chat.id, 'Айди чата: `'+str(m.chat.id)+'`', parse_mode='markdown')
+ except:
+  pass
 
 @bot.message_handler(commands=['newses'])
 def neww(m):
