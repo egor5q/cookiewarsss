@@ -1715,6 +1715,8 @@ def check_lvlup(pet):
         if pet['lvl']>=10:
             chats.update_one({'id':pet['id']},{'$inc':{'lvl':lvl, 'maxhunger':lvl*15, 'hunger':lvl*15}})
             lvvl=chats.find_one({'id':pet['id']})['lvl']
+            if pet['id'] == -1001196172665:
+                return
             chats.update_one({'id':pet['id']},{'$set':{'exp':nextlvl({'lvl':lvvl-1})}})
             if pet['send_lvlup']==True:
                 try:
