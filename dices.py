@@ -85,6 +85,7 @@ def createuser(user):
 #    users.insert_one(createuser({'id':'bot', 'first_name': 'Dices'}))
 
 def new_msg(result):
+  try:
     try:
         user = users.find_one({'id':result['message']['from']['id']})
         message = result['message']
@@ -250,8 +251,8 @@ def new_msg(result):
                 if chat['results'] == False:
                     chats.update_one({'id':chat['id']},{'$set':{'results':True}})
                     req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Вывод результатов броска включен!')
-            
-                
+  except:
+    print(traceback.format_exc())
 
         
 def polling():
