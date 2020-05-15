@@ -237,7 +237,7 @@ def new_msg(result):
                 msgg = json.loads(chatu.text)
                 print(msgg)
                 if message['chat']['type'] != 'private':
-                    if msgg['status'] not in ['creator', 'administrator']:
+                    if msgg['result']['status'] not in ['creator', 'administrator']:
                         req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Только администратор чата может делать это!')
                         return
                     
