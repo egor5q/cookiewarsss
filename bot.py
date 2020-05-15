@@ -2082,6 +2082,7 @@ checks()
 
 import crocodile
 import cookiewars
+import dices
 def poll(b):
     try:
         b.polling(none_stop = True)
@@ -2090,5 +2091,10 @@ def poll(b):
 
 threading.Thread(target = poll, args = [crocodile.bot]).start()
 threading.Thread(target = poll, args = [cookiewars.bot]).start()
+
+def polll(x):
+    x()
+threading.Thread(target = polll, args = [dices.polling]).start()
+
 print('7777')
 threading.Thread(target = poll, args = [bot]).start()
