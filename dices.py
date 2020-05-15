@@ -234,8 +234,10 @@ def new_msg(result):
             
             elif text.lower()[:11] == '/off_result' or text.lower()[:26] == '/off_result@dice_saver_bot':
                 chatu = requests.get(bot+'getChatMember?chat_id='+str(message['chat']['id'])+'&user_id='+str(user['id']))
+                msgg = json.loads(chatu.text)
+                print(msgg)
                 if message['chat']['type'] != 'private':
-                    if chatu.status not in ['creator', 'administrator']:
+                    if msgg['status'] not in ['creator', 'administrator']:
                         req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Только администратор чата может делать это!')
                         return
                     
