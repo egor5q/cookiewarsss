@@ -18,6 +18,7 @@ from requests.exceptions import HTTPError
 client=MongoClient(os.environ['database'])
 db=client.dices
 users=db.users
+chats = db.chats
 
 OPENER = urllib2.build_opener(urllib2.HTTPCookieProcessor(CJ))
 bot = 'https://api.telegram.org/bot'+os.environ['dicebot']+'/'
@@ -36,6 +37,12 @@ for url in ['https://api.github.com', 'https://api.github.com/invalid']:
         
 u_id = 0
 ems = ['🎲', '🏀', '🎯']
+
+def createchat(chat):
+    return {
+        'id':chat['id'],
+        'results':True
+    }
 
 def createuser(user):
     return {
@@ -85,6 +92,10 @@ def new_msg(result):
         user = users.find_one({'id':result['result']['from']['id']})
         #result = result['result']
         message = result['result']
+    chat = chats.find_one({'id':message['chat']['id']})
+    if chat == None:
+        chats.insert_one(createchat(message['chat']))
+        chat = chats.find_one({'id':message['chat']['id']})
     if message['from']['id'] == 1255836783:
         user = users.find_one({'id':'bot'})
     if user == None:
@@ -115,7 +126,8 @@ def new_msg(result):
             #req = urllib2.Request(bot+'sendMessage?chat_id='+str(result['message']['chat']['id'])+'&text="Брошен кубик!"')
             time.sleep(x)
             if user['id'] != 'bot':
-                req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text=Брошен '+doptxt+'! Результат: '+str(number)+'&reply_to_message_id='+str(message['message_id']))
+                if chat['results'] == True:
+                    req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text=Брошен '+doptxt+'! Результат: '+str(number)+'&reply_to_message_id='+str(message['message_id']))
             users.update_one({'id':user['id']},{'$inc':{'results.'+rs+'.score_sum':number, 'results.'+rs+'.score_amount':1, str(number):number}}) 
 
         except:
@@ -210,7 +222,7 @@ def new_msg(result):
             elif text.lower()[:6] == '/start' and message['chat']['type'] == 'private':
                 req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Я могу сохранять результаты бросков кубика/дротика/мяча. Если добавить меня в группу, то я буду записывать статистику бросков и там.')
             
-            elif text.lower()[:5] == '/help':
+            elif text.lower()[:5] == '/help' or text.lower()[:20] == '/help@dice_saver_bot':
                 tt = ''
                 tt += 'Дополнительные функции бота:\n\n1. Имеется возможность после команды /dice написать, какой именно бросок сделать. Все возможные варианты:\n'+\
                 '/dice куб/кубик/кости/cube/🎲\n'+\
@@ -220,6 +232,16 @@ def new_msg(result):
                 tt += '2. Когда вы используете /dice, этот бросок засчитывается боту. Увидеть статистику можно по команде /bot_dices.'
                 req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+tt)
             
+            elif text.lower()[:11] == '/off_result' or text.lower()[:26] == '/off_result@dice_saver_bot':
+                if chat['results'] == True:
+                    chats.update_one({'id':chat['id']},{'$set':{'results':False}})
+                    req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Вывод результатов броска отключен!')
+                    
+                if chat['results'] == False:
+                    chats.update_one({'id':chat['id']},{'$set':{'results':True}})
+                    req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Вывод результатов броска включен!')
+            
+                
 
         
 def polling():
