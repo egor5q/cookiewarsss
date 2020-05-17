@@ -108,6 +108,8 @@ def new_msg(result):
         req = requests.get(bot+'sendMessage?chat_id='+str(441399484)+'&text=Новый юзер: '+user['name']+'. ID: '+str(user['id'])+'. Всего юзеров: '+str(amount))
             
     if 'dice' in message:
+        if message['forward_from'] != None:
+            return
         try:
             number = message['dice']['value']
             em = message['dice']['emoji']
