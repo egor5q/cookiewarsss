@@ -60,7 +60,7 @@ def selectchatt(m):
         users.insert_one(createuser(m.from_user))
         user = users.find_one({'id':m.from_user.id})
     users.update_one({'id':user['id']},{'$set':{'curchat':m.chat.id}})
-    bot.send_message(m.chat.id, 'Вы выбрали чат для добавления слов: "'+m.chat.title+'". Теперь переключайтесь '+
+    bot.send_message(m.chat.id, 'Вы выбрали чат для добавления слов: "'+str(m.chat.title)+'". Теперь переключайтесь '+
                      'ко мне в ЛС и присылайте слова (просто слова, без каких-либо команд!), которые '+
                      'хотите добавить в список. Для отмены напишите команду /deselect_chat.')
     
