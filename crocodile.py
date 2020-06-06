@@ -50,6 +50,8 @@ for ids in ws:
 
 adm = [441399484]
 
+chats.update_many({},{'$set':{'words':[]}})
+
 
 @bot.message_handler(commands=['ping'])
 def ping(m):
@@ -490,7 +492,10 @@ def creategame(call):
     if chat['old'] == False:
         word = random.choice(random.choice(cache))
     else:
-        word = random.choice(cache_old)    
+        allcache = cache_old.copy()
+        for ids in chat['words']:
+            allcache.append(ids)
+        word = random.choice(allcache)    
     word = word.replace('ё', 'е').replace('Ё', 'Е')
     text = word
     return {
@@ -509,5 +514,6 @@ def createchat(m):
         'answer_time': None,
         'lang': 'ru',
         'old':False,
-        'customusers':None
+        'customusers':None,
+        'words':[]
     }
