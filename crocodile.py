@@ -50,8 +50,44 @@ for ids in ws:
 
 adm = [441399484]
 
-chats.update_many({},{'$set':{'words':[]}})
+#chats.update_many({},{'$set':{'words':[]}})
 
+
+@bot.message_handler(commands=['select_chat'])
+def selectchatt(m):
+    user = users.find_one({'id':m.from_user.id})
+    if user == None:
+        users.insert_one(createuser(m.from_user))
+        user = users.find_one({'id':m.from_user.id})
+    users.update_one({'id':user['id']},{'$set':{'curchat':m.chat.id}})
+    bot.send_message(m.chat.id, 'Вы выбрали чат для добавления слов: "'+m.chat.title+'". Теперь переключайтесь '+
+                     'ко мне в ЛС и присылайте слова (просто слова, без каких-либо команд!), которые '+
+                     'хотите добавить в список. Для отмены напишите команду /deselect_chat.')
+    
+@bot.message_handler(commands=['deselect_chat'])
+def deselectchatt(m):
+    user = users.find_one({'id':m.from_user.id})
+    if user == None:
+        users.insert_one(createuser(m.from_user))
+        user = users.find_one({'id':m.from_user.id})
+    users.update_one({'id':user['id']},{'$set':{'curchat':None}})
+    bot.send_message(m.chat.id, 'Успешно выключен режим добавления новых слов.')
+    
+    
+@bot.message_handler(commands=['del_words'])
+def delwordss(m):
+    user = users.find_one({'id':m.from_user.id})
+    if user == None:
+        users.insert_one(createuser(m.from_user))
+        user = users.find_one({'id':m.from_user.id})
+    if user['delwords']:
+        users.update_one({'id':user['id']},{'$set':{'delwords':False}})
+        bot.send_message(m.chat.id, 'Отключено удаление слов из списка чата!')
+    else:
+        users.update_one({'id':user['id']},{'$set':{'delwords':True}})
+        bot.send_message(m.chat.id, 'Включено удаление слов из списка чата! Теперь присылайте мне в ЛС слова '+
+                         '(без команд и прочего, просто текстом), которые хотите удалить. Для отмены снова напишите эту команду.')
+    
 
 @bot.message_handler(commands=['ping'])
 def ping(m):
@@ -301,6 +337,31 @@ def allmsg(m):
         if m.from_user.id in banned:
             return
         chat = newchat(m)
+        if m.chat.id == m.from_user.id:
+            user = users.find_one({'id':m.chat.id})
+            if user != None:
+                if user['curchat'] != None:
+                    if user['delwords'] == False:
+                        u = bot.get_chat_member(user['curchat'], user['id'])
+                        if u.status not in ['administrator', 'creator']:
+                            bot.send_message(m.chat.id, 'Вы не администратор того чата, в который хотите добавить слово! '+
+                                             'Для окончания добавления '+
+                                        'напишите команду /deselect_chat.')
+                            return
+                        chats.update_one({'id':user['curchat']},{'$push':{'words':m.text.lower()}})
+                        bot.send_message(m.chat.id, 'Добавлено новое слово в чат: "'+m.text.lower()+'"! Для окончания добавления '+
+                                        'напишите команду /deselect_chat.')
+                    else:
+                        u = bot.get_chat_member(user['curchat'], user['id'])
+                        if u.status not in ['administrator', 'creator']:
+                            bot.send_message(m.chat.id, 'Вы не администратор того чата, из которого хотите удалить слово! '+
+                                             'Для окончания удаления '+
+                                        'напишите команду /del_words.')
+                            return
+                        chats.update_one({'id':user['curchat']},{'$pull':{'words':m.text.lower()}})
+                        bot.send_message(m.chat.id, 'Удалено слово: "'+m.text.lower()+'"! Для окончания удаления '+
+                                        'напишите команду /del_words.')
+                    
         if m.forward_from != None:
             if m.forward_from.id == 728114349 and m.from_user.id == 441399484:
                 try:
@@ -483,6 +544,14 @@ def medit(message_text, chat_id, message_id, reply_markup=None, parse_mode=None)
                                  reply_markup=reply_markup,
                                  parse_mode=parse_mode)
 
+
+def createuser(user):
+    return {
+        'id':user.id,
+        'name':user.first_name,
+        'curchat':None,
+        'delwords':False
+    }
 
 def creategame(call):
     global url
