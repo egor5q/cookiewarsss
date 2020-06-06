@@ -73,6 +73,13 @@ def deselectchatt(m):
     users.update_one({'id':user['id']},{'$set':{'curchat':None}})
     bot.send_message(m.chat.id, 'Успешно выключен режим добавления новых слов.')
     
+@bot.message_handler(commands=['manage_words'])
+def manageworrds(m):
+    text = '/select_chat - выбрать чат, над которым будете проводить нижеописанные операции.\n'+\
+    '/deselect_chat - отменить операции над чатом.\n'+\
+    '/del_words - включить/отключить режим удаления слов из чата.\n'
+    bot.send_message(m.chat.id, text)
+    
     
 @bot.message_handler(commands=['del_words'])
 def delwordss(m):
@@ -351,6 +358,8 @@ def allmsg(m):
                         chats.update_one({'id':user['curchat']},{'$push':{'words':m.text.lower()}})
                         bot.send_message(m.chat.id, 'Добавлено новое слово в чат: "'+m.text.lower()+'"! Для окончания добавления '+
                                         'напишите команду /deselect_chat.')
+                        bot.send_message(user['curchat'], m.from_user.first_name+' добавил новое слово!')
+                        
                     else:
                         u = bot.get_chat_member(user['curchat'], user['id'])
                         if u.status not in ['administrator', 'creator']:
@@ -361,6 +370,7 @@ def allmsg(m):
                         chats.update_one({'id':user['curchat']},{'$pull':{'words':m.text.lower()}})
                         bot.send_message(m.chat.id, 'Удалено слово: "'+m.text.lower()+'"! Для окончания удаления '+
                                         'напишите команду /del_words.')
+                        bot.send_message(user['curchat'], m.from_user.first_name+' удалил слово "'+m.text.lower()+'"! Важно: удаление встроенных в бота слов не работает, даже если это сообщение пришло!')
                     
         if m.forward_from != None:
             if m.forward_from.id == 728114349 and m.from_user.id == 441399484:
@@ -582,7 +592,7 @@ def createchat(m):
         'currentmaster': None,
         'answer_time': None,
         'lang': 'ru',
-        'old':False,
+        'old':True,
         'customusers':None,
         'words':[]
     }
