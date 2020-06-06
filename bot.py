@@ -2085,7 +2085,7 @@ import cookiewars
 import dices
 def poll(b):
     try:
-        b.polling(none_stop = True, skip_pendings = True)
+        b.polling(none_stop = True)
     except:
         b.send_message(441399484, traceback.format_exc())
 
