@@ -503,7 +503,10 @@ def calls(call):
             if chat['old'] == False:
                 word = random.choice(random.choice(cache))
             else:
-                word = random.choice(cache_old)
+                allcache = cache_old.copy()
+                for ids in chat['words']:
+                    allcache.append(ids)
+                word = random.choice(allcache)
             word = word.replace('ё', 'е').replace('Ё', 'Е')
             global url
             global key
