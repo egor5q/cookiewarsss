@@ -40,9 +40,9 @@ def dd(m):
     dicks=[]
     golddicks=[]
     while i<amount:
-        x=random.randint(1,8)
+        x=random.randint(1,9)
         while x in dicks:
-            x=random.randint(1,8)
+            x=random.randint(1,9)
         dicks.append(x)
         i+=1
     i=1
