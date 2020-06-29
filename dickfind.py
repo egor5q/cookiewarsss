@@ -158,6 +158,3 @@ def editmsg(game, end=False):
     return text
     
     
-    
-print('7777')
-bot.polling(none_stop=True,timeout=600)
