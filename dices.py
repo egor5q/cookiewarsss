@@ -273,7 +273,6 @@ def polling():
                 #    req.add_header('User-agent',USER_AGENT)
                 #    req.add_data(urllib.urlencode({'chat_id':result['message']['chat']['id'],'text':'Эй Привет чувак!'}))
                 #    OPENER.open(req).read()
-                print(result)
                 threading.Thread(target = new_msg, args = [result]).start()
         except:
             print(traceback.format_exc())
