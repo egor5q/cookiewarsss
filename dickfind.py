@@ -8,7 +8,7 @@ from emoji import emojize
 from telebot import types
 from pymongo import MongoClient
 import traceback
-
+import config
 
 token = os.environ['dickfind']
 bot = telebot.TeleBot(token)
@@ -29,6 +29,7 @@ def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode=None):
     
 @bot.message_handler(commands=['dick'])
 def dd(m):
+    config.about(m, bot)
     global number
     text='Угадайте, в какой коробке хуй.'
     kb=types.InlineKeyboardMarkup(3)
@@ -156,5 +157,11 @@ def editmsg(game, end=False):
         else:
             text+=game['users'][ids]['name']+': 💨открыл(а) пустую коробку\n'
     return text
+
+
+@bot.message_handler()
+def allmssss(m):
+    config.about(m, bot)
+    
     
     
