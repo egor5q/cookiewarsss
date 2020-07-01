@@ -13,6 +13,7 @@ from SimpleQIWI import *
 import traceback
 import sys
 import info
+import config
 
 
 
@@ -104,6 +105,7 @@ hidetextmutants=0
 
 @bot.message_handler(commands=['silenton'])
 def silenttt(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
       global hidetext
       hidetext=1
@@ -111,6 +113,7 @@ def silenttt(m):
  
 @bot.message_handler(commands=['give'])
 def givv(m):
+           config.about(m, bot)
            if m.from_user.id==441399484:
                       try:
                                  y=users.find_one({'id':m.reply_to_message.from_user.id})
@@ -122,6 +125,7 @@ def givv(m):
       
 @bot.message_handler(commands=['silentoff'])
 def silenttt(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
       global hidetext
       hidetext=0
@@ -130,11 +134,13 @@ def silenttt(m):
 
 @bot.message_handler(commands=['referal'])
 def ref(m):
+   config.about(m, bot)
    bot.send_message(m.chat.id, 'Присоединяйся к игре CookieWars! Прокачай своего бойца, отправь в бой и наслаждайся тем, как он сам уничтожает соперника!\n'+
                     'https://telegram.me/cookiewarsbot?start='+str(m.from_user.id))
 
 @bot.message_handler(commands=['nextgame'])
 def nextgame(m):
+   config.about(m, bot)
    x=users.find_one({'id':m.from_user.id})
    if x!=None:
       if x['ping']==1:
@@ -147,6 +153,7 @@ def nextgame(m):
 
 @bot.message_handler(commands=['top'])
 def topp(m):
+        config.about(m, bot)
         text='Топ-10 игроков в кукиварс по опыту:\n\n'
         place=[]
         a=None
@@ -182,6 +189,7 @@ def topp(m):
 
 @bot.message_handler(commands=['giftadmin'])
 def ggiftadm(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
      try:
         y=users.find_one({'id':m.reply_to_message.from_user.id})
@@ -193,6 +201,7 @@ def ggiftadm(m):
 
 @bot.message_handler(commands=['gift'])
 def gift(m):
+    config.about(m, bot)
     pass
 # try:
 #   x=users.find_one({'id':m.from_user.id})
@@ -233,19 +242,22 @@ def gift(m):
 
 @bot.message_handler(commands=['offgames'])
 def offgames(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
       variables.update_one({'vars':'main'},{'$set':{'enablegames':0}})
       bot.send_message(m.chat.id, 'Режим технических работ включён!')
       
 @bot.message_handler(commands=['ongames'])
 def offgames(m):
-   if m.from_user.id==441399484:
+    config.about(m, bot)
+    if m.from_user.id==441399484:
       variables.update_one({'vars':'main'},{'$set':{'enablegames':1}})
       bot.send_message(m.chat.id, 'Режим технических работ выключен!')
             
    
 @bot.message_handler(commands=['dropname'])
 def dropname(m):
+ config.about(m, bot)
  if m.from_user.id==441399484:
    try:
        x=users.find_one({'id':m.reply_to_message.from_user.id})
@@ -267,6 +279,7 @@ items=['flash', 'knife']
 
 @bot.message_handler(commands=['buy'])
 def wtbb(m):
+    config.about(m, bot)
     user=users.find_one({'id':m.from_user.id})
     if user!=None:
         try:
@@ -299,6 +312,7 @@ def wtbb(m):
 
 @bot.message_handler(commands=['update'])
 def upd(m):
+        config.about(m, bot)
         if m.from_user.id==441399484:
           users.update_many({},{'$set':{'dailycookie':10}})
           #x=users.find({})
@@ -325,6 +339,7 @@ def upd(m):
 
 @bot.message_handler(commands=['massbattle'])
 def upd(m):
+        config.about(m, bot)
         if m.from_user.id==441399484:
             users.update_many({}, {'$inc':{'joinbots':1}})
             bot.send_message(m.chat.id, 'Каждому игроку был выдан 1 джойн бот!')
@@ -332,10 +347,12 @@ def upd(m):
 
 @bot.message_handler(commands=['myid'])
 def myid(m):
+   config.about(m, bot)
    bot.send_message(m.chat.id, 'Ваш id:\n`'+str(m.from_user.id)+'`',parse_mode='markdown')
             
 @bot.message_handler(commands=['donate'])
 def donate(m):
+  config.about(m, bot)
   if m.from_user.id==m.chat.id:
    bot.send_message(m.chat.id, 'Донат - покупка игровых ресурсов за реальные деньги.\n'+ 
                     'Курс: 25⚛ за 1р. Покупки совершаются через qiwi - кошелёк. Чтобы совершить покупку, '+
@@ -348,6 +365,7 @@ def donate(m):
             
 @bot.message_handler(commands=['autojoin'])
 def autojoin(m):
+  config.about(m, bot)
   if m.from_user.id==m.chat.id:
     enable='☑️'
     enablen='☑️'
@@ -515,6 +533,7 @@ def createzombie(id):
 
 @bot.message_handler(commands=['weapons'])
 def weapon(m):
+  config.about(m, bot)
   if userstrug.find_one({'id':m.from_user.id}) is not None:
    try:
     if m.chat.id==m.from_user.id:
@@ -567,6 +586,7 @@ def weapon(m):
 
 @bot.message_handler(commands=['skins'])
 def skins(m):
+  config.about(m, bot)
   if m.chat.id==m.from_user.id:
     i=variables.find_one({'vars':'main'})
     x=users.find_one({'id':m.from_user.id})
@@ -594,6 +614,7 @@ def skins(m):
 
 @bot.message_handler(commands=['inventory'])
 def invent(m):
+  config.about(m, bot)
   if m.from_user.id==m.chat.id:
     x=users.find_one({'id':m.from_user.id})
     textt=''
@@ -733,6 +754,7 @@ def invent(m):
 
 @bot.message_handler(commands=['clear'])
 def clear(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         try:
             users.update_one({'id':m.reply_to_message.from_user.id}, {'$set':{'bot.bought':[]}})
@@ -745,6 +767,7 @@ def clear(m):
 
 @bot.message_handler(commands=['upgrade'])
 def upgr(m):
+    config.about(m, bot)
     if m.chat.id==m.from_user.id:
         kb=types.InlineKeyboardMarkup()
         kb.add(types.InlineKeyboardButton(text='ХП', callback_data='hp'), types.InlineKeyboardButton(text='Урон', callback_data='dmg'),types.InlineKeyboardButton(text='Прочее', callback_data='different'))
@@ -758,6 +781,7 @@ def upgr(m):
 
 @bot.message_handler(commands=['me'])
 def me(m):
+  config.about(m, bot)
   x=users.find_one({'id':m.from_user.id})
   if x!=None:
       exp=x['bot']['exp']
@@ -862,6 +886,7 @@ def weapontoname(x):
 
 @bot.message_handler(commands=['unequip'])
 def unequip(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
       try:
          users.update_one({'id':m.reply_to_message.from_user.id},{'$set':{'bot.skills':[],'bot.skin':[]}})
@@ -872,6 +897,7 @@ def unequip(m):
    
 @bot.message_handler(commands=['p'])
 def k(m):
+  config.about(m, bot)
   if m.from_user.id==441399484 or m.from_user.id==55888804:
     x=m.text.split('/p')
     try:
@@ -883,6 +909,7 @@ def k(m):
 
 @bot.message_handler(commands=['exp'])
 def k(m):
+  config.about(m, bot)
   if m.from_user.id==441399484 or m.from_user.id==55888804:
     x=m.text.split('/exp')
     try:
@@ -896,6 +923,7 @@ def k(m):
       
 @bot.message_handler(commands=['j'])
 def j(m):
+  config.about(m, bot)
   if m.from_user.id==441399484 or m.from_user.id==55888804:
     x=m.text.split('/j')
     try:
@@ -909,6 +937,7 @@ def j(m):
 
 @bot.message_handler(commands=['d'])
 def dnaaagive(m):
+  config.about(m, bot)
   if m.from_user.id==441399484:
     x=m.text.split('/d')
     try:
@@ -921,6 +950,7 @@ def dnaaagive(m):
 
 @bot.message_handler(commands=['dailybox'])
 def buy(m):
+    config.about(m, bot)
     x=users.find_one({'id':m.from_user.id})
     if x!=None:
      if x['dailybox']==1:
@@ -938,6 +968,7 @@ def buy(m):
   
 @bot.message_handler(commands=['delete'])
 def delete(m):
+    config.about(m, bot)
     adm=[441399484,60727377,137499781,324316537,420049610]
     if m.from_user.id in adm:
         if m.chat.id in games:
@@ -947,6 +978,7 @@ def delete(m):
         
 @bot.message_handler(commands=['name'])
 def name(m):
+    config.about(m, bot)
     text=m.text.split(' ')
     if len(text)==2:
      if len(text[1])<=18:
@@ -1000,6 +1032,7 @@ def itemselect():
 
 @bot.message_handler(commands=['crashgame'])
 def crashgame(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
       if m.chat.id in games:
          games[m.chat.id]['xod']=None
@@ -1038,6 +1071,7 @@ def researchmenu(user):
     
 @bot.message_handler(commands=['buyslot'])
 def buyslot(m):
+    config.about(m, bot)
     no=0
     x=users.find_one({'id':m.from_user.id})
     kb=types.InlineKeyboardMarkup()
@@ -1063,6 +1097,7 @@ def buyslot(m):
     
 @bot.message_handler(commands=['dnashop'])
 def dnashop(m):
+    config.about(m, bot)
     x=users.find_one({'id':m.from_user.id})
     if m.from_user.id==m.chat.id:
         dnamenu(x)
@@ -1072,6 +1107,7 @@ def dnashop(m):
 
 @bot.message_handler(commands=['createdna'])
 def createdna(m):
+    config.about(m, bot)
     x=users.find_one({'id':m.from_user.id})
     if 'dnagenerator' in x['buildings']:
         try:
@@ -1090,6 +1126,7 @@ def createdna(m):
             
 @bot.message_handler(commands=['selectbot'])
 def selectbot(m):
+    config.about(m, bot)
     x=users.find_one({'id':m.from_user.id})
     if x!=None:
         try:
@@ -4947,6 +4984,7 @@ def act(bot, id):
 
 @bot.message_handler(commands=['help'])
 def helpp(m):
+  config.about(m, bot)
   if m.from_user.id==m.chat.id:
     bot.send_message(m.chat.id, '''Игра "CookieWars". Главная суть игры в том, что вам в процессе игры делать ничего не надо - боец сам 
 выбирает оптимальные действия. Вы только должны будете экипировать ему скиллы и оружие, и отправить в бой.\n\n
@@ -4975,6 +5013,7 @@ def helpp(m):
               
 @bot.message_handler(commands=['start'])
 def start(m):
+  config.about(m, bot)
   x=m.text.split('/start')
   x=x[1].split('_')
   try:
@@ -5043,6 +5082,7 @@ def start(m):
       
 @bot.message_handler(commands=['go'])
 def goo(m):
+  config.about(m, bot)
   try:
     if m.chat.id in games:
       if games[m.chat.id]['enablestart']==1 or m.from_user.id==441399484:
@@ -5072,6 +5112,7 @@ def starttimer(id):
    
 @bot.message_handler(commands=['sliznuk'])
 def slizz(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
       try:
         games[m.chat.id]['bots'].update(createrare(m.chat.id))
@@ -5081,6 +5122,7 @@ def slizz(m):
    
 @bot.message_handler(commands=['withoutautojoin'])
 def withoutauto(m):
+     config.about(m, bot)
    # if m.chat.id==-1001208357368:#-229396706:
      if m.chat.id not in games:# and m.from_user.id==441399484:
         code=random.randint(1,10000)
@@ -5107,6 +5149,7 @@ def withoutauto(m):
                     
 @bot.message_handler(commands=['pvp'])
 def withoutauto(m):
+     config.about(m, bot)
    # if m.chat.id==-1001208357368:#-229396706:
      if m.chat.id not in games:# and m.from_user.id==441399484:
         games.update(creategame(m.chat.id, 0))
@@ -5126,6 +5169,7 @@ def withoutauto(m):
    
 @bot.message_handler(commands=['fastfinish'])
 def ff(m):
+   config.about(m, bot)
    if m.from_user.id==441399484:
      try:
         games[m.chat.id]['timee']=2
@@ -5137,6 +5181,7 @@ def ff(m):
                 
 @bot.message_handler(commands=['apocalypse'])
 def apocalypse(m):
+     config.about(m, bot)
    # if m.chat.id==-1001208357368:#-229396706:
      if m.chat.id not in games:# and m.from_user.id==441399484:
         code=random.randint(1,10000)
@@ -5167,6 +5212,7 @@ def enablestart(id):
    
 @bot.message_handler(commands=['begin'])
 def begin(m):
+   config.about(m, bot)
    y=variables.find_one({'vars':'main'})
    if y['enablegames']==1:                      
      if m.chat.id not in games:
@@ -5241,6 +5287,7 @@ def begin(m):
    
 @bot.message_handler(commands=['withoutgmo'])
 def begin(m):
+   config.about(m, bot)
    newchat=-1001172494515
    y=variables.find_one({'vars':'main'})
    if y['enablegames']==1:                      
@@ -5288,6 +5335,7 @@ def begin(m):
         
 @bot.message_handler(commands=['dungeon'])
 def begindungeon(m):
+   config.about(m, bot)
    newchat=-1001172494515
    y=variables.find_one({'vars':'main'})                    
    if m.chat.id not in games:
@@ -5320,6 +5368,7 @@ def modetoname(x):
   
 @bot.message_handler(commands=['chaosstats'])
 def chaosstats(m):
+   config.about(m, bot)
    x=users.find_one({'id':m.from_user.id})
    if x!=None:
         try:
@@ -5823,6 +5872,7 @@ def creategame(id, special, code=228):
   
 @bot.message_handler(commands=['light'])
 def connect(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         x=m.text.split(' ')
         try:
@@ -6032,12 +6082,14 @@ def beginmassbattle(id):
     
 @bot.message_handler(commands=['boxreload'])   
 def boxreload(m):
+  config.about(m, bot)
   if m.from_user.id==441399484:
     users.update_many({}, {'$set':{'dailybox':1}})   
     bot.send_message(m.chat.id, 'Дейлибоксы обновлены!')
    
 @bot.message_handler(commands=['pay'])
 def allmesdonate(m):
+ config.about(m, bot)
  if m.from_user.id==m.chat.id:
    x=users.find_one({'id':m.from_user.id})
    if x!=None:
