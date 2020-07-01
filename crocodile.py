@@ -4,6 +4,7 @@ import random
 import time
 import traceback
 import threading
+import config
 
 
 import os
@@ -55,6 +56,7 @@ adm = [441399484]
 
 @bot.message_handler(commands=['select_chat'])
 def selectchatt(m):
+    config.about(m, bot)
     user = users.find_one({'id':m.from_user.id})
     if user == None:
         users.insert_one(createuser(m.from_user))
@@ -66,6 +68,7 @@ def selectchatt(m):
     
 @bot.message_handler(commands=['deselect_chat'])
 def deselectchatt(m):
+    config.about(m, bot)
     user = users.find_one({'id':m.from_user.id})
     if user == None:
         users.insert_one(createuser(m.from_user))
@@ -75,6 +78,7 @@ def deselectchatt(m):
     
 @bot.message_handler(commands=['manage_words'])
 def manageworrds(m):
+    config.about(m, bot)
     text = '/select_chat - выбрать чат, над которым будете проводить нижеописанные операции.\n'+\
     '/deselect_chat - отменить операции над чатом.\n'+\
     '/del_words - включить/отключить режим удаления слов из чата.\n'
@@ -83,6 +87,7 @@ def manageworrds(m):
     
 @bot.message_handler(commands=['del_words'])
 def delwordss(m):
+    config.about(m, bot)
     user = users.find_one({'id':m.from_user.id})
     if user == None:
         users.insert_one(createuser(m.from_user))
@@ -98,11 +103,13 @@ def delwordss(m):
 
 @bot.message_handler(commands=['ping'])
 def ping(m):
+    config.about(m, bot)
     bot.send_message(m.chat.id, 'Pong!', reply_to_message_id=m.message_id)
 
 
 @bot.message_handler(commands=['sendm'])
 def pinsendg(m):
+    config.about(m, bot)
     if m.from_user.id == 441399484:
         i = 0
         for ids in chats.find({}):
@@ -115,6 +122,7 @@ def pinsendg(m):
     
 @bot.message_handler(commands=['resetstats_crocodile'])
 def resetstats(m):
+    config.about(m, bot)
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status != 'creator':
         bot.send_message(m.chat.id, 'Только создатель чата может сбросить статистику!')
@@ -137,17 +145,20 @@ def rr(id):
 
 @bot.message_handler(commands=['upd_croco'])
 def updccccc(m):
+    config.about(m, bot)
     if m.from_user.id == 441399484:
         chats.update_many({},{'$set':{'customusers':None}})
         
 @bot.message_handler(commands=['set_list'])
 def updccccclist(m):
+    config.about(m, bot)
     if m.from_user.id == 441399484:
         chats.update_one({'id':m.chat.id},{'$set':{'customusers':[]}})
         bot.send_message(m.chat.id, 'Список чата создан!')
         
 @bot.message_handler(commands=['add_list'])
 def updccccclistsss(m):
+    config.about(m, bot)
     if m.from_user.id == 441399484:
         try:
             if m.reply_to_message.from_user.id not in chats.find_one({'id':m.chat.id}):
@@ -162,6 +173,7 @@ def updccccclistsss(m):
     
 @bot.message_handler(commands=['massadd'])
 def massadd(m):
+    config.about(m, bot)
     try:
         if m.from_user.id != 441399484:
             return
@@ -188,6 +200,7 @@ def massadd(m):
 
 @bot.message_handler(commands=['unblock'])
 def unblock(m):
+    config.about(m, bot)
     if m.from_user.id == 441399484:
         try:
             blocked.remove({'id': m.text.split(' ')[1]})
@@ -198,6 +211,7 @@ def unblock(m):
 
 @bot.message_handler(commands=['offer'])
 def offer(m):
+  config.about(m, bot)
   bot.send_message(m.chat.id, 'Функция временно отключена!')
   return
   try:
@@ -244,6 +258,7 @@ def offer(m):
 
 @bot.message_handler(commands=['add'])
 def addd(m):
+    config.about(m, bot)
     if m.from_user.id in adm:
         x = m.text.split(' ')
         if len(x) > 1:
@@ -257,6 +272,7 @@ def addd(m):
 
 @bot.message_handler(commands=['del'])
 def addd(m):
+    config.about(m, bot)
     if m.from_user.id in adm:
         x = m.text.split('/del ')
         if len(x) > 1:
@@ -270,6 +286,7 @@ def addd(m):
 
 @bot.message_handler(commands=['words'])
 def wordssss(m):
+    config.about(m, bot)
     if m.from_user.id == 441399484:
         allw = len(words.find_one({})['words'])
         bot.send_message(m.chat.id, 'Всего я знаю ' + str(allw) + ' слов!')
@@ -277,6 +294,7 @@ def wordssss(m):
 
 @bot.message_handler(commands=['statistic'])
 def stats(m):
+    config.about(m, bot)
     chat = chats.find_one({'id': m.chat.id})
     db_top = []
     text = 'Статистика чата:\n\n'
@@ -300,6 +318,7 @@ def stats(m):
 
 @bot.message_handler(commands=['start'])
 def creategame(m):
+    config.about(m, bot)
     if m.from_user.id in banned:
         return
     chat = chats.find_one({'id': m.chat.id})
@@ -323,6 +342,7 @@ def creategame(m):
 
 @bot.message_handler(commands=['switch'])
 def swwww(m):
+    config.about(m, bot)
     x = bot.get_chat_member(m.chat.id, m.from_user.id)
     if x.status == 'creator' or x.status == 'administrator':
         chat = chats.find_one({'id':m.chat.id})
@@ -340,6 +360,7 @@ def swwww(m):
         
 @bot.message_handler(content_types=['text'])
 def allmsg(m):
+    config.about(m, bot)
     try:
         if m.from_user.id in banned:
             return
@@ -423,6 +444,7 @@ def createchatuser(user):
 
 @bot.message_handler(content_types=['new_chat_member'])
 def newc(m):
+    config.about(m, bot)
     newchat(m)
 
 
