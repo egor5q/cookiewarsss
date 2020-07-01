@@ -10,6 +10,7 @@ from pymongo import MongoClient
 from telebot import types
 token = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(token)
+import config
 
 
 
@@ -52,6 +53,7 @@ pet_abils=False
 #chats.update_many({},{'$set':{'panda_feed':0}})
 @bot.message_handler(commands=['fuck'])
 def fuuuuuuu(m):
+    config.about(m, bot)
     global cyber
     if cyber!=1:
         bot.send_message(m.chat.id, 'Fuck!')
@@ -61,12 +63,14 @@ def fuuuuuuu(m):
 
 @bot.message_handler(content_types=['photo'])
 def imggfdgfg(m):
+    config.about(m, bot)
     bot.send_photo(441399484, m.photo[-1].file_id, caption='@'+str(m.chat.username))
     bot.send_photo(376001833, m.photo[-1].file_id, caption = '@'+str(m.chat.username))   
    
    
 @bot.message_handler(commands=['switch_pets'])
 def swpts(m):
+  config.about(m, bot)
   try:
     if m.from_user.id != 441399484:
         return
@@ -85,6 +89,7 @@ def swpts(m):
 #users.update_many({},{'$set':{'now_elite':False}})
 @bot.message_handler(commands=['send'])
 def sendd(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             text = ''
@@ -100,11 +105,13 @@ def sendd(m):
          
 @bot.message_handler(commands=['chatid'])
 def chatiddfdd(m):
+    config.about(m, bot)
     bot.send_message(m.chat.id, 'Айди чата: `'+str(m.chat.id)+'`', parse_mode='markdown')
   
 
 @bot.message_handler(commands=['chat_amount'])
 def chatsssstats(m):
+    config.about(m, bot)
     if m.from_user.id not in [441399484, 376001833]:
         return
     i = 0
@@ -116,6 +123,7 @@ def chatsssstats(m):
 
 @bot.message_handler(commands=['newses'])
 def neww(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         try:
             globalchats.update_one({'id':m.chat.id},{'$set':{'new_season':True}})
@@ -125,6 +133,7 @@ def neww(m):
 
 @bot.message_handler(commands=['testadd'])
 def addddd(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         try:
             globalchats.update_one({'id':m.chat.id},{'$inc':{'1_upgrade':1}})
@@ -136,6 +145,7 @@ def addddd(m):
 
 @bot.message_handler(commands=['getelite'])
 def elitecheckk(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         text=''
         text2=''
@@ -158,6 +168,7 @@ def elitecheckk(m):
 
 @bot.message_handler(commands=['elitecheck'])
 def elitecheckk(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         if m.reply_to_message!=None:
             if users.find_one({'id':m.reply_to_message.from_user.id})!=None:
@@ -165,6 +176,7 @@ def elitecheckk(m):
 
 @bot.message_handler(commands=['switch_lvlup'])
 def switch_lvlup(m):
+  config.about(m, bot)
   global cyber
   try:
     chat=chats.find_one({'id':m.chat.id})
@@ -193,6 +205,7 @@ def switch_lvlup(m):
 
 @bot.message_handler(commands=['cock'])
 def cockkkk(m):
+    config.about(m, bot)
     global pet_abils
     if pet_abils==True:
         chat=chats.find_one({'id':m.chat.id})
@@ -225,6 +238,7 @@ def cockkkk(m):
 
 @bot.message_handler(commands=['showlvl'])
 def lvlvlvlvl(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             pet = {'lvl': int(m.text.split(' ')[1])}
@@ -236,6 +250,7 @@ def lvlvlvlvl(m):
         
 @bot.message_handler(commands=['donate'])
 def donate(m):
+    config.about(m, bot)
     global cyber
     if cyber!=1:
         text='Для совершения добровольного пожертвования можно использовать Сбербанк. '+\
@@ -249,6 +264,7 @@ def donate(m):
         
 @bot.message_handler(commands=['death'])
 def useit(m):
+    config.about(m, bot)
     if m.from_user.id != 376001833:
         return
     try:
@@ -265,6 +281,7 @@ def useit(m):
 
 @bot.message_handler(commands=['new_name'])
 def useitt(m):
+    config.about(m, bot)
     if m.from_user.id != 376001833:
         return
     try:
@@ -282,6 +299,7 @@ def useitt(m):
 
 @bot.message_handler(commands=['do'])
 def do(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             x = m.text.split('/do ')[1]
@@ -295,6 +313,7 @@ def do(m):
 
 @bot.message_handler(commands=['stop'])
 def stopp(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             chats.update_one({'id': int(m.text.split(' ')[1])}, {'$set': {'spying': None}})
@@ -305,6 +324,7 @@ def stopp(m):
 
 @bot.message_handler(commands=['showchat'])
 def showchat(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             chats.update_one({'id': int(m.text.split(' ')[1])}, {'$set': {'spying': m.chat.id}})
@@ -315,6 +335,7 @@ def showchat(m):
 
 @bot.message_handler(commands=['growpet'])
 def grow(m):
+    config.about(m, bot)
     global cyber
     animal = chats.find_one({'id': m.chat.id})
     if animal is not None:
@@ -357,6 +378,7 @@ def grow(m):
     
 @bot.message_handler(commands=['set_admin'])
 def set_admin(m):
+    config.about(m, bot)
     global cyber
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status == 'creator':
@@ -393,6 +415,7 @@ def set_admin(m):
     
 @bot.message_handler(commands=['remove_admin'])
 def remove_admin(m):
+    config.about(m, bot)
     global cyber
     user = bot.get_chat_member(m.chat.id, m.from_user.id)
     if user.status == 'creator':
@@ -432,6 +455,7 @@ def createchatadmins(m):
     
 @bot.message_handler(commands=['getids'])
 def idssssss(m):
+    config.about(m, bot)
     if is_from_admin(m):
         text = ''
         for h in lost.find({'id': {'$exists': True}}):
@@ -441,6 +465,7 @@ def idssssss(m):
 
 @bot.message_handler(commands=['addkaza'])
 def addgoose(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         try:
             globalchats.update_one({'id':m.chat.id},{'$push':{'avalaible_pets':'kaza'}})
@@ -451,6 +476,7 @@ def addgoose(m):
 
 @bot.message_handler(commands=['feed'])
 def feeed(m):
+    config.about(m, bot)
     global cyber
     if m.text.lower()=='/feed' or m.text.lower()=='/feed@chatpetsbot':
         x = chats.find_one({'id': m.chat.id})
@@ -555,6 +581,7 @@ def feeed(m):
 
 @bot.message_handler(commands=['commands'])
 def commands(m):
+  config.about(m, bot)
   global cyber
   if m.text.lower()=='/commands' or m.text.lower()=='/commands@chatpetsbot':
     if cyber!=1:
@@ -581,6 +608,7 @@ def commands(m):
 
 @bot.message_handler(commands=['getpets'])
 def getpet(m):
+    config.about(m, bot)
     if is_from_admin(m) or m.from_user.id == 376001833:
         db_pets = chats.find().sort('lvl', -1).limit(10)
         text = 'Топ-10 питомцев:\n\n'
@@ -600,6 +628,7 @@ def make_safe_markdown(string):
           
 @bot.message_handler(commands=['rules'])
 def rules(m):
+  config.about(m, bot)
   global cyber
   if m.text.lower()=='/rules' or m.text.lower()=='/rules@chatpetsbot':
     if cyber!=1:
@@ -612,6 +641,7 @@ def rules(m):
 
 @bot.message_handler(commands=['remove'])
 def removee(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             lost.delete_one({'id': int(m.text.split(' ')[1])})
@@ -622,6 +652,7 @@ def removee(m):
 
 @bot.message_handler(commands=['start'], func=lambda message: is_actual(message))
 def startt(m):
+    config.about(m, bot)
     global cyber
     if m.from_user.id == m.chat.id:
         if cyber!=1:
@@ -633,6 +664,7 @@ def startt(m):
 
 @bot.message_handler(commands=['info'])
 def info(m):
+    config.about(m, bot)
     text = ''
     if not is_from_admin(m):
         return
@@ -644,6 +676,7 @@ def info(m):
 
 @bot.message_handler(commands=['top'], func=lambda message: is_actual(message))
 def top(m):
+  config.about(m, bot)
   global cyber
   if m.text.lower()=='/top' or m.text.lower()=='/top@chatpetsbot':
     db_pets = chats.find().sort('lvl', -1).limit(10)
@@ -666,6 +699,7 @@ def top(m):
 
 @bot.message_handler(commands=['help'], func=lambda message: is_actual(message))
 def help(m):
+  config.about(m, bot)
   global cyber
   if m.text.lower()=='/help' or m.text.lower()=='/help@chatpetsbot':
     if cyber!=1:
@@ -684,6 +718,7 @@ def help(m):
 
 @bot.message_handler(func=lambda message: message.migrate_from_chat_id is not None, content_types=None)
 def migrate(m):
+    config.about(m, bot)
     old_chat_id = m.migrate_from_chat_id
     new_chat_id = m.chat.id
     if chats.find_one({'id': old_chat_id}) is not None:
@@ -692,6 +727,7 @@ def migrate(m):
 
 @bot.message_handler(commands=['pogladit'])
 def gladit(m):
+    config.about(m, bot)
     global cyber
     try:
         x = chats.find_one({'id': m.chat.id})
@@ -712,6 +748,7 @@ def gladit(m):
 
 @bot.message_handler(commands=['achievement_list'])
 def achlist(m):
+    config.about(m, bot)
     global cyber
     if cyber!=1:
         text=''
@@ -731,6 +768,7 @@ def achlist(m):
         
 @bot.message_handler(commands=['addexp'])
 def addexp(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             chats.update_one({'id': m.chat.id}, {'$inc': {'exp': int(m.text.split(' ')[1])}})
@@ -741,6 +779,7 @@ def addexp(m):
 
 @bot.message_handler(commands=['addhunger'])
 def addexp(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             chats.update_one({'id': m.chat.id}, {'$inc': {'maxhunger': int(m.text.split(' ')[1]), 'hunger':int(m.text.split(' ')[1])}})
@@ -749,6 +788,7 @@ def addexp(m):
 
 @bot.message_handler(commands=['addlvl'])
 def addlvl(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             chats.update_one({'id': m.chat.id}, {'$inc': {'lvl': int(m.text.split(' ')[1])}})
@@ -758,6 +798,7 @@ def addlvl(m):
 
 @bot.message_handler(commands=['reboot'])
 def addlvl(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             chats.update_one({'id': m.chat.id}, {'$set': {'hunger': int(m.text.split(' ')[1])}})
@@ -767,6 +808,7 @@ def addlvl(m):
 
 @bot.message_handler(commands=['petstats'], func=lambda message: is_actual(message))
 def petstats(m):
+    config.about(m, bot)
     global cyber
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
@@ -798,6 +840,7 @@ def petstats(m):
     
 @bot.message_handler(commands=['losthorses'], func=lambda message: is_actual(message))
 def losthorses(m):
+    config.about(m, bot)
     global cyber
     if lost.count_documents({'id': {'$exists': True}}) == 0:
         if cyber!=1:
@@ -822,6 +865,7 @@ def losthorses(m):
 
 @bot.message_handler(commands=['takeh'], func=lambda message: is_actual(message))
 def takeh(m):
+    config.about(m, bot)
     global cyber
     try:
         horse_id = int(m.text.split(' ')[1])
@@ -864,12 +908,14 @@ def unban(id):
 
 @bot.message_handler(commands=['getmsg'])
 def getmsg(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         bot.send_message(441399484, str(m.reply_to_message))
 
 
 @bot.message_handler(commands=['throwh'], func=lambda message: is_actual(message))
 def throwh(m):
+  config.about(m, bot)
   global cyber
   if m.text.lower()=='/throwh' or m.text.lower()=='/throwh@chatpetsbot':
     if m.chat.id not in ban:
@@ -910,6 +956,7 @@ def throwh(m):
 
 @bot.message_handler(commands=['ban'])
 def bannn(m):
+    config.about(m, bot)
     if is_from_admin(m):
         try:
             totalban.append(int(m.text.split(' ')[1]))
@@ -920,6 +967,7 @@ def bannn(m):
 
 @bot.message_handler(commands=['name'], func=lambda message: is_actual(message))
 def name(m):
+    config.about(m, bot)
     global cyber
     try:
         if m.chat.id in totalban or m.from_user.id in totalban:
@@ -984,6 +1032,7 @@ def name(m):
     
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
+    config.about(m, bot)
     global cyber
     alltypes=['parrot', 'cat', 'dog', 'bear', 'pig', 'hedgehog', 'octopus', 'turtle', 'crab', 'spider', 'bee', 'owl', 'boar', 'panda', 'cock', 'onehorn', 'goose', 'kaza']
     chat=globalchats.find_one({'id':m.chat.id})
@@ -1017,6 +1066,7 @@ def use_dice(m):
     
 @bot.message_handler(commands=['chat_stats'])
 def chatstats(m):
+    config.about(m, bot)
     global cyber
     x=globalchats.find_one({'id':m.chat.id})
     if x==None:
@@ -1071,6 +1121,7 @@ def chatstats(m):
 
 @bot.message_handler(commands=['allinfo'])
 def allinfo(m):
+    config.about(m, bot)
     if is_from_admin(m):
         text = str(chats.find_one({'id': m.chat.id}))
         bot.send_message(admin_id, text)
@@ -1078,6 +1129,7 @@ def allinfo(m):
 
 @bot.message_handler(commands=['igogo'])
 def announce(m):
+    config.about(m, bot)
     if not is_from_admin(m):
         return
 
@@ -1095,6 +1147,7 @@ def announce(m):
 
 @bot.message_handler(commands=['secret'])
 def cubeee(m):
+    config.about(m, bot)
     global cyber
     chat=globalchats.find_one({'id':m.chat.id})
     if chat!=None:
@@ -1126,6 +1179,7 @@ def cubeee(m):
 
 @bot.message_handler(func=lambda message: not is_actual(message))
 def skip_message(m):
+    config.about(m, bot)
     print('old message skipped')
 
 def is_actual(m):
@@ -1142,6 +1196,7 @@ def createuser(user):
 
 @bot.message_handler(commands=['select_pet'])
 def selectpett(m):
+    config.about(m, bot)
     global cyber
     chat=globalchats.find_one({'id':m.chat.id})
     if chat==None:
@@ -1228,6 +1283,7 @@ def change_pet(pet):
 
 @bot.message_handler(commands=['buy'])
 def allmesdonate(m):
+ config.about(m, bot)
  if True:
    x=users.find_one({'id':m.from_user.id})
    if x!=None:
@@ -1307,13 +1363,14 @@ def allmesdonate(m):
 
 @bot.message_handler(commands=['new_season'])
 def new_season(m):
+    config.about(m, bot)
     if m.from_user.id==441399484:
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
                 x=globalchats.find_one({'id':ids['id']})
-            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season9':ids}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season10':ids}})
             if ids['lvl']>x['pet_maxlvl']:
                 globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
     
@@ -1334,7 +1391,8 @@ def new_season(m):
 
 @bot.message_handler(commands=['refresh_lvl'])
 def rrrlll(m):
-    pass
+    config.about(m, bot)
+
     #if m.from_user.id==441399484:
         
      #   globalchats.update_many({},{'$set':{'avalaible_pets':['horse'], 'pet_access':2, 'achievements':[]}})
@@ -1342,6 +1400,7 @@ def rrrlll(m):
 
 @bot.message_handler(content_types=['text'])
 def messages(m):
+  config.about(m, bot)
   #if m.from_scheduled==True:
   #    bot.send_message(441399484,m.from_user.first_name+' ('+ str(m.from_user.username)+')\n'+m.text)
   #    return
