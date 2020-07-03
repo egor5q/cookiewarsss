@@ -26,7 +26,6 @@ blocked = db.blocked
 if words.find_one({}) == None:
     words.insert_one({'words': []})
    
-
 resetlist = []
     
 banned = [787340171]
