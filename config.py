@@ -18,7 +18,8 @@ def createabout(m):
         'names':[m.from_user.first_name],
         'msgcount':0,
         'usernames':[],
-        'groups':{}
+        'groups':{},
+        'lastseen':0
     }
 
 def creategroup(m, bot):
@@ -36,6 +37,8 @@ def about(m, bot):
         about_user.insert_one(createabout(m))
         a_u = about_user.find_one({'id':m.from_user.id})
     about_user.update_one({'id':m.from_user.id},{'$inc':{'msgcount':1}})
+    about_user.update_one({'id':m.from_user.id},{'$set':{'lastseen':time.time()}})
+    
     if m.from_user.first_name not in a_u['names']:
         about_user.update_one({'id':m.from_user.id},{'$push':{'names':m.from_user.first_name}})
         about_user.update_one({'id':m.from_user.id},{'$set':{'name':m.from_user.first_name}})
