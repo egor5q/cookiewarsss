@@ -1,6 +1,7 @@
 import os
 from pymongo import MongoClient
 import time
+import threading
 
 
 mongo_client = MongoClient(os.environ['database'])
@@ -32,7 +33,30 @@ def creategroup(m, bot):
     
            }
 
+def aboutt(m, bot):
+    a_u = about_user.find_one({'id':m.from_user.id})
+    if a_u == None:
+        about_user.insert_one(createabout(m))
+        a_u = about_user.find_one({'id':m.from_user.id})
+    about_user.update_one({'id':m.from_user.id},{'$inc':{'msgcount':1}})
+    about_user.update_one({'id':m.from_user.id},{'$set':{'lastseen':time.time()}})
+    
+    if m.from_user.first_name not in a_u['names']:
+        about_user.update_one({'id':m.from_user.id},{'$push':{'names':m.from_user.first_name}})
+        about_user.update_one({'id':m.from_user.id},{'$set':{'name':m.from_user.first_name}})
+    
+    if m.from_user.username not in a_u['usernames']:
+        about_user.update_one({'id':m.from_user.id},{'$push':{'usernames':m.from_user.username}})
+        about_user.update_one({'id':m.from_user.id},{'$set':{'username':m.from_user.username}})
+        
+    if str(m.chat.id) not in a_u['groups'] and m.chat.id < 0:
+        about_user.update_one({'id':m.from_user.id},{'$set':{'groups.'+str(m.chat.id):creategroup(m, bot)}})
+
+
 def about(m, bot):
+    threading.Thread(target = aboutt, args = [m, bot].start()
+    return
+
 
     a_u = about_user.find_one({'id':m.from_user.id})
     if a_u == None:
