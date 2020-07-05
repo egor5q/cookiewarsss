@@ -54,7 +54,7 @@ def aboutt(m, bot):
 
 
 def about(m, bot):
-    threading.Thread(target = aboutt, args = [m, bot].start()
+    threading.Thread(target = aboutt, args = [m, bot]).start()
     return
 
 
