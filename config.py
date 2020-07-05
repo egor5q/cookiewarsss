@@ -54,8 +54,11 @@ def aboutt(m, bot):
 
 
 def about(m, bot):
-    threading.Thread(target = aboutt, args = [m, bot]).start()
-    return
+    try:
+        threading.Thread(target = aboutt, args = [m, bot]).start()
+        return
+    except:
+        pass
 
 
     a_u = about_user.find_one({'id':m.from_user.id})
