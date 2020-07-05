@@ -53,6 +53,10 @@ adm = [441399484]
 #chats.update_many({},{'$set':{'words':[]}})
 
 
+@bot.message_handler(func = lambda m: time.time() - m.date >= 120)
+def skippp(m):
+    pass
+
 @bot.message_handler(commands=['select_chat'])
 def selectchatt(m):
     config.about(m, bot)
