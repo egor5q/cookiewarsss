@@ -62,7 +62,10 @@ def about(m, bot):
         a_u = about_user.find_one({'id':m.from_user.id})
         
     msgcount = a_u['msgcount']
-    lastseen = a_u['lastseen']
+    try:
+        lastseen = a_u['lastseen']
+    except:
+        lastseen = time.time()
     names = a_u['names']
     name = a_u['name']
     username = a_u['username']
