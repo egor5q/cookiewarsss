@@ -24,7 +24,15 @@ lost = db.lost
 chat_admins=db.chat_admins
 pay=db.pay
 donates=db.donates
+curses = db.curseason
 cyber=0
+
+if curses.find_one({}) == None:
+    curses.insert_one({
+        'season':15,
+        'lastseason':0
+    
+    })
 
 
 
@@ -1362,16 +1370,13 @@ def allmesdonate(m):
 
 
 
-@bot.message_handler(commands=['new_season'])
-def new_season(m):
-    config.about(m, bot)
-    if m.from_user.id==441399484:
+def new_season(ses):
         for ids in chats.find({}):
             x=globalchats.find_one({'id':ids['id']})
             if x==None:
                 globalchats.insert_one(createglobalchat(ids['id']))
                 x=globalchats.find_one({'id':ids['id']})
-            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season10':ids}})
+            globalchats.update_one({'id':ids['id']},{'$set':{'saved_pets.'+str(ids['id'])+'season'+ses:ids}})
             if ids['lvl']>x['pet_maxlvl']:
                 globalchats.update_one({'id':ids['id']},{'$set':{'pet_maxlvl':ids['lvl']}}) 
     
@@ -1380,10 +1385,10 @@ def new_season(m):
         db_pets = chats.find().sort('lvl', -1).limit(10)
         
         for doc in db_pets:
-            globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':2}})
+            globalchats.update_one({'id':doc['id']},{'$inc':{'pet_access':3}})
         for ids in chats.find({}):
             try:
-                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие питомцы добавлены вам в дом, но кормить их больше не нужно, и уровень у них больше не поднимется. Они останутся у вас как память. Все чаты из топ-10 получают 2 куба в подарок!')
+                bot.send_message(ids['id'], 'Начинается новый сезон! Все ваши текущие питомцы добавлены вам в дом, но кормить их больше не нужно, и уровень у них больше не поднимется. Они останутся у вас как память. Все чаты из топ-10 получают 3 куба в подарок!')
             except:
                 pass
         chats.remove({})
@@ -1416,12 +1421,24 @@ def messages(m):
     animal = chats.find_one({'id': m.chat.id})
     if animal is None:
         return
+    lastminutefeed = animal['lastminutefeed']
+    lvlupers = animal['lvlupers']
+    title = animal['title']
+    up = False
     if m.from_user.id not in animal['lastminutefeed']:
-        chats.update_one({'id': m.chat.id}, {'$push': {'lastminutefeed': m.from_user.id}})
+        lastminutefeed.append(m.from_user.id)
+        up = True
     if m.from_user.id not in animal['lvlupers'] and users.find_one({'id':m.from_user.id})['now_elite']==True:
-        chats.update_one({'id': m.chat.id}, {'$push': {'lvlupers': m.from_user.id}})
+        lvlupers.append(m.from_user.id)
+        up = True
     if m.chat.title != animal['title']:
-        chats.update_one({'id': m.chat.id}, {'$set': {'title': m.chat.title}})
+        title = m.chat.title
+        up = True
+    
+    if up:
+        chats.update_one({'id': m.chat.id}, {'$set': {'title': title, 'lvlupers':lvlupers, 'lastminutefeed':lastminutefeed}})
+        
+    
   #  try:
   #      if animal['spying'] is not None:
   #          bot.send_message(animal['spying'], '(Name: ' + m.from_user.first_name + ') (id: ' + str(
@@ -1937,6 +1954,15 @@ def take_horse(horse_id, new_chat_id):
     chats.insert_one(pet)
 
     
+check_new_season():
+    x = curses.find_one({})
+    z = x['season']
+    if time.time() - x['lastseason'] >= 2678400:
+        new_season(z)
+        z+=1
+        curses.update_one({},{'$set':{'lastseason':time.time(), 'season':z}})
+    
+    
 def check_newday():
     t=threading.Timer(60, check_newday)
     t.start()
@@ -1963,6 +1989,9 @@ def check_newday():
  
  
     if y==0 and x==24:
+        
+        check_new_season()
+        
         users.update_many({},{'$set':{'now_elite':False}})
         allist=users.find({})
         alls=[]
