@@ -1954,7 +1954,7 @@ def take_horse(horse_id, new_chat_id):
     chats.insert_one(pet)
 
     
-check_new_season():
+def check_new_season():
     x = curses.find_one({})
     z = x['season']
     if time.time() - x['lastseason'] >= 2678400:
