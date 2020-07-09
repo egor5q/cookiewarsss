@@ -1965,6 +1965,10 @@ def check_new_season():
 def check_newday():
     t=threading.Timer(60, check_newday)
     t.start()
+    try:
+        check_new_season()
+    except:
+        bot.send_message(441399484, traceback.format_exc())
     x=time.ctime()
     x=x.split(" ")
     month=0
@@ -1989,7 +1993,7 @@ def check_newday():
  
     if y==0 and x==24:
         
-        check_new_season()
+        
         
         users.update_many({},{'$set':{'now_elite':False}})
         allist=users.find({})
