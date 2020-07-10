@@ -201,6 +201,17 @@ def createuser(user):
 
 @bot.message_handler()
 def allmssss(m):
+    if m.chat.id < 0:
+        if chats.find_one({'id':m.chat.id}) == None:
+            t = 1594395747
+            chats.insert_one({
+                'id':m.chat.id,
+                'title':m.chat.title
+            }
+            )
+            if time.time() - t <= 250400:
+                bot.send_message(m.chat.id, 'У бота теперь есть статистика найденных членов - найти её можно по команде /dickstat!')
+        
     config.about(m, bot)
     
     
