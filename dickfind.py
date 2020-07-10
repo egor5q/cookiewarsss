@@ -90,9 +90,9 @@ def dickstats(m):
     user = createuser(m.from_user)
     alls = user['penis']+user['goldpenis']+user['null']
     if alls > 0:
-        penis = round(2, user['penis']/alls)
-        goldpenis = round(2, user['goldpenis']/alls)
-        null = round(2, user['null']/alls)
+        penis = round(2, float(user['penis']/alls))
+        goldpenis = round(2, float(user['goldpenis']/alls))
+        null = round(2, float(user['null']/alls))
     else:
         penis = 0
         goldpenis = 0
