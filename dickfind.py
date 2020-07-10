@@ -13,6 +13,11 @@ import config
 token = os.environ['dickfind']
 bot = telebot.TeleBot(token)
 
+mongo_client = MongoClient(os.environ['database'])
+db = mongo_client.dickfind
+users = db.users
+chats = db.chats
+
 polls={}
 number=0
 
@@ -78,12 +83,31 @@ def dd(m):
                 )
     bot.send_message(m.chat.id, text, reply_markup=kb)
     number+=1
-    
+ 
+
+@bot.message_handler(commands=['dickstat'])
+def dickstats(m):
+    user = createuser(m.from_user)
+    alls = user['penis']+user['goldpenis']+user['null']
+    if alls > 0:
+        penis = round(2, user['penis']/alls)
+        goldpenis = round(2, user['goldpenis']/alls)
+        null = round(2, user['null']/alls)
+    else:
+        penis = 0
+        goldpenis = 0
+        null = 0
+    text = 'Статистика пользователя '+user['name']+':\n\n'
+    text += 'Найдено членов: '+str(user['penis'])+'🍆  ('+str(penis)+'%)\n'
+    text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌  ('+str(goldpenis)+'%)\n'
+    text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)'
+    bot.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
     
 
 @bot.callback_query_handler(func=lambda call:True)
 def inline(call):
   try:
+    user2 = createuser(call.from_user)
     user=call.from_user
     try:
         game=polls[int(call.data.split(' ')[1])]
@@ -97,12 +121,15 @@ def inline(call):
                 if 'gold' in call.data:
                     golddick=True
                     text='🍌|Ура! Вы нашли золотой пенис!'
+                    users.update_one({'id':call.from_user.id},{'$inc':{'goldpenis':1}})
                 else:
                     text='🍆|Ура! Вы выбрали ящик с членом!'
+                    users.update_one({'id':call.from_user.id},{'$inc':{'penis':1}})
                 bot.answer_callback_query(call.id, text, show_alert=True)
             else:
                 dick=False
                 bot.answer_callback_query(call.id, '💨|О нет! Вы выбрали ящик без члена!', show_alert=True)
+                users.update_one({'id':call.from_user.id},{'$inc':{'null':1}})
             
             game['users'].update({user.id:{'name':call.from_user.first_name,
                                           'dick':dick,
@@ -157,6 +184,19 @@ def editmsg(game, end=False):
         else:
             text+=game['users'][ids]['name']+': 💨открыл(а) пустую коробку\n'
     return text
+
+def createuser(user):
+    user2 = users.find_one({'id':user.id})
+    if user2 == None:
+        users.insert_one({
+            'id':user.id,
+            'name':user.first_name,
+            'penis':0,
+            'goldpenis':0,
+            'null':0
+        })
+        user2 = users.find_one({'id':user.id})
+    return user2
 
 
 @bot.message_handler()
