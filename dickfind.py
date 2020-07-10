@@ -98,8 +98,8 @@ def dickstats(m):
         goldpenis = 0
         null = 0
     text = 'Статистика пользователя '+user['name']+':\n\n'
-    text += 'Найдено членов: '+str(user['penis'])+'🍆  ('+str(penis)+'%)\n'
-    text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌  ('+str(goldpenis)+'%)\n'
+    text += 'Найдено членов: '+str(user['penis'])+'🍆 ('+str(penis)+'%)\n'
+    text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌 ('+str(goldpenis)+'%)\n'
     text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)'
     bot.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
     
