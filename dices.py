@@ -134,7 +134,7 @@ def new_msg(result):
             users.update_one({'id':user['id']},{'$inc':{'results.'+rs+'.score_sum':number, 'results.'+rs+'.score_amount':1, str(number):number}}) 
 
         except:
-            print(traceback.format_exc())
+            pass
             
     else:
         if 'text' in message:
@@ -163,7 +163,7 @@ def new_msg(result):
                     print(msg)
                     new_msg(msg)
                 except:
-                    print(traceback.format_exc())
+                    pass
                     
             elif text.lower()[:9] == '/my_dices' or text.lower()[:24] == '/my_dices@dice_saver_bot':
                 txt = ''
@@ -254,7 +254,7 @@ def new_msg(result):
                     chats.update_one({'id':chat['id']},{'$set':{'results':True}})
                     req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+'Вывод результатов броска включен!')
   except:
-    print(traceback.format_exc())
+    pass
 
         
 def polling():
@@ -275,7 +275,7 @@ def polling():
                 #    OPENER.open(req).read()
                 threading.Thread(target = new_msg, args = [result]).start()
         except:
-            print(traceback.format_exc())
+            pass
             time.sleep(5)
         
     
