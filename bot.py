@@ -56,7 +56,7 @@ bearer=os.environ['bearer']
 mylogin=int(os.environ['phone'])
 
 
-pet_abils=False
+pet_abils=True
 
 #chats.update_many({},{'$set':{'panda_feed':0}})
 @bot.message_handler(commands=['fuck'])
