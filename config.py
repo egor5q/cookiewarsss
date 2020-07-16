@@ -70,6 +70,7 @@ def aboutt(m, bot):
     
 
 def about(m, bot):
+    return
     try:
         threading.Thread(target = aboutt, args = [m, bot]).start()
     except:
