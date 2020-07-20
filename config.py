@@ -70,12 +70,12 @@ def aboutt(m, bot):
     
 
 def about(m, bot):
-    return
-    try:
-        threading.Thread(target = aboutt, args = [m, bot]).start()
-    except:
-        pass
-    return
+    #return
+    #try:
+    #    threading.Thread(target = aboutt, args = [m, bot]).start()
+    #except:
+    #    pass
+    #return
 
     a_u = about_user.find_one({'id':m.from_user.id})
     if a_u == None:
