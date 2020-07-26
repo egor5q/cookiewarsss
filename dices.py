@@ -130,7 +130,8 @@ def new_msg(result):
         for ids in users.find({}):
             amount += 1
         req = requests.get(bot+'sendMessage?chat_id='+str(441399484)+'&text=Новый юзер: '+user['name']+'. ID: '+str(user['id'])+'. Всего юзеров: '+str(amount))
-            
+    print('MESSAGE!')        
+    print(message)
     if 'dice' in message:
         if 'forward_from' in message:
             return
