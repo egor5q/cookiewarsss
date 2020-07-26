@@ -36,7 +36,7 @@ for url in ['https://api.github.com', 'https://api.github.com/invalid']:
         print('Success!')
         
 u_id = 0
-ems = ['🎲', '🏀', '🎯']
+ems = ['🎲', '🏀', '🎯', '⚽️']
 
 def createchat(chat):
     return {
@@ -77,9 +77,33 @@ def createuser(user):
                 '4':0,
                 '5':0,
                 '6':0
+            },
+            'football':{
+                'score_sum':0,
+                'score_amount':0,
+                '1':0,
+                '2':0,
+                '3':0,
+                '4':0,
+                '5':0,
+                '6':0
             }
         }
     }
+
+try:
+    users.find_one({'id':441399484})['results']['football']
+except:
+    users.update_many({},{'$set':{'results.football':{
+                'score_sum':0,
+                'score_amount':0,
+                '1':0,
+                '2':0,
+                '3':0,
+                '4':0,
+                '5':0,
+                '6':0
+            }}})
 
 #if users.find_one({'id':'bot'}) == None:
 #    users.insert_one(createuser({'id':'bot', 'first_name': 'Dices'}))
@@ -126,6 +150,11 @@ def new_msg(result):
                 rs = 'ball'
                 doptxt = 'мяч'
                 
+            elif em == '⚽️':
+                x = 4
+                rs = 'football'
+                doptxt = 'футбольный мяч'
+                
             #req = urllib2.Request(bot+'sendMessage?chat_id='+str(result['message']['chat']['id'])+'&text="Брошен кубик!"')
             time.sleep(x)
             if user['id'] != 'bot':
@@ -152,6 +181,8 @@ def new_msg(result):
                         em = '🏀'
                     if item.lower() in ['cube', 'куб', 'кубик', 'кости']:
                         em = '🎲'
+                    if item.lower() in ['футбол', 'football', '⚽️']:
+                        em = '⚽️'
                 except:
                     pass
                 if em not in ems:
@@ -191,6 +222,14 @@ def new_msg(result):
                 except:
                     txt += '   Средний балл: 0\n'
                     
+                txt += '\n'
+                txt += '⚽️:\n'
+                txt += '   Количество бросков: '+str(user['results']['football']['score_amount'])+'\n'
+                try:
+                    txt += '   Средний балл: '+str(round(user['results']['football']['score_sum']/user['results']['ball']['score_amount'], 3))+'\n'
+                except:
+                    txt += '   Средний балл: 0\n'
+                    
                 req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+txt+'&reply_to_message_id='+str(message['message_id']))
             
             elif text.lower()[:10] == '/bot_dices' or text.lower()[:25] == '/bot_dices@dice_saver_bot':
@@ -220,6 +259,14 @@ def new_msg(result):
                 except:
                     txt += '   Средний балл: 0\n'
                     
+                txt += '\n'
+                txt += '⚽️:\n'
+                txt += '   Количество бросков: '+str(user['results']['football']['score_amount'])+'\n'
+                try:
+                    txt += '   Средний балл: '+str(round(user['results']['football']['score_sum']/user['results']['ball']['score_amount'], 3))+'\n'
+                except:
+                    txt += '   Средний балл: 0\n'
+                    
                 req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+txt+'&reply_to_message_id='+str(message['message_id']))
             
             elif text.lower()[:6] == '/start' and message['chat']['type'] == 'private':
@@ -230,7 +277,8 @@ def new_msg(result):
                 tt += 'Дополнительные функции бота:\n\n1. Имеется возможность после команды /dice написать, какой именно бросок сделать. Все возможные варианты:\n'+\
                 '/dice куб/кубик/кости/cube/🎲\n'+\
                 '/dice мяч/мячик/баскетбол/корзина/basketball/🏀\n'+\
-                '/dice дротик/дартс/darts/🎯'
+                '/dice дротик/дартс/darts/🎯\n'+\
+                '/dice футбол/football/⚽️'
                 tt += '\n\n'
                 tt += '2. Когда вы используете /dice, этот бросок засчитывается боту. Увидеть статистику можно по команде /bot_dices.'
                 req = requests.get(bot+'sendMessage?chat_id='+str(message['chat']['id'])+'&text='+tt)
