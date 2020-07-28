@@ -34,7 +34,7 @@ def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode=None):
     
 @bot.message_handler(commands=['dick'])
 def dd(m):
-    config.about(m, bot)
+    #config.about(m, bot)
     if m.chat.id < 0:
         if chats.find_one({'id':m.chat.id}) == None:
             t = 1594395747
@@ -222,7 +222,7 @@ def allmssss(m):
             if time.time() - t <= 250400:
                 bot.send_message(m.chat.id, 'У бота теперь есть статистика найденных членов - найти её можно по команде /dickstat!')
         
-    config.about(m, bot)
+    #config.about(m, bot)
     
     
     
