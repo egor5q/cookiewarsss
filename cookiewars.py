@@ -3098,7 +3098,7 @@ def results(id):
                   yy=''
                   zz=''
              dung=0
-             if id==-1001208357368 or id==-1001172494515:
+             if True:
               if games[id]['mode']==None:
                 
                 prizes(id,ids,winner)
