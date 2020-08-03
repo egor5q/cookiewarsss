@@ -45,15 +45,15 @@ def randomgen():
             text += x
     return text
 
-while len(dickcodes) < 100:
+while len(dickcodes) < 10000:
     key = randomgen()
     dickcodes.append(key)
     
-while len(emptycodes) < 100:
+while len(emptycodes) < 10000:
     key = randomgen()
     emptycodes.append(key)
     
-while len(golddickcodes) < 100:
+while len(golddickcodes) < 10000:
     key = randomgen()
     golddickcodes.append(key)
 
