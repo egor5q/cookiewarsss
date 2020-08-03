@@ -21,6 +21,43 @@ chats = db.chats
 polls={}
 number=0
 
+symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'k', 'l', 'm', '1', '0', '9', '8', '6', '5', '4', '3', 'u', 'o', 'x', 'q', 'r', 's', 't', 'u', 'v', 'w', 'y', 'z']
+
+dickcodes = []
+emptycodes = []
+golddickcodes = []
+
+def randomgen():
+    l = 10
+    text = ''
+    while len(text) < l:
+        x = random.choice(symbols)
+        if random.randint(1, 2) == 1:
+            x = x.upper()
+        text += x
+    
+    while text in dickcodes or text in emptycodes or text in golddickcodes:
+        text = ''
+        while len(text) < l:
+            x = random.choice(symbols)
+            if random.randint(1, 2) == 1:
+                x = x.upper()
+            text += x
+    return text
+
+while len(dickcodes) < 100:
+    key = randomgen()
+    dickcodes.append(key)
+    
+while len(emptycodes) < 100:
+    key = randomgen()
+    emptycodes.append(key)
+    
+while len(golddickcodes) < 100:
+    key = randomgen()
+    golddickcodes.append(key)
+
+
 try:
     pass
 
@@ -66,12 +103,13 @@ def dd(m):
         randoms=random.randint(1,10000000)
         if i in dicks:
             if random.randint(1,100)!=1:
-                callb='penis'
+                callb=random.choice(dickcodes)
             else:
-                callb='goldpenis'
+                callb=random.choice(golddickcodes)
                 golddicks.append(i)
         else:
-            callb=str(random.randint(1,100))
+            callb=random.choice(emptycodes)
+        
         if i<=3:
             buttons1.append(types.InlineKeyboardButton(text='📦', callback_data=callb+' '+str(number)+' '+str(randoms)))
         elif i<=6:
@@ -126,16 +164,16 @@ def inline(call):
     if game!=None:
         if user.id not in game['users'] and call.data!='xyi':
             golddick=False
-            if 'penis' in call.data:
+            if call.data.split()[0] in dickcodes:
                 dick=True
-                if 'gold' in call.data:
-                    golddick=True
-                    text='🍌|Ура! Вы нашли золотой пенис!'
-                    users.update_one({'id':call.from_user.id},{'$inc':{'goldpenis':1}})
-                else:
-                    text='🍆|Ура! Вы выбрали ящик с членом!'
-                    users.update_one({'id':call.from_user.id},{'$inc':{'penis':1}})
+                text='🍆|Ура! Вы выбрали ящик с членом!'
+                users.update_one({'id':call.from_user.id},{'$inc':{'penis':1}})
                 bot.answer_callback_query(call.id, text, show_alert=True)
+            elif call.data.split()[0] in golddickcodes:
+                dick = True
+                golddick=True
+                text='🍌|Ура! Вы нашли золотой пенис!'
+                users.update_one({'id':call.from_user.id},{'$inc':{'goldpenis':1}})
             else:
                 dick=False
                 bot.answer_callback_query(call.id, '💨|О нет! Вы выбрали ящик без члена!', show_alert=True)
