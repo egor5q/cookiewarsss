@@ -3,5 +3,5 @@ redis
 emoji
 pymongo
 SimpleQIWI
-
+pyrogram
 
