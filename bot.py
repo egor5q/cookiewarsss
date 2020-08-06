@@ -2196,7 +2196,7 @@ threading.Thread(target = poll, args = [bot]).start()
 try:
     from pyrogram import Client
     from pyrogram.api import functions
-    bot1 = Client("session4", api_id = 1652051, api_hash = '02dd95c689729c9bd8734f68b6f42166')
+    bot1 = Client("session3", api_id = 1652051, api_hash = '02dd95c689729c9bd8734f68b6f42166')
 except:
     print(traceback.format_exc())
 
