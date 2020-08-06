@@ -2214,7 +2214,7 @@ def msgsss(client, m):
       return
   #if m.reply_markup == None:
   #    return
-  if 'просыпайся' in m.text.lower() or 'шашлык' in m.text.lower() and m.reply_to_message.from_user.id == 621704393:
+  if 'просыпайся' in m.text.lower() or 'шашлык' in m.text.lower():
       bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
 
   text = None
