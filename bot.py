@@ -2201,40 +2201,39 @@ def msgsss(client, m):
  try:
   if m.chat.id > 0:
     return
+  if m.text == 'Успокойся, ты уже ничего не решаешь':
+      return
+  global lasttext
+  if m.from_user == None:
+      return
+  if m.from_user.id != 512187187:
+      return
+  #if m.reply_markup == None:
+  #    return
+  if 'просыпайся' in m.text.lower() or 'шашлык' in m.text.lower() and m.reply_to_message.from_user.id == 621704393:
+      bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
+
+  text = None
   try:
-    if m.text == 'Успокойся, ты уже ничего не решаешь':
-        return
-    global lasttext
-    if m.from_user == None:
-        return
-    if m.from_user.id != 512187187:
-        return
-    #if m.reply_markup == None:
-    #    return
-    if 'просыпайся' in m.text.lower() or 'шашлык' in m.text.lower() and m.reply_to_message.from_user.id == 621704393:
-        bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
+      sp = m.reply_markup.keyboard
+  except:
+      if m.reply_to_message != None and m.reply_to_message.from_user.id == 621704393:
+          bot1.send_message(m.chat.id, lasttext, reply_to_message_id = m.message_id)
+      return
+  if m.text in ['КТО ОСМЕЛИЛСЯ ПРИЗВАТЬ МЕНЯ? 👿']:
+      bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
+      
+      time.sleep(20)
+      bot1.send_message(m.chat.id, 'Мы готовы')
+  
 
-    text = None
-    try:
-        sp = m.reply_markup.keyboard
-    except:
-        if m.reply_to_message != None and m.reply_to_message.from_user.id == 621704393:
-            bot1.send_message(m.chat.id, lasttext, reply_to_message_id = m.message_id)
-        return
-    if m.text in ['КТО ОСМЕЛИЛСЯ ПРИЗВАТЬ МЕНЯ? 👿']:
-        bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
-        
-        time.sleep(20)
-        bot1.send_message(m.chat.id, 'Мы готовы')
-    
-
-    else:  
-        try:
-            x = random.choice(random.choice(sp))
-            bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
-            lasttext = x
-        except:
-            bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
+  else:  
+      try:
+          x = random.choice(random.choice(sp))
+          bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
+          lasttext = x
+      except:
+          bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
 
  except:
      bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
