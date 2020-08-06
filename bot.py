@@ -2232,8 +2232,6 @@ def msgsss(client, m):
         x = random.choice(random.choice(sp))
         bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
         lasttext = x
-      except:
-          bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
     except:
         pass
         #bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
