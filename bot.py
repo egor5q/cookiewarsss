@@ -2190,3 +2190,102 @@ threading.Thread(target = polll, args = [dices.polling]).start()
 
 print('7777')
 threading.Thread(target = poll, args = [bot]).start()
+
+from pyrogram import Client
+from pyrogram.api import functions
+from pyrogram.api import types
+bot1 = Client("session3", api_id = 1652051, api_hash = '02dd95c689729c9bd8734f68b6f42166')
+
+@bot1.on_message()
+def msgsss(client, m):
+  if m.chat.id > 0:
+    return
+  try:
+    if m.text == 'Успокойся, ты уже ничего не решаешь':
+        return
+    global lasttext
+    if m.from_user == None:
+        return
+    if m.from_user.id != 512187187:
+        return
+    #if m.reply_markup == None:
+    #    return
+    if 'просыпайся' in m.text.lower() or 'шашлык' in m.text.lower() and m.reply_to_message.from_user.id == 621704393:
+        bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
+
+    text = None
+    try:
+        sp = m.reply_markup.keyboard
+    except:
+        if m.reply_to_message != None and m.reply_to_message.from_user.id == 621704393:
+            bot1.send_message(m.chat.id, lasttext, reply_to_message_id = m.message_id)
+        return
+    if m.text in ['КТО ОСМЕЛИЛСЯ ПРИЗВАТЬ МЕНЯ? 👿']:
+        bot1.send_message(m.chat.id, 'я хил', reply_to_message_id = m.message_id)
+        
+        time.sleep(4)
+        bot1.send_message(m.chat.id, 'Мы готовы')
+    
+    triggers = []#'атака', 'избивать', 'драть', 'ударять', 'выносить', 'бить', 'штурмовать', 'атачить', 'уничтожать', 'долбить']
+    triggers2 = []#'главного', 'рагну', 'главаря', 'босса','гиганта', 'основного', 'монстра']
+    print(sp)
+    maintext = None
+    mainact = None
+    if m.reply_to_message != None:
+        if m.reply_to_message.from_user.id != 621704393:
+            return
+    for ids in sp:
+        for idss in ids:
+            p1 = False
+            p2 = False
+            revers = False
+            for idsss in triggers:
+                if idsss in idss.lower():
+                    p1 = True
+            for idsss in triggers2:
+                if idsss in idss.lower():
+                    p2 = True
+            if 'отречение' in m.text.lower():
+                revers = True
+            else:
+                if 'из лужи' in idss.lower() or 'шаг' in idss.lower() or 'влево' in idss.lower() or 'вправо' in idss.lower() or 'в сторону' in idss.lower() or 'лужи' in idss.lower():
+                    maintext = idss
+            if not revers:
+                if p1 or p2:
+                    if text == None:
+                        text = idss
+                if p1 and p2:
+                    mainact = idss
+            else:
+                if not p1 and not p2:
+                    text = idss
+                    mainact = text
+                    
+    time.sleep(random.randint(10, 20)/10)
+    if maintext != None:
+        bot1.send_message(m.chat.id, maintext, reply_to_message_id = m.message_id)
+        lasttext = maintext
+        return
+
+    if mainact != None:
+        bot1.send_message(m.chat.id, mainact, reply_to_message_id = m.message_id)
+        lasttext = mainact
+        return
+
+    if text != None:
+        bot1.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
+        lasttext = text
+    else:
+      
+      try:
+        x = random.choice(random.choice(sp))
+        bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
+        lasttext = x
+      except:
+        bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
+  except:
+    bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
+    
+bot1.run()
+
+
