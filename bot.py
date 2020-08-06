@@ -12,7 +12,7 @@ token = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(token)
 import config
 
-
+lasttext = 'Ну я додик'
 
 client = MongoClient(os.environ['database'])
 db = client.chatpets
