@@ -2194,9 +2194,9 @@ threading.Thread(target = polll, args = [dices.polling]).start()
 print('7777')
 threading.Thread(target = poll, args = [bot]).start()
 
+import pyrogram.types as ptypes
 from pyrogram import Client
 from pyrogram.api import functions
-from pyrogram.api import types
 bot1 = Client("session3", api_id = 1652051, api_hash = '02dd95c689729c9bd8734f68b6f42166')
 
 @bot1.on_message()
