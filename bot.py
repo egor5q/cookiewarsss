@@ -2246,10 +2246,16 @@ def msgsss(client, m):
         
 def ragna():
     threading.Timer(random.randint(120, 400), ragna).start()
-    with bot1:
+    try:
+      with bot1:
         bot1.send_message(-1001175617321, 'я хил')
         time.sleep(20)
         bot1.send_message(-1001175617321, 'Мы готовы')
+    except:
+        bot1.send_message(-1001175617321, 'я хил')
+        time.sleep(20)
+        bot1.send_message(-1001175617321, 'Мы готовы')
+   
         
 threading.Thread(target = ragna).start()   
         
