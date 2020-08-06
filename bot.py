@@ -1574,7 +1574,7 @@ def check_hunger(pet, horse_lost):
             hunger+=addh
         if pet['type']=='octopus' and hunger<maxhunger and random.randint(1,100)<=1:
             db_pets = chats.find().sort('lvl', -1).limit(10)
-            if len(db_pets)>0:
+            try:
                 trgt=random.choice(db_pets)
                 if trgt['type']=='dog' and random.randint(1,100)<=30:
                     if trgt['send_lvlup']==True:
@@ -1591,9 +1591,11 @@ def check_hunger(pet, horse_lost):
                         bot.send_message(trgt['id'], 'Осьминог "'+pet['name']+'" украл у вас '+str(colvo)+' еды!')
                     if pet['send_lvlup']==True:
                         bot.send_message(pet['id'], 'Ваш осьминог украл у питомца "'+trgt['name']+'" '+str(colvo)+' еды!')
+            except:
+                pass
         if pet['type']=='turtle' and random.randint(1,1000)<=3:
             db_pets = chats.find().sort('lvl', -1).limit(10)
-            if len(db_pets)>0:
+            try:
                 trgt=random.choice(db_pets)
                 if trgt['type']=='dog' and random.randint(1,100)<=30:
                     if pet['send_lvlup']==True:
@@ -1628,7 +1630,8 @@ def check_hunger(pet, horse_lost):
                             pass
                     
             
-            
+            except:
+                pass
 
     # если кто-то писал в чат, прибавить кол-во еды равное кол-во покормивших в эту минуту * 2
     gchat=globalchats.find_one({'id':pet['id']})
