@@ -2227,7 +2227,9 @@ def msgsss(client, m):
       bot1.send_message(m.chat.id, 'Мы готовы')
   
 
-  else:  
+  else: 
+      if m.reply_to_message.from_user.id != 621704393:
+          return
       try:
           x = random.choice(random.choice(sp))
           bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
