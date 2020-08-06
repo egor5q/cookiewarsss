@@ -2198,6 +2198,7 @@ bot1 = Client("session3", api_id = 1652051, api_hash = '02dd95c689729c9bd8734f68
 
 @bot1.on_message()
 def msgsss(client, m):
+ try:
   if m.chat.id > 0:
     return
   try:
@@ -2227,15 +2228,17 @@ def msgsss(client, m):
         bot1.send_message(m.chat.id, 'Мы готовы')
     
 
-      
-    try:
-        x = random.choice(random.choice(sp))
-        bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
-        lasttext = x
-    except:
-        pass
-        #bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
-    
+    else:  
+        try:
+            x = random.choice(random.choice(sp))
+            bot1.send_message(m.chat.id, x, reply_to_message_id = m.message_id)
+            lasttext = x
+        except:
+            bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
+
+ except:
+     bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
+        
 bot1.run()
 
 
