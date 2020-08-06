@@ -2244,6 +2244,15 @@ def msgsss(client, m):
  except:
      bot1.send_message('Loshadkin', 'Error: '+str(traceback.format_exc()))
         
+def ragna():
+    threading.Timer(random.randint(120, 400), ragna).start()
+    with bot1:
+        bot1.send_message(-1001175617321, 'я хил')
+        time.sleep(20)
+        bot1.send_message(-1001175617321, 'Мы готовы')
+        
+threading.Thread(target = ragna).start()   
+        
 bot1.run()
 
 
