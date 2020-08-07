@@ -12,7 +12,7 @@ token = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(token)
 import config
 
-lasttext = 'Ну я додик'
+lasttext = 'Ну я дурочка'
 
 client = MongoClient(os.environ['database'])
 db = client.chatpets
@@ -2200,6 +2200,27 @@ try:
 except:
     print(traceback.format_exc())
 
+def checkword(idss, idsss):
+    allow = False
+    points = 0
+    botword = idss.lower().split()[0]
+    i = 0
+    for symbol in idsss:
+        try:
+            if botword[i] == idsss[i]:
+                points += 1
+        except:
+            pass
+        i+=1
+        
+    points += 2
+    if points >= len(idsss):
+        allow = True
+    else:
+        allow = False
+        
+    return allow
+    
 @bot1.on_message()
 def msgsss(client, m):
  try:
@@ -2231,7 +2252,56 @@ def msgsss(client, m):
       bot1.send_message(m.chat.id, 'Мы готовы')
   
 
-  else: 
+  triggers = ['хил', 'лечить', 'залечить', 'вернуть', 'хилить', 'исцелить', 'снять', 'дать']
+  triggers2 = ['подсрачник', 'нервы', 'смысл', 'психику', 'свою психику', 'мамку']
+  print(sp)
+  maintext = None
+  mainact = None
+  texts = []
+  if m.reply_to_message != None:
+      if m.reply_to_message.from_user.id != 621704393:
+          return
+  for ids in sp:
+      for idss in ids:
+          p1 = False
+          p2 = False
+          revers = False
+          for idsss in triggers:
+              if checkword(idss.lower(), idsss.lower()) or idsss in idss.lower():
+                  p1 = True
+          for idsss in triggers2:
+              if checkword(idss.lower(), idsss.lower()) or idsss in idss.lower():
+                  p2 = True
+          if 'отречение' in m.text.lower():
+              revers = True
+          else:
+              if 'из лужи' in idss.lower() or 'шаг' in idss.lower() or 'влево' in idss.lower() or 'вправо' in idss.lower() or 'в сторону' in idss.lower() or 'лужи' in idss.lower():
+                  maintext = idss
+          if not revers:
+              if p1 and not p2:
+                  text = idss
+                  texts.append(idss)
+                        
+          else:
+              if not p1 or p2:
+                  text = idss
+                  mainact = text
+                  
+  time.sleep(random.randint(10, 20)/10)
+  if maintext != None:
+      bot1.send_message(m.chat.id, maintext, reply_to_message_id = m.message_id)
+      lasttext = maintext
+      return
+
+  if mainact != None:
+      bot1.send_message(m.chat.id, mainact, reply_to_message_id = m.message_id)
+      lasttext = mainact
+      return
+
+  if text != None:
+      bot1.send_message(m.chat.id, random.choice(texts), reply_to_message_id = m.message_id)
+      lasttext = text
+  else:
       if m.reply_to_message.from_user.id != 621704393:
           return
       try:
