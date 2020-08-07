@@ -2299,7 +2299,8 @@ def msgsss(client, m):
       return
 
   if text != None:
-      bot1.send_message(m.chat.id, random.choice(texts), reply_to_message_id = m.message_id)
+      text = random.choice(texts)
+      bot1.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
       lasttext = text
   else:
       if m.reply_to_message.from_user.id != 621704393:
