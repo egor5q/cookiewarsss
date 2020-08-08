@@ -92,7 +92,8 @@ def createduel(m, limit=3):
         'kb':None,
         'dicks':[],
         'golddicks':[],
-        'msgid':None
+        'msgid':None,
+        'turn':1
     }
            
     number += 1
