@@ -81,7 +81,7 @@ def createduelplayer(user):
 def createduel(m, limit=3):
     global number
     player = createduelplayer(m.from_user)
-    a = {number:{
+    a = {
         'players':{player['id']:player
         },
         'id':m.chat.id,
@@ -94,7 +94,7 @@ def createduel(m, limit=3):
         'golddicks':[],
         'msgid':None
     }
-           }
+           
     number += 1
     return a
 
@@ -112,7 +112,7 @@ def duelll(m):
     kb.add(types.InlineKeyboardButton(text = 'Принять вызов', callback_data = 'startduel?'+str(d['number'])))
     msg = bot.send_message(m.chat.id, m.from_user.first_name+' хочет сразиться в поиске писюна! Кто готов принять вызов?', reply_markup = kb)
     d['msgid'] = msg.message_id
-    duels.update(d)
+    duels.update({d['number']:d})
     
     
 @bot.callback_query_handler(func = lambda call: call.data[:9] == 'startduel')
