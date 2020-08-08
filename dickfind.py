@@ -195,8 +195,8 @@ def nextduelturn(duel):
             
     if not notscore:
         for ids in duel['turnresults']:
-        if duel['turnresults'][ids]['result'] == 'found':
-            duel['players'][ids]['score'] += 1
+            if duel['turnresults'][ids]['result'] == 'found':
+                duel['players'][ids]['score'] += 1
     
     end = False
     for ids in duel['players']:
