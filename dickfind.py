@@ -301,13 +301,13 @@ def dueledit(duel, endgame = False):
         winner = None
         for ids in duel['players']:
             player = duel['players'][ids]
-            if player['score'] > maxscore and player['score'] != 0:
+            if player['score'] > maxscore:
                 maxscore = player['score']
                 winner = player
             elif player['score'] == maxscore:
                 winner = None
         if winner != None:        
-            text += '🏆 И победитель этой дуэли - '+player['name']+'! Поздравляем!'
+            text += '🏆 И победитель этой дуэли - '+winner['name']+'! Поздравляем!'
         else:
             text += 'Ничья!'
         
