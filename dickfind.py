@@ -120,7 +120,8 @@ def duells(m):
     try:
         duel = duels[int(call.data.split('?')[1])]
     except:
-        return
+        print(traceback.format_exc())
+        print(duels)
     if duel['started']:
         bot.answer_callback_query(call.id, 'Дуэль уже началась! Присоединиться уже нельзя!')
         return
