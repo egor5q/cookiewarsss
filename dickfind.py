@@ -116,12 +116,13 @@ def duelll(m):
     
     
 @bot.callback_query_handler(func = lambda call: call.data[:9] == 'startduel')
-def duells(m):
+def duells(call):
     try:
         duel = duels[int(call.data.split('?')[1])]
     except:
         print(traceback.format_exc())
         print(duels)
+        return
     if duel['started']:
         bot.answer_callback_query(call.id, 'Дуэль уже началась! Присоединиться уже нельзя!')
         return
@@ -143,7 +144,7 @@ def duells(m):
     
     
 @bot.callback_query_handler(func = lambda call: call.data[:4] == 'duel')
-def duellss(m):
+def duellss(call):
     try:
         duel = duels[int(call.data.split('?')[2])]
     except:
