@@ -2183,16 +2183,16 @@ def poll(b):
     except:
         b.send_message(441399484, traceback.format_exc())
 
-#threading.Thread(target = poll, args = [crocodile.bot]).start()
-#threading.Thread(target = poll, args = [cookiewars.bot]).start()
+threading.Thread(target = poll, args = [crocodile.bot]).start()
+threading.Thread(target = poll, args = [cookiewars.bot]).start()
 threading.Thread(target = poll, args = [dickfind.bot]).start()
 
 def polll(x):
     x()
-#threading.Thread(target = polll, args = [dices.polling]).start()
+threading.Thread(target = polll, args = [dices.polling]).start()
 
 print('7777')
-#threading.Thread(target = poll, args = [bot]).start()
+threading.Thread(target = poll, args = [bot]).start()
 
 
 
