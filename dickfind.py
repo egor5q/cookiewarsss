@@ -115,7 +115,7 @@ def duelll(m):
     duels.update(d)
     
     
-@bot.callback_query_handler(func = lambda call: call.data[9] == 'startduel')
+@bot.callback_query_handler(func = lambda call: call.data[:9] == 'startduel')
 def duells(m):
     try:
         duel = duels[int(call.data.split('?')[1])]
@@ -141,7 +141,7 @@ def duells(m):
     medit(text, call.message.chat.id, call.message.message_id, reply_markup = kb)
     
     
-@bot.callback_query_handler(func = lambda call: call.data[4] == 'duel')
+@bot.callback_query_handler(func = lambda call: call.data[:4] == 'duel')
 def duellss(m):
     try:
         duel = duels[int(call.data.split('?')[2])]
