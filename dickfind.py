@@ -248,7 +248,30 @@ def nextduelturn(duel):
 
 
 def endduel(duel):
-    dueledit(duel, endgame=True)
+    kb2=types.InlineKeyboardMarkup()
+    buttons1=[]
+    buttons2=[]
+    buttons3=[]
+    i=1
+    while i<=9:
+        if i in duel['dicks']:
+            emoj='🍆'
+            if i in duel['golddicks']:
+                emoj='🍌'
+        else:
+            emoj='💨'
+        if i<=3:
+            buttons1.append(types.InlineKeyboardButton(text=emoj, callback_data='xyi'))
+        elif i<=6:
+            buttons2.append(types.InlineKeyboardButton(text=emoj, callback_data='xyi'))
+        elif i<=9:
+            buttons3.append(types.InlineKeyboardButton(text=emoj, callback_data='xyi'))
+        i+=1
+    kb2.add(*buttons1)
+    kb2.add(*buttons2)
+    kb2.add(*buttons3)
+
+    medit(dueledit(duel, endgame=True), duel['id'], duel['msgid'], reply_markup = kb2)
     try:
         del duels[duel['number']]
     except:
