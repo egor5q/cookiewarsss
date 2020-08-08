@@ -276,8 +276,8 @@ def dueledit(duel, endgame = False):
         players = []
         maxscore = -1
         winner = None
-        for ids in game['players']:
-            player = game['players'][ids]
+        for ids in duel['players']:
+            player = duel['players'][ids]
             if player['score'] > maxscore:
                 maxscore = player['score']
                 winner = player
