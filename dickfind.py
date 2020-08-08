@@ -129,8 +129,11 @@ def dd(m):
         
     }}
                 )
-    bot.send_message(m.chat.id, text, reply_markup=kb)
-    number+=1
+    try:
+        bot.send_message(m.chat.id, text, reply_markup=kb)
+        number+=1
+    except:
+        pass
  
 
 @bot.message_handler(commands=['dickstat'])
@@ -149,7 +152,10 @@ def dickstats(m):
     text += 'Найдено членов: '+str(user['penis'])+'🍆 ('+str(penis)+'%)\n'
     text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌 ('+str(goldpenis)+'%)\n'
     text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)'
-    bot.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
+    try:
+        bot.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
+    except:
+        pass
     
 
 @bot.callback_query_handler(func=lambda call:True)
