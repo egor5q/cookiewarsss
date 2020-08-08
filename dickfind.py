@@ -169,23 +169,35 @@ def duellss(m):
     if d:
         text = '🍆|Ура! Вы выбрали ящик с членом!'
         text2 = player['name']+': 🍆нашёл(ла) член\n'
-        player['score'] += 1
+        result = 'found'
     elif gd:
         text = '🍌|Ура! Вы нашли золотой пенис!'
         text2 = player['name']+': 🍌нашёл(ла) ЗОЛОТОЙ член!\n'
-        player['score'] += 10
+        player['score'] += 9
+        result = 'found'
     else:
         text = '💨|О нет! Вы выбрали ящик без члена!'
         text2 = player['name']+': 💨открыл(а) пустую коробку\n'
+        result = 'notfound'
     bot.answer_callback_query(call.id, text, show_alert = True)
     
-    duel['turnresults'].update({player['id']:{'text':text2}})
+    duel['turnresults'].update({player['id']:{'text':text2, 'result':result}})
     medit(dueledit(duel), call.message.chat.id, call.message.message_id, reply_markup = duel['kb'])
     if len(duel['turnresults']) >= len(duel['players']):
         time.sleep(2)
         nextduelturn(duel)
         
 def nextduelturn(duel):
+    notscore = True
+    for ids in duel['turnresults']:
+        if duel['turnresults'][ids]['result'] == 'notfound':
+            notscore = False
+            
+    if not notscore:
+        for ids in duel['turnresults']:
+        if duel['turnresults'][ids]['result'] == 'found':
+            duel['players'][ids]['score'] += 1
+    
     end = False
     for ids in duel['players']:
         player = duel['players'][ids]
@@ -233,10 +245,14 @@ def nextduelturn(duel):
 
 
 def endduel(duel):
-    pass
+    dueledit(duel, endgame=True)
+    try:
+        del duels[duel['number']]
+    except:
+        pass
         
           
-def dueledit(duel):
+def dueledit(duel, endgame = False):
     text = 'Раунд '+str(duel['turn'])+':\n\n'
     for ids in duel['players']:
         player = duel['players'][ids]
@@ -247,10 +263,28 @@ def dueledit(duel):
             t = 'очка'
         elif str(score)[-1] in ['0', '5', '6', '7', '8', '9']:
             t = 'очков'
-        text += player['name']+': '+str(player['score'])+' '+t+'\n'
+        text += player['name']+': '+str(player['score'])+'/'+str(duel['scorelimit'])+' '+t+'\n'
     text += '\n'
-    for ids in duel['turnresults']:
-        text += duel['turnresults'][ids]['text']
+    if not endgame:
+        for ids in duel['turnresults']:
+            text += duel['turnresults'][ids]['text']
+    else:
+        winner = None
+        players = []
+        maxscore = -1
+        winner = None
+        for ids in game['players']:
+            player = game['players'][ids]
+            if player['score'] > maxscore:
+                maxscore = player['score']
+                winner = player
+            elif player['score'] == maxscore:
+                winner = None
+        if winner != None:        
+            text += '🏆 И победитель этой дуэли - '+player['name']+'! Поздравляем!'
+        else:
+            text += 'Ничья! Оба соперника нашли золотой член!'
+        
     return text
     
     
