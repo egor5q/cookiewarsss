@@ -297,11 +297,11 @@ def dueledit(duel, endgame = False):
     else:
         winner = None
         players = []
-        maxscore = -1
+        maxscore = -1000
         winner = None
         for ids in duel['players']:
             player = duel['players'][ids]
-            if player['score'] > maxscore:
+            if player['score'] > maxscore and player['score'] != 0:
                 maxscore = player['score']
                 winner = player
             elif player['score'] == maxscore:
@@ -309,7 +309,7 @@ def dueledit(duel, endgame = False):
         if winner != None:        
             text += '🏆 И победитель этой дуэли - '+player['name']+'! Поздравляем!'
         else:
-            text += 'Ничья! Оба соперника нашли золотой член!'
+            text += 'Ничья!'
         
     return text
     
