@@ -128,7 +128,7 @@ def duells(m):
         bot.answer_callback_query(call.id, 'Вы уже в дуэли!')
         return
     player = createduelplayer(call.from_user)
-    duel['players'].update(player['id']:player)
+    duel['players'].update({player['id']:player})
     duel['started'] = True
     text = dueledit(duel)
     
