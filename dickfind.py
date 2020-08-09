@@ -172,20 +172,24 @@ def duellss(call):
     if d:
         text = '🍆|Ура! Вы выбрали ящик с членом!'
         text2 = player['name']+': 🍆нашёл(ла) член\n'
+        users.update_one({'id':player['id']},{'$inc':{'penis':1}})             
         result = 'found'
     elif gd:
         text = '🍌|Ура! Вы нашли золотой пенис!'
         text2 = player['name']+': 🍌нашёл(ла) ЗОЛОТОЙ член!\n'
+        users.update_one({'id':player['id']},{'$inc':{'goldpenis':1}})
         player['score'] += 9
         result = 'found'
     else:
         text = '💨|О нет! Вы выбрали ящик без члена!'
         text2 = player['name']+': 💨открыл(а) пустую коробку\n'
+        users.update_one({'id':player['id']},{'$inc':{'null':1}})
         result = 'notfound'
     bot.answer_callback_query(call.id, text, show_alert = True)
     
     duel['turnresults'].update({player['id']:{'text':text2, 'result':result}})
-    medit(dueledit(duel), call.message.chat.id, call.message.message_id, reply_markup = duel['kb'])
+    #medit(dueledit(duel), call.message.chat.id, call.message.message_id, reply_markup = duel['kb'])
+    time.sleep(random.randint(1, 100)/100)
     if len(duel['turnresults']) >= len(duel['players']):
         time.sleep(2)
         nextduelturn(duel)
