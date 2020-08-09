@@ -178,20 +178,24 @@ def duellss(call):
     if d:
         text = '🍆|Ура! Вы выбрали ящик с членом!'
         text2 = player['name']+': 🍆нашёл(ла) член\n'
-        users.update_one({'id':player['id']},{'$inc':{'penis':1}})             
+           
+        x = 'penis'          
         result = 'found'
     elif gd:
         text = '🍌|Ура! Вы нашли золотой пенис!'
         text2 = player['name']+': 🍌нашёл(ла) ЗОЛОТОЙ член!\n'
-        users.update_one({'id':player['id']},{'$inc':{'goldpenis':1}})
+        
+        x = 'goldpenis'
         player['score'] += 9
         result = 'found'
     else:
         text = '💨|О нет! Вы выбрали ящик без члена!'
         text2 = player['name']+': 💨открыл(а) пустую коробку\n'
-        users.update_one({'id':player['id']},{'$inc':{'null':1}})
+        
+        x = 'null'
         result = 'notfound'
     bot.answer_callback_query(call.id, text, show_alert = True)
+    users.update_one({'id':player['id']},{'$inc':{x:1}})
     
     duel['turnresults'].update({player['id']:{'text':text2, 'result':result}})
     #medit(dueledit(duel), call.message.chat.id, call.message.message_id, reply_markup = duel['kb'])
@@ -488,24 +492,25 @@ def inline(call):
             if call.data.split()[0] in dickcodes:
                 dick=True
                 text='🍆|Ура! Вы выбрали ящик с членом!'
-                users.update_one({'id':call.from_user.id},{'$inc':{'penis':1}})
+                x = 'penis'
                 bot.answer_callback_query(call.id, text, show_alert=True)
             elif call.data.split()[0] in golddickcodes:
                 dick = True
                 golddick=True
                 text='🍌|Ура! Вы нашли золотой пенис!'
-                users.update_one({'id':call.from_user.id},{'$inc':{'goldpenis':1}})
+                x = 'goldpenis'
             else:
                 dick=False
                 bot.answer_callback_query(call.id, '💨|О нет! Вы выбрали ящик без члена!', show_alert=True)
-                users.update_one({'id':call.from_user.id},{'$inc':{'null':1}})
+                x = 'null'
             
             game['users'].update({user.id:{'name':call.from_user.first_name,
                                           'dick':dick,
                                           'golddick':golddick}})
             kb=types.InlineKeyboardMarkup(3)
-            
+     
             medit(editmsg(game), call.message.chat.id, call.message.message_id, reply_markup=game['kb'])
+            users.update_one({'id':player['id']},{'$inc':{x:1}})
         
         elif 'endgame' not in call.data:
             bot.answer_callback_query(call.id, 'Вы уже походили!')
