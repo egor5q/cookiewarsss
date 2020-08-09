@@ -21,6 +21,11 @@ chats = db.chats
 polls={}
 number=0
 
+try:
+    users.find_one({'id':441399484})['duelwin']
+except:
+    users.update_many({},{'$set':{'duelwin':0, 'duelloose':0, 'draw':0}})
+
 symbols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'k', 'l', 'm', '1', '0', '9', '8', '6', '5', '4', '3', 'u', 'o', 'x', 'q', 'r', 's', 't', 'u', 'v', 'w', 'y', 'z']
 
 dickcodes = []
@@ -310,10 +315,17 @@ def dueledit(duel, endgame = False):
                 winner = player
             elif player['score'] == maxscore:
                 winner = None
-        if winner != None:        
+        if winner != None:     
+            for ids in duel['players']:
+                if duel['players'][ids]['id'] != winner['id']:
+                    looser = duel['players'][ids]
             text += '🏆 И победитель этой дуэли - '+winner['name']+'! Поздравляем!'
+            users.update_one({'id':winner['id']},{'$inc':{'duelwin':1}})
+            users.update_one({'id':looser['id']},{'$inc':{'duelloose':1}})
         else:
             text += 'Ничья!'
+            for ids in duel['players']:
+                users.update_one({'id':duel['players'][ids]['id']},{'$inc':{'draw':1}})
         
     return text
     
@@ -439,7 +451,22 @@ def dickstats(m):
     text = 'Статистика пользователя '+user['name']+':\n\n'
     text += 'Найдено членов: '+str(user['penis'])+'🍆 ('+str(penis)+'%)\n'
     text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌 ('+str(goldpenis)+'%)\n'
-    text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)'
+    text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)\n\n'
+    
+    duelall = user['duelwin']+user['duelloose']+user['draw']
+    if duelall > 0:
+        duelwin = round((user['duelwin']/duelall)*100, 2)
+        duelloose = round((user['duelloose']/duelall)*100, 2)
+        draw = round((user['draw']/duelall)*100, 2)
+    else:
+        duelwin = 0
+        duelloose = 0
+        draw = 0
+        
+    text += 'Дуэли:\n'
+    text += 'Победы: '+str(user['duelwin'])+' ('+str(duelwin)+'%)\n'
+    text += 'Поражения: '+str(user['duelloose'])+' ('+str(duelloose)+'%)\n'
+    text += 'Ничьи: '+str(user['draw'])+' ('+str(draw)+'%)\n'
     try:
         bot.send_message(m.chat.id, text, reply_to_message_id = m.message_id)
     except:
@@ -537,7 +564,8 @@ def createuser(user):
             'goldpenis':0,
             'null':0,
             'duelwin':0,
-            'duelloose':0
+            'duelloose':0,
+            'draw':0
         })
         user2 = users.find_one({'id':user.id})
     return user2
