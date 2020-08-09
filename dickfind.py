@@ -111,7 +111,7 @@ def duelll(m):
 
     kb = types.InlineKeyboardMarkup()
     kb.add(types.InlineKeyboardButton(text = 'Принять вызов', callback_data = 'startduel?'+str(d['number'])))
-    msg = bot.send_message(m.chat.id, m.from_user.first_name+' хочет сразиться в поиске писюна! Кто готов принять вызов?', reply_markup = kb)
+    msg = bot.send_message(m.chat.id, m.from_user.first_name+' хочет сразиться в поиске писюна! Лимит по очкам: '+str(limit)+'. Кто готов принять вызов?', reply_markup = kb)
     d['msgid'] = msg.message_id
     duels.update({d['number']:d})
     
