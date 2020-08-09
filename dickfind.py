@@ -146,6 +146,7 @@ def duells(call):
     
 @bot.callback_query_handler(func = lambda call: call.data[:4] == 'duel')
 def duellss(call):
+    time.sleep(random.randint(1, 10)/100)
     try:
         duel = duels[int(call.data.split('?')[2])]
     except:
@@ -189,7 +190,6 @@ def duellss(call):
     
     duel['turnresults'].update({player['id']:{'text':text2, 'result':result}})
     #medit(dueledit(duel), call.message.chat.id, call.message.message_id, reply_markup = duel['kb'])
-    time.sleep(random.randint(1, 100)/100)
     if len(duel['turnresults']) >= len(duel['players']):
         time.sleep(2)
         nextduelturn(duel)
@@ -535,7 +535,9 @@ def createuser(user):
             'name':user.first_name,
             'penis':0,
             'goldpenis':0,
-            'null':0
+            'null':0,
+            'duelwin':0,
+            'duelloose':0
         })
         user2 = users.find_one({'id':user.id})
     return user2
