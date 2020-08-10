@@ -510,7 +510,7 @@ def inline(call):
             kb=types.InlineKeyboardMarkup(3)
      
             medit(editmsg(game), call.message.chat.id, call.message.message_id, reply_markup=game['kb'])
-            users.update_one({'id':player['id']},{'$inc':{x:1}})
+            users.update_one({'id':user.id},{'$inc':{x:1}})
         
         elif 'endgame' not in call.data:
             bot.answer_callback_query(call.id, 'Вы уже походили!')
