@@ -1819,7 +1819,7 @@ def check_lvlup(pet):
     for ids in pet['lvlupers']:
         lvl+=1
     if lvl>0:
-        if pet['lvl']>=10:
+    #    if pet['lvl']>=10:
             chats.update_one({'id':pet['id']},{'$inc':{'lvl':lvl, 'maxhunger':lvl*15, 'hunger':lvl*15}})
             lvvl=chats.find_one({'id':pet['id']})['lvl']
             
