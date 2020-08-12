@@ -619,6 +619,7 @@ def checkchats():
     bot.send_message(441399484, str(i)+' новых чатов!')
     
     
+checkchats()
 
 @bot.message_handler()
 def allmssss(m):
