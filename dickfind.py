@@ -597,21 +597,40 @@ def createuser(user):
         user2 = users.find_one({'id':user.id})
     return user2
 
+chatstocheck = []
+
+def checkchats():
+    ch = chats.find_many({})
+    chid = []
+    i = 0
+    chatscopy = chatstocheck.copy()
+    for ids in ch:
+        chid.append(ids['id'])
+    for ids in chatscopy:
+        if ids.id not in chid:
+            i+=1
+            chats.insert_one({
+                'id':ids.id,
+                'title':ids.title
+            }
+            )
+    chatstocheck.clear()
+    threading.Timer(300, checkchats).start()
+    bot.send_message(441399484, str(i)+' новых чатов!')
+    
+    
 
 @bot.message_handler()
 def allmssss(m):
     if m.chat.id < 0:
-        if chats.find_one({'id':m.chat.id}) == None:
-            t = 1594395747
-            chats.insert_one({
-                'id':m.chat.id,
-                'title':m.chat.title
-            }
-            )
-            if time.time() - t <= 250400:
-                bot.send_message(m.chat.id, 'У бота теперь есть статистика найденных членов - найти её можно по команде /dickstat!')
-        
-    #config.about(m, bot)
+        allow = True
+        chatscopy = chatstocheck.copy()
+        for ids in chatscopy:
+            if ids.id == m.chat.id:
+                return
+        chatstocheck.append(m.chat)
+
+
     
     
     
