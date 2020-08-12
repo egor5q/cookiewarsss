@@ -600,7 +600,7 @@ def createuser(user):
 chatstocheck = []
 
 def checkchats():
-    ch = chats.find_many({})
+    ch = chats.find({})
     chid = []
     i = 0
     chatscopy = chatstocheck.copy()
