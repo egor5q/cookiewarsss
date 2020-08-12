@@ -453,6 +453,13 @@ def dickstats(m):
         goldpenis = 0
         null = 0
     text = 'Статистика пользователя '+user['name']+':\n\n'
+    try:
+        for ids in user['statuses']:
+            text += ids+'; '
+        text = text[:len(text)-2]
+        text += '.\n'
+    except:
+        pass
     text += 'Найдено членов: '+str(user['penis'])+'🍆 ('+str(penis)+'%)\n'
     text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌 ('+str(goldpenis)+'%)\n'
     text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)\n\n'
@@ -476,7 +483,22 @@ def dickstats(m):
     except:
         pass
     
-
+@bot.message_handler(commands=['set_status'])
+def setstatusss(m):
+    if m.from_user.id != 441399484:
+        return
+    try:
+        try:
+            users.find_one({'id':m.reply_to_message.from_user.id})['statuses']
+            users.update_one({'id':m.reply_to_message.from_user.id},{'$push':{'statuses':m.text.split('/set_status ')[1]}})
+            bot.send_message(m.chat.id, 'Успешно!')
+        except:
+            users.update_one({'id':m.reply_to_message.from_user.id},{'$set':{'statuses':[m.text.split('/set_status ')[1]]}})
+            bot.send_message(m.chat.id, 'Успешно!')
+    except:
+        bot.send_message(m.chat.id, 'Ошибка!')
+    
+    
 @bot.callback_query_handler(func=lambda call:True)
 def inline(call):
   try:
