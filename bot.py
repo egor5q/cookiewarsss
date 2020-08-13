@@ -1791,7 +1791,7 @@ def check_hp(pet, horse_lost):
     
 
 def check_all_pets_hunger():
-    threading.Timer(60, check_all_pets_hunger).start()
+    threading.Timer(61, check_all_pets_hunger).start()
     
     for pet in lost.find({'id': {'$exists': True}}):
         check_hunger(pet, True)
