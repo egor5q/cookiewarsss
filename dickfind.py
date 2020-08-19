@@ -109,10 +109,6 @@ def createduel(m, limit=3):
 def skipp(m):
     return
 
-@bot.callback_query_handler(func = lambda call: time.time() - call.date >= 120)
-def skipp(m):
-    return
-
     
 @bot.message_handler(commands=['duel'])
 def duelll(m):
@@ -631,13 +627,14 @@ checkchats()
 
 @bot.message_handler()
 def allmssss(m):
+    return
     if m.chat.id < 0:
         allow = True
-        chatscopy = chatstocheck.copy()
-        for ids in chatscopy:
-            if ids.id == m.chat.id:
-                return
-        chatstocheck.append(m.chat)
+        #chatscopy = chatstocheck.copy()
+        #for ids in chatscopy:
+        #    if ids.id == m.chat.id:
+        #        return
+        #chatstocheck.append(m.chat)
 
 
     
