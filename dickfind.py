@@ -105,6 +105,14 @@ def createduel(m, limit=3):
     return a
 
         
+@bot.message_handler(func = lambda m: time.time() - m.date >= 120)
+def skipp(m):
+    return
+
+@bot.callback_query_handler(func = lambda call: time.time() - call.date >= 120)
+def skipp(m):
+    return
+
     
 @bot.message_handler(commands=['duel'])
 def duelll(m):
