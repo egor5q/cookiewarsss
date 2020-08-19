@@ -615,7 +615,7 @@ def checkchats():
             }
             )
     chatstocheck.clear()
-    threading.Timer(300, checkchats).start()
+    threading.Timer(4000, checkchats).start()
     bot.send_message(441399484, str(i)+' новых чатов!')
     
     
