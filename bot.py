@@ -11,6 +11,7 @@ from telebot import types
 token = os.environ['TELEGRAM_TOKEN']
 bot = telebot.TeleBot(token)
 import config
+import heroku3
 
 lasttext = 'Ну я дурочка'
 
@@ -2182,6 +2183,8 @@ def poll(b):
         b.polling(none_stop = True)
     except:
         b.send_message(441399484, traceback.format_exc())
+        herokuapp = heroku3.from_key(os.environ['herokukey']).apps()['chatpets']
+        herokuapp.restart()
 
 threading.Thread(target = poll, args = [crocodile.bot]).start()
 threading.Thread(target = poll, args = [cookiewars.bot]).start()
