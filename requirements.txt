@@ -4,3 +4,4 @@ emoji
 pymongo
 SimpleQIWI
 pyrogram
+heroku3
