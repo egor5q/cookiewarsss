@@ -1037,7 +1037,17 @@ def name(m):
             bot.send_message(m.chat.id, 'Для киберпереименования используйте киберформат:\n/name *киберимя*\nГде *киберимя* - киберимя вашего киберпитомца.', parse_mode='markdown')
       
 
-
+@bot.message_handler(commands=['addcube'])
+def addcubesss(m):
+    if m.from_user.id != 441399484:
+        return
+    try:
+        globalchats.update_one({'id':m.chat.id},{'$inc':{'pet_access':int(m.text.split()[1])}})
+        bot.send_message(m.chat.id, 'Успешно выдано '+m.text.split()[1]+' кубов!')
+    except:
+        bot.send_message(m.chat.id, 'Error!')
+    
+    
     
 @bot.message_handler(commands=['use_dice'])
 def use_dice(m):
