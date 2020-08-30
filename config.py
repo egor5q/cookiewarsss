@@ -3,7 +3,6 @@ from pymongo import MongoClient
 import time
 import threading
 
-
 mongo_client = MongoClient(os.environ['database'])
 
 pasyuk_id = 441399484
@@ -34,7 +33,7 @@ def creategroup(m, bot):
            }
 
 def aboutt(m, bot):
-    #return
+    return
     a_u = about_user.find_one({'id':m.from_user.id})
     if a_u == None:
         about_user.insert_one(createabout(m))
