@@ -2201,7 +2201,10 @@ threading.Thread(target = poll, args = [cookiewars.bot]).start()
 threading.Thread(target = poll, args = [dickfind.bot]).start()
 
 def polll(x):
+  try:
     x()
+  except:
+    bot.send_message(441399484, traceback.format_exc())
 threading.Thread(target = polll, args = [dices.polling]).start()
 
 print('7777')
