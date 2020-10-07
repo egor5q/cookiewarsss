@@ -11,6 +11,7 @@ import traceback
 import config
 
 
+
 token = os.environ['dickfind']
 bot = telebot.TeleBot(token)
 
