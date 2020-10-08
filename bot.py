@@ -2192,9 +2192,12 @@ def poll(b):
     try:
         b.polling(none_stop = True)
     except:
+      try:
         b.send_message(441399484, traceback.format_exc())
         herokuapp = heroku3.from_key(os.environ['herokukey']).apps()['chatpets']
         herokuapp.restart()
+      except:
+        pass
 
 threading.Thread(target = poll, args = [crocodile.bot]).start()
 threading.Thread(target = poll, args = [cookiewars.bot]).start()
@@ -2204,7 +2207,11 @@ def polll(x):
   try:
     x()
   except:
-    bot.send_message(441399484, traceback.format_exc())
+    try:
+        bot.send_message(441399484, traceback.format_exc())
+    except:
+        pass
+
 threading.Thread(target = polll, args = [dices.polling]).start()
 
 print('7777')
