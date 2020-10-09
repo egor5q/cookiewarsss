@@ -2194,8 +2194,8 @@ def poll(b):
     except:
       try:
         b.send_message(441399484, traceback.format_exc())
-        herokuapp = heroku3.from_key(os.environ['herokukey']).apps()['chatpets']
-        herokuapp.restart()
+        #herokuapp = heroku3.from_key(os.environ['herokukey']).apps()['chatpets']
+        #herokuapp.restart()
       except:
         pass
 
