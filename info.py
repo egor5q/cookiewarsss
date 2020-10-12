@@ -3,7 +3,6 @@ class Lobby(object):
         self.game={}
         
 
-
         
 class Ninja(object):
     def __init__(self):
