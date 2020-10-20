@@ -5,3 +5,4 @@ pymongo
 SimpleQIWI
 pyrogram
 heroku3
+dnspython
