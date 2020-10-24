@@ -20,6 +20,7 @@ class Robot(object):
         self.accuracy=10
         self.cost=80
         
+
         
 class Berserk(object):
     def __init__(self):
