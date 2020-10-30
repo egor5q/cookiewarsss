@@ -325,6 +325,10 @@ def creategame(m):
     #config.about(m, bot)
     if m.from_user.id in banned:
         return
+    if '@' in m.text:
+        uname = m.text.split('@')[1]
+        if uname.lower() != 'crocodilefreebot':
+            return
     chat = chats.find_one({'id': m.chat.id})
     if chat == None:
         chats.insert_one(createchat(m))
