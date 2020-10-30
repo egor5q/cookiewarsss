@@ -2194,7 +2194,7 @@ def poll(b):
     except:
       try:
         b.send_message(441399484, traceback.format_exc())
-        b.send_message(441399484, traceback.format_exc())
+        b.send_message(441399484, 'Бот упал!')
         #herokuapp = heroku3.from_key(os.environ['herokukey']).apps()['chatpets']
         #herokuapp.restart()
       except:
