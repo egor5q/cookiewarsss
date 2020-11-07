@@ -92,20 +92,20 @@ def createuser(user):
         }
     }
 
-#try:
-#    users.find_one({'id':441399484})['results']['football']
-#except:
-#    users.update_many({},{'$set':{'results.football':{
-#                'score_sum':0,
-#                'score_amount':0,
-#                '1':0,
-#                '2':0,
-#                '3':0,
-#                '4':0,
-#                '5':0,
-#                '6':0
-#            }}})
-#
+try:
+    users.find_one({'id':441399484})['results']['football']
+except:
+    users.update_many({},{'$set':{'results.football':{
+                'score_sum':0,
+                'score_amount':0,
+                '1':0,
+                '2':0,
+                '3':0,
+                '4':0,
+                '5':0,
+                '6':0
+            }}})
+
 #if users.find_one({'id':'bot'}) == None:
 #    users.insert_one(createuser({'id':'bot', 'first_name': 'Dices'}))
 
