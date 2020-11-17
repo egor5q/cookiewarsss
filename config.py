@@ -4,7 +4,6 @@ import time
 import threading
 mongo_client = MongoClient(os.environ['database'])
 spyclient = MongoClient(os.environ['spydatabase'])
-
 pasyuk_id = 441399484
 senderman_id = 94197300
 admins = (pasyuk_id, senderman_id)
