@@ -13,6 +13,7 @@ bot = telebot.TeleBot(token)
 import config
 import heroku3
 
+
 lasttext = 'Ну я дурочка'
 
 client = MongoClient(os.environ['database'])
