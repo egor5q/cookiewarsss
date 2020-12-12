@@ -1,6 +1,7 @@
 class Lobby(object):
     def __init__(self):
         self.game={}
+
         
 class Ninja(object):
     def __init__(self):
