@@ -16,7 +16,6 @@ CJ = cookielib.LWPCookieJar()
 from requests.exceptions import HTTPError
 
 
-
 client=MongoClient(os.environ['database'])
 db=client.dices
 users=db.users
