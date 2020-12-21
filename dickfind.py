@@ -365,11 +365,11 @@ def getdickkb(duel):
             callb=random.choice(emptycodes)
         
         if i<=3:
-            buttons1.append(types.InlineKeyboardButton(text='📦', callback_data='duel?'+callb+'?'+str(duel['number'])))
+            buttons1.append(types.InlineKeyboardButton(text='🎁', callback_data='duel?'+callb+'?'+str(duel['number'])))
         elif i<=6:
-            buttons2.append(types.InlineKeyboardButton(text='📦', callback_data='duel?'+callb+'?'+str(duel['number'])))
+            buttons2.append(types.InlineKeyboardButton(text='🎁', callback_data='duel?'+callb+'?'+str(duel['number'])))
         elif i<=9:
-            buttons3.append(types.InlineKeyboardButton(text='📦', callback_data='duel?'+callb+'?'+str(duel['number'])))
+            buttons3.append(types.InlineKeyboardButton(text='🎁', callback_data='duel?'+callb+'?'+str(duel['number'])))
         i+=1
     kb.add(*buttons1)
     kb.add(*buttons2)
@@ -419,11 +419,11 @@ def dd(m):
             callb=random.choice(emptycodes)
         
         if i<=3:
-            buttons1.append(types.InlineKeyboardButton(text='📦', callback_data=callb+' '+str(number)+' '+str(randoms)))
+            buttons1.append(types.InlineKeyboardButton(text='🎁', callback_data=callb+' '+str(number)+' '+str(randoms)))
         elif i<=6:
-            buttons2.append(types.InlineKeyboardButton(text='📦', callback_data=callb+' '+str(number)+' '+str(randoms)))
+            buttons2.append(types.InlineKeyboardButton(text='🎁', callback_data=callb+' '+str(number)+' '+str(randoms)))
         elif i<=9:
-            buttons3.append(types.InlineKeyboardButton(text='📦', callback_data=callb+' '+str(number)+' '+str(randoms)))
+            buttons3.append(types.InlineKeyboardButton(text='🎁', callback_data=callb+' '+str(number)+' '+str(randoms)))
         i+=1
     kb.add(*buttons1)
     kb.add(*buttons2)
