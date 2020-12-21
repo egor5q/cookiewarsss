@@ -193,8 +193,8 @@ def duellss(call):
         player['score'] += 9
         result = 'found'
     else:
-        text = '💨|О нет! Вы выбрали ящик без члена!'
-        text2 = player['name']+': 💨открыл(а) пустую коробку\n'
+        text = '🎄|О нет! Вы выбрали ящик без члена!'
+        text2 = player['name']+': 🎄открыл(а) пустую коробку\n'
         
         x = 'null'
         result = 'notfound'
@@ -234,7 +234,7 @@ def nextduelturn(duel):
             if i in duel['golddicks']:
                 emoj='🍌'
         else:
-            emoj='💨'
+            emoj='🎄'
         if i<=3:
             buttons1.append(types.InlineKeyboardButton(text=emoj, callback_data='xyi'))
         elif i<=6:
@@ -276,7 +276,7 @@ def endduel(duel):
             if i in duel['golddicks']:
                 emoj='🍌'
         else:
-            emoj='💨'
+            emoj='🎄'
         if i<=3:
             buttons1.append(types.InlineKeyboardButton(text=emoj, callback_data='xyi'))
         elif i<=6:
@@ -466,7 +466,7 @@ def dickstats(m):
         pass
     text += 'Найдено членов: '+str(user['penis'])+'🍆 ('+str(penis)+'%)\n'
     text += 'Найдено ЗОЛОТЫХ членов: '+str(user['goldpenis'])+'🍌 ('+str(goldpenis)+'%)\n'
-    text += 'Открыто пустых коробок: '+str(user['null'])+'💨 ('+str(null)+'%)\n\n'
+    text += 'Открыто пустых коробок: '+str(user['null'])+'🎄 ('+str(null)+'%)\n\n'
     
     duelall = user['duelwin']+user['duelloose']+user['draw']
     if duelall > 0:
@@ -527,7 +527,7 @@ def inline(call):
                 x = 'goldpenis'
             else:
                 dick=False
-                bot.answer_callback_query(call.id, '💨|О нет! Вы выбрали ящик без члена!', show_alert=True)
+                bot.answer_callback_query(call.id, '🎄|О нет! Вы выбрали ящик без члена!', show_alert=True)
                 x = 'null'
             
             game['users'].update({user.id:{'name':call.from_user.first_name,
@@ -553,7 +553,7 @@ def inline(call):
                 if i in game['golddicks']:
                     emoj='🍌'
             else:
-                emoj='💨'
+                emoj='🎄'
             if i<=3:
                 buttons1.append(types.InlineKeyboardButton(text=emoj, callback_data='xyi'))
             elif i<=6:
@@ -582,7 +582,7 @@ def editmsg(game, end=False):
         elif game['users'][ids]['dick']==True:
             text+=game['users'][ids]['name']+': 🍆нашёл(ла) член\n'
         else:
-            text+=game['users'][ids]['name']+': 💨открыл(а) пустую коробку\n'
+            text+=game['users'][ids]['name']+': 🎄открыл(а) пустую коробку\n'
     return text
 
 def createuser(user):
