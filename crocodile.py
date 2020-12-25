@@ -58,9 +58,9 @@ adm = [441399484]
 def skippp(m):
     pass
 
-@bot.callback_query_handler(func = lambda call: time.time() - call.date >= 120)
-def skp(call):
-    pass
+#@bot.callback_query_handler(func = lambda call: time.time() - star)
+#def skp(call):
+#    pass
 
 @bot.message_handler(commands=['select_chat'])
 def selectchatt(m):
