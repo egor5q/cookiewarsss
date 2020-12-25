@@ -581,7 +581,10 @@ def calls(call):
             bot.send_message(call.data.split(' ')[1], 'Вам было запрещено предлагать слова!')
 
     except:
-        bot.send_message(441399484, traceback.format_exc())
+        try:
+            bot.send_message(441399484, traceback.format_exc())
+        except:
+            pass
 
 
 def medit(message_text, chat_id, message_id, reply_markup=None, parse_mode=None):
