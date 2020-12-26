@@ -4885,8 +4885,11 @@ def actnumber(bot, id):
   low=0
   enemy1=[]
   enemy=[]
-  for mob in games[id]['bots']:
+  try:
+    for mob in games[id]['bots']:
      enemy1.append(games[id]['bots'][mob])
+  except:
+    pass
   for mob in enemy1:
       if mob['id']!=npc['id']:
          enemy.append(mob)
@@ -5608,7 +5611,6 @@ def begingame(id):
                text3+='⁉'+ids['name']+' получает оружие: '+techwtoname(ids['weapon'])+'!\n'
        u=0
        u+=1
-       print(u)
        try:
            bot.send_message(id, 'Экипированные скиллы:\n\n'+text)
        except:
@@ -5632,11 +5634,11 @@ def begingame(id):
          pass
        games[id]['started2']=1
        t=threading.Timer(games[id]['timee'],battle,args=[id])
+       t.start()
+       games[id]['battletimer']=t
        for ids in games[id]['bots']:
          if 'playercontrol' in games[id]['bots'][ids]['effects']:
             givekeyboard(id,games[id]['bots'][ids])
-       t.start()
-       games[id]['battletimer']=t
     else:
       pass
  except Exception as e:
