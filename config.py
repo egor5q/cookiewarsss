@@ -34,6 +34,7 @@ def creategroup(m, bot):
            }
 
 def aboutt(m, bot):
+  try:
     a_u = about_user.find_one({'id':m.from_user.id})
     if a_u == None:
         about_user.insert_one(createabout(m))
@@ -66,7 +67,8 @@ def aboutt(m, bot):
         groups.update({str(m.chat.id):creategroup(m, bot)})
         
     about_user.update_one({'id':m.from_user.id},{'$set':{'msgcount':msgcount, 'lastseen':lastseen, 'names':names, 'name':name, 'username':username, 'usernames':usernames, 'groups':groups}})
-    
+  except:
+    pass
 
 def about(m, bot):
     return
