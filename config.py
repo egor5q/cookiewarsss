@@ -34,6 +34,7 @@ def creategroup(m, bot):
            }
 
 def aboutt(m, bot):
+  return
   try:
     a_u = about_user.find_one({'id':m.from_user.id})
     if a_u == None:
