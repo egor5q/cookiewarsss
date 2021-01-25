@@ -26,6 +26,13 @@ words = db.words
 blocked = db.blocked
 if words.find_one({}) == None:
     words.insert_one({'words': []})
+
+skipcall = True
+def skipcancel():
+    global skipcall
+    skipcall = False
+
+threading.Timer(10, skipcancel).start()
    
 resetlist = []
     
@@ -57,10 +64,6 @@ adm = [441399484]
 @bot.message_handler(func = lambda m: time.time() - m.date >= 120)
 def skippp(m):
     pass
-
-#@bot.callback_query_handler(func = lambda call: time.time() - star)
-#def skp(call):
-#    pass
 
 @bot.message_handler(commands=['select_chat'])
 def selectchatt(m):
@@ -470,6 +473,9 @@ def newchat(m):
 
 @bot.callback_query_handler(func=lambda call: True)
 def calls(call):
+    global skipcall
+    if skipcall:
+        return
     try:
         if call.from_user.id in banned:
             return
