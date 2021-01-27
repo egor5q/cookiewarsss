@@ -2186,7 +2186,7 @@ checks()
 #        time.sleep(15)
 
 import crocodile
-#import cookiewars
+import cookiewars
 import dices
 import dickfind
 def poll(b):
@@ -2202,7 +2202,7 @@ def poll(b):
         pass
 
 threading.Thread(target = poll, args = [crocodile.bot]).start()
-#threading.Thread(target = poll, args = [cookiewars.bot]).start()
+threading.Thread(target = poll, args = [cookiewars.bot]).start()
 threading.Thread(target = poll, args = [dickfind.bot]).start()
 
 def polll(x):
