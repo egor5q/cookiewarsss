@@ -36,6 +36,8 @@ threading.Timer(10, skipcancel).start()
    
 resetlist = []
     
+games = {}   
+    
 banned = [787340171]
 cache = []
 cache_old = []
@@ -380,7 +382,7 @@ def allmsg(m):
     try:
         if m.from_user.id in banned:
             return
-        chat = newchat(m)
+        #chat = newchat(m)
         if m.chat.id == m.from_user.id:
             user = users.find_one({'id':m.chat.id})
             if user != None:
@@ -418,32 +420,33 @@ def allmsg(m):
                     return
                 except:
                     pass
-        if chat['currentgame'] != None:
-            game = chat['currentgame']
-            if m.text.lower() == game['word'].lower() or m.text.lower() == game['word'].lower().replace('ё', 'e'):
-                if m.from_user.id == game['master']:
-                    bot.send_message(m.chat.id, 'Ведущему нельзя называть слово! Отменяю игру.')
-                    chats.update_one({'id': chat['id']}, {'$set': {'currentgame': None}})
-                    kb = types.InlineKeyboardMarkup()
-                    kb.add(types.InlineKeyboardButton(text='Я!', callback_data='start'))
-                    bot.send_message(m.chat.id, '🙈Кто желает быть ведущим?', reply_markup=kb)
-                    return
-                if str(m.from_user.id) not in chat['users']:
-                    chats.update_one({'id': chat['id']},
-                                     {'$set': {'users.' + str(m.from_user.id): createchatuser(m.from_user)}})
-
-                chats.update_one({'id': chat['id']}, {'$inc': {'users.' + str(m.from_user.id) + '.score': 1}})
-                chats.update_one({'id': chat['id']}, {'$set': {'currentgame': None}})
-                name = m.from_user.first_name.replace('*', '\*').replace('_', '\_').replace('`', '\`').replace('[',
-                                                                                                               '').replace(
-                    ']', '').replace('(', '').replace(')', '')
-                bot.send_message(m.chat.id, '🙈[' + name + '](tg://user?id=' + str(m.from_user.id) + ') ' +
-                                 'угадал слово:\n*' + game['word'].title() + '*', parse_mode='markdown')
-                chats.update_one({'id': chat['id']},
-                                 {'$set': {'currentmaster': m.from_user.id, 'answer_time': time.time()}})
+        if m.chat.id not in games:
+            return
+        game = games[m.chat.id]
+        if m.text.lower() == game['word'].lower() or m.text.lower() == game['word'].lower().replace('ё', 'e'):
+            if m.from_user.id == game['master']:
+                bot.send_message(m.chat.id, 'Ведущему нельзя называть слово! Отменяю игру.')
+                del games[m.chat.id]
                 kb = types.InlineKeyboardMarkup()
                 kb.add(types.InlineKeyboardButton(text='Я!', callback_data='start'))
                 bot.send_message(m.chat.id, '🙈Кто желает быть ведущим?', reply_markup=kb)
+                return
+            chat = newchat(m)
+            if str(m.from_user.id) not in chat['users']:
+                chats.update_one({'id': chat['id']},
+                                 {'$set': {'users.' + str(m.from_user.id): createchatuser(m.from_user)}})
+
+            chats.update_one({'id': chat['id']}, {'$inc': {'users.' + str(m.from_user.id) + '.score': 1}})
+            del games[m.chat.id]
+            name = m.from_user.first_name.replace('*', '\*').replace('_', '\_').replace('`', '\`').replace('[',
+                                                                                                           '').replace(
+                ']', '').replace('(', '').replace(')', '')
+            bot.send_message(m.chat.id, '🙈[' + name + '](tg://user?id=' + str(m.from_user.id) + ') ' +
+                             'угадал слово:\n*' + game['word'].title() + '*', parse_mode='markdown')
+
+            kb = types.InlineKeyboardMarkup()
+            kb.add(types.InlineKeyboardButton(text='Я!', callback_data='start'))
+            bot.send_message(m.chat.id, '🙈Кто желает быть ведущим?', reply_markup=kb)
 
     except:
         bot.send_message(441399484, traceback.format_exc())
@@ -480,35 +483,27 @@ def calls(call):
     try:
         if call.from_user.id in banned:
             return
-        chat = chats.find_one({'id': call.message.chat.id})
-        if chat == None:
-            return
+        #chat = chats.find_one({'id': call.message.chat.id})
+        #if chat == None:
+        #    return
         if call.data == 'start':
             allow = True
-            if chat['currentgame'] != None:
-                game = chat['currentgame']
+            if call.message.chat.id in games:
+                game = games[call.message.chat.id]
                 if time.time() - game['starttime'] >= 120:
-                    chats.update_one({'id': chat['id']}, {'$set': {'currentgame': None}})
+                    del games[call.message.chat.id]
                 else:
                     bot.answer_callback_query(call.id, 'Ещё не прошло 2 минуты с начала предыдущей игры!',
                                               show_alert=True)
                     allow = False
                     return
-            try:
-                if chat['currentmaster'] != None and time.time() - chat['answer_time'] <= 8 and call.from_user.id != \
-                        chat['currentmaster']:
-                    bot.answer_callback_query(call.id,
-                                              'Только тот, кто отгадал, может нажать на эту кнопку! Ограничение будет снято через 8 секунд.',
-                                              show_alert=True)
-                    return
-            except:
-                pass
+
             if allow:
                 try:
                     medit('Ведущий был выбран!', call.message.chat.id, call.message.message_id)
                 except:
                     return
-                chats.update_one({'id': chat['id']}, {'$set': {'currentgame': creategame(call)}})
+                games.update(creategame(call))
                 kb = types.InlineKeyboardMarkup(row_width=3)
                 kb.add(types.InlineKeyboardButton(text='👁Посмотреть слово', callback_data='look_word'))
                 kb.add(types.InlineKeyboardButton(text='🔁Сменить слово', callback_data='change_word'))
@@ -519,27 +514,30 @@ def calls(call):
                     call.from_user.id) + ') должен объяснить слово.' +
                                  ' Сменить ведущего можно будет через 2 минуты.', reply_markup=kb,
                                  parse_mode='markdown')
-                chats.update_one({'id': chat['id']}, {'$set': {'currentmaster': None, 'answer_time': None}})
 
         if call.data == 'look_word':
-            game = chat['currentgame']
-            if game == None:
+            if call.message.chat.id not in games:
                 bot.answer_callback_query(call.id, 'Игра не запущена! Запустить можно по команде /start.',
                                           show_alert=True)
                 return
+            game = games[call.message.chat.id]
             if game['master'] == call.from_user.id:
                 bot.answer_callback_query(call.id, 'Нужно объяснить слово: ' + game['word'].title(), show_alert=True)
             else:
                 bot.answer_callback_query(call.id, 'Не вы загадываете слово!', show_alert=True)
 
         if call.data == 'change_word':
-            game = chat['currentgame']
-            if game == None:
+            if call.message.chat.id not in games:
                 bot.answer_callback_query(call.id, 'Игра не запущена! Запустить можно по команде /start.',
                                           show_alert=True)
                 return
+            game = games[call.message.chat.id]
             if call.from_user.id != game['master']:
                 bot.answer_callback_query(call.id, 'Не вы загадываете слово!', show_alert=True)
+                return
+            
+            chat = chats.find_one({'id': call.message.chat.id})
+            if chat == None:
                 return
             if chat['old'] == False:
                 word = random.choice(random.choice(cache))
@@ -549,20 +547,9 @@ def calls(call):
                     allcache.append(ids)
                 word = random.choice(allcache)
             word = word.replace('ё', 'е').replace('Ё', 'Е')
-            global url
-            global key
-            global lang
             text = word
-            try:
-                #r = requests.post(url, data={'key': key, 'text': text, 'lang': lang})
-                #print(r.text)
-                #if chats.find_one({'id': call.message.chat.id})['lang'] == 'eng':
-                #    word = r.text
-                #    print(word)
-                pass
-            except:
-                print(traceback.format_exc())
-            chats.update_one({'id': call.message.chat.id}, {'$set': {'currentgame.word': word}})
+
+            games[call.message.chat.id]['word'] = word
             bot.answer_callback_query(call.id, 'Нужно объяснить слово: ' + word.title(), show_alert=True)
 
         if 'disallow_word' in call.data:
@@ -622,11 +609,13 @@ def creategame(call):
         word = random.choice(allcache)    
     word = word.replace('ё', 'е').replace('Ё', 'Е')
     text = word
-    return {
+    return {call.message.chat.id:{
+        
         'master': call.from_user.id,
         'starttime': time.time(),
         'word': word
     }
+           }
 
 
 def createchat(m):
