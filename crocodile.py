@@ -75,6 +75,28 @@ def testrekkk(m):
         bot.forward_message(chat_id = 441399484, from_chat_id = m.chat.id, message_id = m.reply_to_message.message_id)
     except:
         print(traceback.format_exc())
+        
+@bot.message_handler(commands=['reklama'])
+def testrekkkrrr(m):
+    if m.from_user.id != 441399484:
+        return
+    i = 0
+    for ids in chats.find({}):
+        try:
+            bot.forward_message(chat_id = ids['id'], from_chat_id = m.chat.id, message_id = m.reply_to_message.message_id)
+            i+=1
+            if i%1000 == 0:
+                try:
+                    bot.send_message(441399484, 'Сообщение получило '+str(i)+' чатов!')
+                except:
+                    pass
+        except:
+            pass
+    try:
+        bot.send_message(441399484, 'Сообщение получило '+str(i)+' чатов!')
+    except:
+        pass
+
 
 @bot.message_handler(commands=['select_chat'])
 def selectchatt(m):
@@ -352,7 +374,9 @@ def creategame(m):
     if chat == None:
         chats.insert_one(createchat(m))
         chat = chats.find_one({'id': m.chat.id})
-
+    user = users.find_one({'id':m.from_user.id})
+    if user['name'] != m.from_user.first_name:
+        users.update_one({'id':m.from_user.id},{'$set':{'name':m.from_user.first_name}})
     allow = True
     if chat['currentgame'] != None:
         game = chat['currentgame']
@@ -446,6 +470,8 @@ def allmsg(m):
                                  {'$set': {'users.' + str(m.from_user.id): createchatuser(m.from_user)}})
 
             chats.update_one({'id': chat['id']}, {'$inc': {'users.' + str(m.from_user.id) + '.score': 1}})
+            if chat['users'][str(m.from_user.id)]['name'] != call.from_user.first_name:
+                chats.update_one({'id':chat['id']},{'$set':{'users.'+str(m.from_user.id)+'.name':call.from_user.first_name}})
             del games[m.chat.id]
             name = m.from_user.first_name.replace('*', '\*').replace('_', '\_').replace('`', '\`').replace('[',
                                                                                                            '').replace(
