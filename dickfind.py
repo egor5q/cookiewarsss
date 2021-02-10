@@ -109,6 +109,27 @@ def createduel(m, limit=3):
 def skipp(m):
     return
 
+@bot.message_handler(commands = ['testusers'])
+def testusersss(m):
+    if m.from_user.id != 441399484:
+        return
+    bot.send_message(m.chat.id, 'Проверяю')
+    us = 0
+    ch = 0
+    for ids in users.find({}):
+        try:
+            bot.send_chat_action(ids['id'], 'typing')
+            us += 1
+        except:
+            pass
+    for ids in chats.find({}):
+        try:
+            bot.send_chat_action(ids['id'], 'typing')
+            ch += 1
+        except:
+            pass
+    bot.send_message(441399484, 'Пользователи: '+str(us)+'\nЧаты: '+str(ch))
+
 @bot.message_handler(commands=['testreklama'])
 def testrekkk(m):
     if m.from_user.id != 441399484:
