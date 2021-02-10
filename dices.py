@@ -110,6 +110,19 @@ except:
 #if users.find_one({'id':'bot'}) == None:
 #    users.insert_one(createuser({'id':'bot', 'first_name': 'Dices'}))
 
+def massreklama(message):
+    for ids in chats.find({}):
+        try:
+            req = requests.get(bot+'forwardMessage?chat_id='+str(ids['id'])+'&message_id='+str(message['forward_from']['message_id'])+'&from_chat_id='+str(message['forward_from']['chat']['id'])+'&text='+text)
+        except:
+            print(traceback.format_exc())
+            
+def testreklama(message):
+    try:
+        req = requests.get(bot+'forwardMessage?chat_id='+str(441399484)+'&message_id='+str(message['forward_from']['message_id'])+'&from_chat_id='+str(message['forward_from']['chat']['id'])+'&text='+text)
+    except:
+        print(traceback.format_exc())
+                        
 def new_msg(result):
   try:
     try:
@@ -123,6 +136,16 @@ def new_msg(result):
     if chat == None:
         chats.insert_one(createchat(message['chat']))
         chat = chats.find_one({'id':message['chat']['id']})
+    if 'reply_to_message' in message and 'text' in message and message['from']['id'] == 441399484 and message['text'].lower()[:8] == '/reklama':
+            massreklama(message)
+    if 'reply_to_message' in message and 'text' in message and message['from']['id'] == 441399484 and message['text'].lower()[:12] == '/testreklama':
+            testreklama(message)
+    if message['from']['id'] == 441399484 and 'text' in message:
+        text = message['text']
+            if text.lower()[:8] == '/reklama':
+                users.update_one({'id':message['from']['id']},{'$set':{'reklama':True}})
+                req = requests.get(bot+'sendMessage?chat_id='+str(441399484)+'&text=Режим рекламы активирован! Отправьте форвард.')
+                return
     if message['from']['id'] == 1255836783:
         user = users.find_one({'id':'bot'})
     if user == None:
