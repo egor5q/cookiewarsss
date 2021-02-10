@@ -141,7 +141,7 @@ def new_msg(result):
     if 'reply_to_message' in message and 'text' in message and message['from']['id'] == 441399484 and message['text'].lower()[:12] == '/testreklama':
             testreklama(message)
     if message['from']['id'] == 441399484 and 'text' in message:
-        text = message['text']
+            text = message['text']
             if text.lower()[:8] == '/reklama':
                 users.update_one({'id':message['from']['id']},{'$set':{'reklama':True}})
                 req = requests.get(bot+'sendMessage?chat_id='+str(441399484)+'&text=Режим рекламы активирован! Отправьте форвард.')
