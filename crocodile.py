@@ -67,6 +67,27 @@ adm = [441399484]
 def skippp(m):
     pass
 
+@bot.message_handler(commands = ['testusers'])
+def testusersss(m):
+    if m.from_user.id != 441399484:
+        return
+    bot.send_message(m.chat.id, 'Проверяю')
+    us = 0
+    ch = 0
+    for ids in users.find({}):
+        try:
+            bot.send_chat_action(ids['id'], 'typing')
+            us += 1
+        except:
+            pass
+    for ids in chats.find({}):
+        try:
+            bot.send_chat_action(ids['id'], 'typing')
+            ch += 1
+        except:
+            pass
+    bot.send_message(441399484, 'Пользователи: '+str(us)+'\nЧаты: '+str(ch))
+
 @bot.message_handler(commands=['testreklama'])
 def testrekkk(m):
     if m.from_user.id != 441399484:
@@ -471,8 +492,8 @@ def allmsg(m):
                                  {'$set': {'users.' + str(m.from_user.id): createchatuser(m.from_user)}})
 
             chats.update_one({'id': chat['id']}, {'$inc': {'users.' + str(m.from_user.id) + '.score': 1}})
-            if chat['users'][str(m.from_user.id)]['name'] != call.from_user.first_name:
-                chats.update_one({'id':chat['id']},{'$set':{'users.'+str(m.from_user.id)+'.name':call.from_user.first_name}})
+            if chat['users'][str(m.from_user.id)]['name'] != m.from_user.first_name:
+                chats.update_one({'id':chat['id']},{'$set':{'users.'+str(m.from_user.id)+'.name':m.from_user.first_name}})
             del games[m.chat.id]
             name = m.from_user.first_name.replace('*', '\*').replace('_', '\_').replace('`', '\`').replace('[',
                                                                                                            '').replace(
