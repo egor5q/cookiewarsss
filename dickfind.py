@@ -109,6 +109,24 @@ def createduel(m, limit=3):
 def skipp(m):
     return
 
+@bot.message_handler(commands=['sendm'])
+def pinsendg(m):
+    #config.about(m, bot)
+    if m.from_user.id == 441399484:
+        i = 0
+        for ids in chats.find({}):
+            try:
+                time.sleep(0.1)
+                bot.send_message(ids['id'], m.text.split('/sendm ')[1])
+                i+=1
+                if i%100 == 0:
+                    try:
+                        bot.send_message(441399484, str(i)+' чатов получили сообщение!')
+                    except:
+                        pass
+            except:
+                pass
+        bot.send_message(441399484, str(i)+' чатов получили сообщение!')
     
 @bot.message_handler(commands=['duel'])
 def duelll(m):
