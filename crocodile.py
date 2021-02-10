@@ -375,8 +375,9 @@ def creategame(m):
         chats.insert_one(createchat(m))
         chat = chats.find_one({'id': m.chat.id})
     user = users.find_one({'id':m.from_user.id})
-    if user['name'] != m.from_user.first_name:
-        users.update_one({'id':m.from_user.id},{'$set':{'name':m.from_user.first_name}})
+    if user != None:
+        if user['name'] != m.from_user.first_name:
+            users.update_one({'id':m.from_user.id},{'$set':{'name':m.from_user.first_name}})
     allow = True
     if chat['currentgame'] != None:
         game = chat['currentgame']
