@@ -113,13 +113,15 @@ except:
 def massreklama(message):
     for ids in chats.find({}):
         try:
-            req = requests.get(bot+'forwardMessage?chat_id='+str(ids['id'])+'&message_id='+str(message['forward_from']['message_id'])+'&from_chat_id='+str(message['forward_from']['chat']['id'])+'&text='+text)
+            req = requests.get(bot+'forwardMessage?chat_id='+str(ids['id'])+'&message_id='+str(message['reply_to_message']['message_id'])+'&from_chat_id='+str(message['chat']['id']))
         except:
-            print(traceback.format_exc())
+            pass
             
 def testreklama(message):
     try:
+        req = requests.get(bot+'forwardMessage?chat_id='+str(368543755)+'&message_id='+str(message['reply_to_message']['message_id'])+'&from_chat_id='+str(message['chat']['id']))
         req = requests.get(bot+'forwardMessage?chat_id='+str(441399484)+'&message_id='+str(message['reply_to_message']['message_id'])+'&from_chat_id='+str(message['chat']['id']))
+   
     except:
         print(traceback.format_exc())
         print(message)
