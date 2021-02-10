@@ -67,6 +67,15 @@ adm = [441399484]
 def skippp(m):
     pass
 
+@bot.message_handler(commands=['testreklama'])
+def testrekkk(m):
+    if m.from_user.id != 441399484:
+        return
+    try:
+        bot.forward_message(chat_id = 441399484, from_chat_id = m.chat.id, message_id = m.reply_to_message.message_id)
+    except:
+        print(traceback.format_exc())
+
 @bot.message_handler(commands=['select_chat'])
 def selectchatt(m):
     #config.about(m, bot)
