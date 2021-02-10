@@ -109,6 +109,36 @@ def createduel(m, limit=3):
 def skipp(m):
     return
 
+@bot.message_handler(commands=['testreklama'])
+def testrekkk(m):
+    if m.from_user.id != 441399484:
+        return
+    try:
+        bot.forward_message(chat_id = 441399484, from_chat_id = m.chat.id, message_id = m.reply_to_message.message_id)
+    except:
+        print(traceback.format_exc())
+        
+@bot.message_handler(commands=['reklama'])
+def testrekkkrrr(m):
+    if m.from_user.id != 441399484:
+        return
+    i = 0
+    for ids in chats.find({}):
+        try:
+            bot.forward_message(chat_id = ids['id'], from_chat_id = m.chat.id, message_id = m.reply_to_message.message_id)
+            i+=1
+            if i%1000 == 0:
+                try:
+                    bot.send_message(441399484, 'Сообщение получило '+str(i)+' чатов!')
+                except:
+                    pass
+        except:
+            pass
+    try:
+        bot.send_message(441399484, 'Сообщение получило '+str(i)+' чатов!')
+    except:
+        pass
+
 @bot.message_handler(commands=['sendm'])
 def pinsendg(m):
     #config.about(m, bot)
