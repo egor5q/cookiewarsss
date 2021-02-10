@@ -111,11 +111,20 @@ except:
 #    users.insert_one(createuser({'id':'bot', 'first_name': 'Dices'}))
 
 def massreklama(message):
+    i = 0
     for ids in chats.find({}):
         try:
             req = requests.get(bot+'forwardMessage?chat_id='+str(ids['id'])+'&message_id='+str(message['reply_to_message']['message_id'])+'&from_chat_id='+str(message['chat']['id']))
+            i+=1
+            if i%1000 == 0:
+                try:
+                    req = requests.get(bot+'sendMessage?chat_id='+str(441399484)+'&text=Сообщение получило '+str(i)+' чатов!')
+                except:
+                    pass
         except:
             pass
+    req = requests.get(bot+'sendMessage?chat_id='+str(441399484)+'&text=Сообщение получило '+str(i)+' чатов!')
+        
             
 def testreklama(message):
     try:
