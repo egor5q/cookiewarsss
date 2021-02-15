@@ -492,6 +492,7 @@ def allmsg(m):
                                  {'$set': {'users.' + str(m.from_user.id): createchatuser(m.from_user)}})
 
             chats.update_one({'id': chat['id']}, {'$inc': {'users.' + str(m.from_user.id) + '.score': 1}})
+            chat = newchat(m)
             if chat['users'][str(m.from_user.id)]['name'] != m.from_user.first_name:
                 chats.update_one({'id':chat['id']},{'$set':{'users.'+str(m.from_user.id)+'.name':m.from_user.first_name}})
             del games[m.chat.id]
