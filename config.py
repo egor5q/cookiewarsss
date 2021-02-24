@@ -25,6 +25,7 @@ def createabout(m):
         'lastseen':0
     }
 
+
 def creategroup(m, bot):
     return {
         'title':m.chat.title,
