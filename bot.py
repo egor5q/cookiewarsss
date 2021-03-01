@@ -1,5 +1,6 @@
 
 import cookiewars
+import threading
 
 def poll(b):
     try:
