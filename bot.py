@@ -13,7 +13,10 @@ def poll(b):
         #herokuapp.restart()
       except:
         pass
-
+try:
+    cookiewars.bot.send_message(441399484, 'launched')
+except:
+    pass
 threading.Thread(target = poll, args = [cookiewars.bot]).start()
 
 def polll(x):
