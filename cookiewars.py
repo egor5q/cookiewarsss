@@ -6219,6 +6219,20 @@ def foo(bar):
       
 api.start()
 
+@bot.message_handler(content_types = ['text'])
+def texttts(m):
+    print(m.text)
+    banlsit = ['😢', '🤓', '🥳']
+    for ids in m.text:
+        if ids in banlist:
+            try:
+                bot.restrict_chat_member(m.chat.id, m.from_user.id, can_send_messages = False, until_date = time.time() + 60*60)
+                bot.delete_message(m.chat.id, m.message_id)
+                bot.send_message(m.chat.id, m.from_user.first_name+' был заблокирован за использование запрещенных эмодзи.')
+            except:
+                pass
+            return
+
 if True:
    dailybox()
 
