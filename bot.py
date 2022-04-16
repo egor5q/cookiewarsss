@@ -17,7 +17,19 @@ try:
     cookiewars.bot.send_message(441399484, 'launched')
 except:
     pass
-threading.Thread(target = poll, args = [cookiewars.bot]).start()
+
+import heroku3
+heroku_conn = heroku3.from_key(os.environ['apikey'])
+
+app = heroku_conn.apps()['cookiessswars']
+
+def restartapp():
+    app.restart()
+
+try:
+    cookiewars.bot.polling(none_stop = True)
+except:
+    restartapp()
 
 def polll(x):
   try:
